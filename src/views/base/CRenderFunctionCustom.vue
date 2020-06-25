@@ -34,13 +34,6 @@
                     if(this.$route.params.id) newItem[1].props["to"] = newItem[1].props["to"].replace("#id", this.$route.params.id)
                     else return []
                 }
-                if(newItem[1].props["to"]) console.log(newItem[1].props["to"])
-                /*
-                if(newItem[1].props["serverSpecific"]) {
-                    console.log(newItem[1].props["to"])
-                    console.log(this.$route.params.id)
-                    newItem[1].props["to"] = this.$route.params.id + newItem[1].props["to"]
-                }*/
 
                 this.$options.renderFunctionOptions.forEach(option => {
                     //on option doesn't work, possible to use only nativeOn

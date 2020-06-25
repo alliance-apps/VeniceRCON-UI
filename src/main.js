@@ -22,14 +22,7 @@ axios.interceptors.response.use(function (response) {
 });*/
 
 
-
-
-
-
-
-
-
-
+import bf3helpers from './services/bf3helpers'
 
 
 

@@ -10,12 +10,11 @@
     import io from "socket.io-client"
 
 
+
     export default {
         name: 'Loading',
         mounted() {
-            //this.$store.commit('set', ['loaded', true])
             if(this.$store.state.loaded) this.$router.push('/dashboard')
-            console.log(this.$store.state.loaded)
 
             if (store.state.jwt === null) {
                 this.$router.push('/login')
@@ -23,7 +22,7 @@
                 axios.get('auth/whoami')
                     .then((response) => {
                         store.commit('set', ['user', response.data.token])
-                        store.commit('set', ['permissions', response.data.permissions])
+                        store.commit('setPermissions', response.data.permissions)
                         store.commit('set', ['loaded', true])
                         store.commit('set', ['authorized', true])
                         if (this.$route.query.redirect) this.$router.push(this.$route.query.redirect)
@@ -37,17 +36,28 @@
 
 
                 const socket = io.connect(store.state.backendHost, { query: `auth_token=${store.state.jwt}`})
-                socket.on("error", err => console.log(err))
+                socket.on("error", () => {
+                    alert("We have lost websocket connection. Please reload.")
+                })
                 socket.on("INSTANCE#ADD", event => {
                     this.$store.commit("setObjectProp", ["instances", event.state.id, event.state])
-                    console.log("got added to instance", event.state)
                 })
                 socket.on("INSTANCE#UPDATE", event => {
+                    //if(event.length > 2) console.log(event)
                     this.$store.commit("lodashSet", ["instances", event])
-                    //console.log(`received updates for instance with id ${event.id}`, event.changes)
                 })
                 socket.on("INSTANCE#REMOVE", event => {
-                    console.log(`removed from instance ${event.id}`)
+                    this.$store.commit("setObjectProp", ["instances", event.state.id, undefined])
+                })
+                socket.on("SELF#PERMISSION_UPDATE", () => {
+                    axios.get('auth/whoami')
+                        .then((response) => {
+                            store.commit('set', ['user', response.data.token])
+                            store.commit('setPermissions', response.data.permissions)
+                        })
+                        .catch(() => {
+
+                        })
                 })
             }
         },

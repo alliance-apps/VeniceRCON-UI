@@ -7,8 +7,13 @@ var _ = require('lodash');
 
 var deep_value = function(obj, path){
   for (var i=0, path=path.split('.'), len=path.length; i<len; i++){
-    obj = obj[path[i]];
-  };
+    if(obj[path[i]])
+      obj = obj[path[i]];
+    else {
+      Vue.set(obj, path[i], {})
+      obj = obj[path[i]];
+    }
+  }
   return obj;
 };
 
@@ -21,7 +26,8 @@ const state = {
   activeServer: localStorage.getItem('activeServer') || 0,
   jwt: localStorage.getItem('jwt'),
   user: null,
-  permissions: [],
+  globalPermissions: [],
+  permissions: {},
   instances: {},
 }
 
@@ -35,7 +41,7 @@ const mutations = {
     state.sidebarShow = sidebarClosed ? true : 'responsive'
   },
   updatePersistent (state, [variable, value]) {
-    state[variable] = value
+    Vue.set(state, variable, value)
     localStorage.setItem(variable, value)
 
     if(variable === 'backendHost') {
@@ -48,7 +54,7 @@ const mutations = {
     localStorage.setItem('jwt', token)
   },
   set (state, [variable, value]) {
-    state[variable] = value
+    Vue.set(state, variable, value)
   },
   setObjectProp (state, [variable, prop, value]) {
     Vue.set(state[variable], prop, value)
@@ -60,9 +66,21 @@ const mutations = {
       let postpath = change[0].substring(pos+1)
       let target = state[variable][event.id]
       if(prepath !== "") target = deep_value(target, prepath)
-      Vue.set(target, postpath, change[1])
+      //console.log("prepath " + prepath + " - postpath " + postpath)
+      if(change[1] === null) Vue.set(target, postpath, undefined)
+      else Vue.set(target, postpath, change[1])
     })
   },
+  setPermissions(state, permissions) {
+    for(const permission of permissions) {
+      if(permission.root && permission.instance === null) {
+        Vue.set(state, "globalPermissions", permission.scopes)
+      } else {
+        Vue.set(state.permissions, permission.instance, permission.scopes)
+      }
+    }
+
+  }
 }
 
 const actions = {

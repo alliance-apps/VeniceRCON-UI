@@ -1,14 +1,18 @@
 <template>
   <div>
     <!--<WidgetsDropdown/>-->
+  <img :src="this.$bf3_getMapImage(this.$store.state.instances[this.$route.params.id].serverinfo.map)"><br>
+  {{ this.$bf3_getMapDisplayName(this.$store.state.instances[this.$route.params.id].serverinfo.map) }} ({{ this.$bf3_getGamemodeDisplayName(this.$store.state.instances[this.$route.params.id].serverinfo.mode) }})
+  <br><br>User: {{ this.$store.state.user }}
+  <br><br>Instance Permissions: {{ this.$store.state.permissions }}
+  <br><br>Global Permissions: {{ this.$store.state.globalPermissions }}
+  <br><br>Serverdata: {{ this.$store.state.instances[this.$route.params.id] }}
 
-<CButton class="m-2">asdasd</CButton>
-    <CButton color="primary" class="m-2" @click="$store.commit('updatePersistent', ['backendHost', 'https://meingammelserver.com'])">Hello</CButton>
-    <CButton color="primary" class="m-2" @click="$store.commit('updatePersistent', ['activeServer' , 1])">Hello</CButton>
-      <br><br>JWT: {{ this.$store.state.jwt }}
-      <br><br>User: {{ this.$store.state.user }}
-      <br><br>Permissions: {{ this.$store.state.permissions }}
-      <br><br>My instances: {{ this.instances }}
+  <br><br>
+
+  <ul>
+      <li v-for="(instance, key) in this.$store.state.instances[this.$route.params.id].players">{{ instance }}</li>
+  </ul>
   </div>
 </template>
 
@@ -21,16 +25,14 @@ export default {
     WidgetsDropdown,
 
   },
-    computed: {
-      instances() {
-          return this.$store.state.instances
-      }
-    },
-    watch: {
-      instances() {
-          console.log("INstances changed")
-      }
-    },
+  computed: {
+
+  },
+  watch: {
+    instances() {
+        console.log("INstances changed")
+    }
+  },
   data () {
     return {
       selected: 'Month',
