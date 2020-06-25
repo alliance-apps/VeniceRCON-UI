@@ -58,6 +58,9 @@ const Register = () => import('@/views/pages/Register')
 const Users = () => import('@/views/users/Users')
 const User = () => import('@/views/users/User')
 
+import CRenderFunctionCustom from "../views/base/CRenderFunctionCustom";
+Vue.component("CRenderFunctionCustom", CRenderFunctionCustom)
+
 Vue.use(Router)
 
 const router = new Router({
@@ -114,7 +117,7 @@ function configRoutes () {
     },
     {
       path: '/',
-      redirect: '/dashboard',
+      redirect: '/servers',
       name: 'Home',
       component: TheContainer,
       children: [
@@ -124,29 +127,9 @@ function configRoutes () {
           component: Servers
         },
         {
-          path: 'dashboard',
+          path: ':id/dashboard',
           name: 'Dashboard',
           component: Dashboard
-        },
-        {
-          path: 'theme',
-          redirect: '/theme/colors',
-          name: 'Theme',
-          component: {
-            render (c) { return c('router-view') }
-          },
-          children: [
-            {
-              path: 'colors',
-              name: 'Colors',
-              component: Colors
-            },
-            {
-              path: 'typography',
-              name: 'Typography',
-              component: Typography
-            }
-          ]
         },
         {
           path: 'charts',

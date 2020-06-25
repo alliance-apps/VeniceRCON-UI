@@ -41,7 +41,7 @@
           <CIcon name="cil-list"/>
         </CHeaderNavLink>
       </CHeaderNavItem>
-
+<!--
       <CDropdown
               color="default"
               :toggler-text="($store.state.instances[$store.state.activeServer].serverinfo.name || $store.state.instances[$store.state.activeServer].host) + ' ' + ($store.state.instances[$store.state.activeServer].serverinfo.address || ('(Not connected)'))"
@@ -49,7 +49,7 @@
       >
         <CDropdownItem v-for="(instance, key) in $store.state.instances" @click="$store.commit('updatePersistent', ['activeServer' , key])">#{{ key }} {{ instance.serverinfo.name || "Not connected" }} ({{ instance.host }})</CDropdownItem>
       </CDropdown>
-
+-->
 
       <TheHeaderDropdownAccnt/>
     </CHeaderNav>

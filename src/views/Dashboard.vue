@@ -1,6 +1,6 @@
 <template>
   <div>
-    <WidgetsDropdown/>
+    <!--<WidgetsDropdown/>-->
 
 <CButton class="m-2">asdasd</CButton>
     <CButton color="primary" class="m-2" @click="$store.commit('updatePersistent', ['backendHost', 'https://meingammelserver.com'])">Hello</CButton>
@@ -8,7 +8,7 @@
       <br><br>JWT: {{ this.$store.state.jwt }}
       <br><br>User: {{ this.$store.state.user }}
       <br><br>Permissions: {{ this.$store.state.permissions }}
-      <br><br>My instances: {{ this.$store.state.instances }}
+      <br><br>My instances: {{ this.instances }}
   </div>
 </template>
 
@@ -21,6 +21,16 @@ export default {
     WidgetsDropdown,
 
   },
+    computed: {
+      instances() {
+          return this.$store.state.instances
+      }
+    },
+    watch: {
+      instances() {
+          console.log("INstances changed")
+      }
+    },
   data () {
     return {
       selected: 'Month',

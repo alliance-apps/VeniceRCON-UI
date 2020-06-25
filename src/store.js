@@ -2,6 +2,15 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from "axios";
 Vue.use(Vuex)
+var _ = require('lodash');
+
+
+var deep_value = function(obj, path){
+  for (var i=0, path=path.split('.'), len=path.length; i<len; i++){
+    obj = obj[path[i]];
+  };
+  return obj;
+};
 
 const state = {
   loaded: false,
@@ -13,7 +22,7 @@ const state = {
   jwt: localStorage.getItem('jwt'),
   user: null,
   permissions: [],
-  instances: [],
+  instances: {},
 }
 
 const mutations = {
@@ -41,13 +50,19 @@ const mutations = {
   set (state, [variable, value]) {
     state[variable] = value
   },
-  serverInfoUpdate(state, update) {
-    let serverid = update.id
-    let tmp = state.instances[serverid - 1].serverinfo
-    console.log(tmp)
-    tmp[update.name] = update.value
-    console.log("updating " + (serverid - 1) + " " + update.name)
-  }
+  setObjectProp (state, [variable, prop, value]) {
+    Vue.set(state[variable], prop, value)
+  },
+  lodashSet (state, [variable, event]) {
+    event.changes.forEach(change => {
+      let pos = change[0].lastIndexOf('.')
+      let prepath = change[0].substring(0,pos)
+      let postpath = change[0].substring(pos+1)
+      let target = state[variable][event.id]
+      if(prepath !== "") target = deep_value(target, prepath)
+      Vue.set(target, postpath, change[1])
+    })
+  },
 }
 
 const actions = {
@@ -60,15 +75,8 @@ const actions = {
 
 
 const getters = {
-  getServers: state => {
-    axios.get('instances')
-        .then((response) => {
-          state.instances = response.data
-          return response.data
-        })
-        .catch(() => {
-          console.log("request error for instances")
-        })
+  getInstances() {
+    return state.instances
   }
 }
 

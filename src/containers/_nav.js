@@ -3,16 +3,24 @@ export default [
     _name: 'CSidebarNav',
     _children: [
 
+      {
+        _name: 'CSidebarNavItem',
+        name: 'Servers',
+        to: '/servers',
+        icon: 'cil-list'
+      },
 
       {
         _name: 'CSidebarNavTitle',
-        _children: ['Server']
+        _children: ['Server'],
+        serverSpecific: true
       },
 
       {
         _name: 'CSidebarNavItem',
         name: 'Dashboard',
-        to: '/dashboard',
+        to: '/#id/dashboard',
+        serverSpecific: true,
         icon: 'cil-speedometer',
         badge: {
           color: 'primary',
@@ -22,37 +30,43 @@ export default [
       {
         _name: 'CSidebarNavItem',
         name: 'Players',
-        to: '/theme/colors',
+        to: '/#id/players',
+        serverSpecific: true,
         icon: 'cil-drop'
       },
       {
         _name: 'CSidebarNavItem',
         name: 'Chat',
         to: '/theme/typography',
+        serverSpecific: true,
         icon: 'cil-pencil'
       },
       {
         _name: 'CSidebarNavItem',
         name: 'Events',
         to: '/theme/typography',
+        serverSpecific: true,
         icon: 'cil-pencil'
       },
       {
         _name: 'CSidebarNavItem',
         name: 'Banlist',
         to: '/theme/typography',
+        serverSpecific: true,
         icon: 'cil-pencil'
       },
       {
         _name: 'CSidebarNavItem',
         name: 'Maplist',
         to: '/theme/typography',
+        serverSpecific: true,
         icon: 'cil-pencil'
       },
       {
         _name: 'CSidebarNavItem',
         name: 'Configuration',
         to: '/theme/typography',
+        serverSpecific: true,
         icon: 'cil-pencil'
       },
 
@@ -60,6 +74,7 @@ export default [
         _name: 'CSidebarNavItem',
         name: 'Plugins',
         to: '/plugins',
+        serverSpecific: true,
         icon: 'cil-speedometer',
         badge: {
           color: 'primary',

@@ -7,8 +7,6 @@
 <script>
     import store from "../../store";
     import axios from "axios";
-    import Vue from "vue";
-    import VueSocketIO from 'vue-socket.io'
     import io from "socket.io-client"
 
 
@@ -40,15 +38,16 @@
 
                 const socket = io.connect(store.state.backendHost, { query: `auth_token=${store.state.jwt}`})
                 socket.on("error", err => console.log(err))
-                socket.on("instance#initial", data => {
-                    console.log("instance#initial", data)
-                    store.commit('set', ['instances', data])
+                socket.on("INSTANCE#ADD", event => {
+                    this.$store.commit("setObjectProp", ["instances", event.state.id, event.state])
+                    console.log("got added to instance", event.state)
                 })
-                socket.on("instance#update", data => console.log("instance#update", data))
-                socket.on("serverinfo#update", data => {
-                    store.commit('serverInfoUpdate', data)
-                    //console.log("serverinfo#update", data)
-
+                socket.on("INSTANCE#UPDATE", event => {
+                    this.$store.commit("lodashSet", ["instances", event])
+                    //console.log(`received updates for instance with id ${event.id}`, event.changes)
+                })
+                socket.on("INSTANCE#REMOVE", event => {
+                    console.log(`removed from instance ${event.id}`)
                 })
             }
         },

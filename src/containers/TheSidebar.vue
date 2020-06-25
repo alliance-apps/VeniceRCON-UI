@@ -10,7 +10,7 @@
         class="c-sidebar-brand-full" 
         name="logo" 
         size="custom-size" 
-        :height="35" 
+        :height="35"
         viewBox="0 0 556 134"
       />
       <CIcon 
@@ -22,7 +22,7 @@
       />
     </CSidebarBrand>
 
-    <CRenderFunction flat :content-to-render="$options.nav"/>
+    <CRenderFunctionCustom flat :content-to-render="$options.nav"/>
     <CSidebarMinimizer
       class="d-md-down-none"
       @click.native="$store.commit('set', ['sidebarMinimize', !minimize])"
