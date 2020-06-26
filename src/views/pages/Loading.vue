@@ -26,7 +26,7 @@
                         store.commit('set', ['loaded', true])
                         store.commit('set', ['authorized', true])
                         if (this.$route.query.redirect) this.$router.push(this.$route.query.redirect)
-                        else this.$router.push('/dashboard')
+                        else this.$router.push('/servers')
                     })
                     .catch(() => {
                         store.commit('set', ['authorized', false])

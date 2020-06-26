@@ -55,15 +55,15 @@ const gamemodeData = {
 
 
 
-Vue.prototype.$bf3_getMapImage = (map) => {return cdnBaseUrl + map.toLowerCase() + ".jpg"}
+Vue.prototype.$bf3_getMapImage = (map) => {return "https://eaassets-a.akamaihd.net/bl-cdn/cdnprefix/production-284-20170531/public/base/bf3/map_images/992x164/mp_013.jpg"}
 Vue.prototype.$bf3_getMapDisplayName = (map) => {
-    if(mapData[map].display_name)
+    if(mapData[map])
         return mapData[map].display_name
     else
         return map
 }
 Vue.prototype.$bf3_getGamemodeDisplayName = (gamemode) => {
-    if(gamemodeData[gamemode].display_name)
+    if(gamemodeData[gamemode])
         return gamemodeData[gamemode].display_name
     else
         return gamemode

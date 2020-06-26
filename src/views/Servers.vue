@@ -8,7 +8,7 @@
                     <router-link :to="key + '/dashboard'">#{{ instance.id }} | {{ instance.host }} | {{ instance.serverinfo.name }} | {{ instance.serverinfo.map }} ({{ instance.serverinfo.mode }}) | {{ instance.serverinfo.uptime }}</router-link>
                 </div>
                 <div v-else>
-                    <router-link :to="key + '/dashboard'">{{ instance.host }}</router-link>
+                    <router-link :to="key + '/dashboard'">[DISCONNECTED] {{ instance.host }}</router-link>
                 </div>
             </div>
         </div>

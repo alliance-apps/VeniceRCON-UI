@@ -58,6 +58,7 @@ const Register = () => import('@/views/pages/Register')
 const Users = () => import('@/views/users/Users')
 const User = () => import('@/views/users/User')
 
+
 import CRenderFunctionCustom from "../views/base/CRenderFunctionCustom";
 Vue.component("CRenderFunctionCustom", CRenderFunctionCustom)
 

@@ -1,9 +1,7 @@
 <template>
   <div>
-    <!--<WidgetsDropdown/>-->
-  <img :src="this.$bf3_getMapImage(this.$store.state.instances[this.$route.params.id].serverinfo.map)"><br>
-  {{ this.$bf3_getMapDisplayName(this.$store.state.instances[this.$route.params.id].serverinfo.map) }} ({{ this.$bf3_getGamemodeDisplayName(this.$store.state.instances[this.$route.params.id].serverinfo.mode) }})
-  <br><br>User: {{ this.$store.state.user }}
+  <WidgetsDropdown/>
+  User: {{ this.$store.state.user }}
   <br><br>Instance Permissions: {{ this.$store.state.permissions }}
   <br><br>Global Permissions: {{ this.$store.state.globalPermissions }}
   <br><br>Serverdata: {{ this.$store.state.instances[this.$route.params.id] }}
