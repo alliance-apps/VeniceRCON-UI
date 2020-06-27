@@ -58,6 +58,8 @@ const Register = () => import('@/views/pages/Register')
 const Users = () => import('@/views/users/Users')
 const User = () => import('@/views/users/User')
 
+const Players = () => import('@/views/Players')
+
 
 import CRenderFunctionCustom from "../views/base/CRenderFunctionCustom";
 Vue.component("CRenderFunctionCustom", CRenderFunctionCustom)
@@ -131,6 +133,11 @@ function configRoutes () {
           path: ':id/dashboard',
           name: 'Dashboard',
           component: Dashboard
+        },
+        {
+          path: ':id/players',
+          name: 'Players',
+          component: Players
         },
         {
           path: 'charts',

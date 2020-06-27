@@ -1,9 +1,9 @@
 <template>
   <CRow>
-    <CCol sm="6" lg="3" style="height: 225px;">
+    <CCol sm="6" lg="3" style="height: 170px; max-height: 200px">
       <!-- this.$bf3_getMapDisplayName(this.$store.state.instances[$route.params.id].serverinfo.map) -->
       <MapRoundWidget
-              class="h-75"
+              class="h-100"
               color="primary"
               :text="this.$bf3_getGamemodeDisplayName(this.$store.state.instances[$route.params.id].serverinfo.mode)"
               :header="this.$bf3_getMapDisplayName(this.$store.state.instances[$route.params.id].serverinfo.map)"
@@ -71,9 +71,9 @@
       </MapRoundWidget>
     </CCol>
 
-    <CCol sm="6" lg="3" style="height: 225px;">
+    <CCol sm="6" lg="3" style="height: 170px;">
       <CWidgetDropdown
-              class="h-75"
+              class="h-100"
               color="warning"
               :header="$store.state.instances[$route.params.id].serverinfo.slots + '/' + $store.state.instances[$route.params.id].serverinfo.totalSlots"
               text="Players online"
@@ -108,8 +108,8 @@
       </CWidgetDropdown>
     </CCol>
 
-    <CCol sm="6" lg="3" style="height: 225px;">
-      <CWidgetDropdown color="info" header="Serverinfo" class="h-75">
+    <CCol sm="6" lg="3" style="height: 170px;">
+      <CWidgetDropdown color="info" header="Serverinfo" class="h-100">
         <template #default>
           <CDropdown
                   color="transparent p-0"
@@ -137,10 +137,10 @@
     </CCol>
 
 
-    <CCol sm="6" md="3" style="height: 225px;">
-      <CCard  class="h-75">
+    <CCol sm="6" md="3" style="height: 170px;">
+      <CCard  class="h-100">
 
-        <CCardBody style="text-align: center;">
+        <CCardBody class=" text-truncate">
           cat24max <b>[ACB-90]</b> voteban_flash<br>
           voteban_flash <b>[M16A3]</b> Multivitamin<br>
           <b>uveuveuveuve</b> joined<br>
@@ -152,9 +152,8 @@
       </CCard>
     </CCol>
 
-
-
   </CRow>
+
 </template>
 
 <script>

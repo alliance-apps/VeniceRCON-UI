@@ -1,6 +1,27 @@
 <template>
   <div>
   <WidgetsDropdown/>
+<br>
+  <CRow>
+    <CCol sm="6" lg="6">
+
+      <PlayerList/>
+    </CCol>
+    <CCol sm="6" lg="6">
+      <PlayerList/>
+
+    </CCol>
+  </CRow>
+
+
+
+
+
+
+
+
+
+
   User: {{ this.$store.state.user }}
   <br><br>Instance Permissions: {{ this.$store.state.permissions }}
   <br><br>Global Permissions: {{ this.$store.state.globalPermissions }}
@@ -16,12 +37,13 @@
 
 <script>
 import WidgetsDropdown from './widgets/WidgetsDropdown'
+import PlayerList from "./widgets/PlayerList";
 
 export default {
   name: 'Dashboard',
   components: {
     WidgetsDropdown,
-
+    PlayerList
   },
   computed: {
 

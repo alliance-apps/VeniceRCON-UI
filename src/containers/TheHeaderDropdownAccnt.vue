@@ -9,7 +9,7 @@
       <CHeaderNavLink>
         <div class="c-avatar">
           <img
-            src="img/avatars/6.jpg"
+            src="https://i0.wp.com/eaassets-a.akamaihd.net/battlelog/defaultavatars/default-avatar-36.png"
             class="c-avatar-img "
           />
         </div>
@@ -19,7 +19,7 @@
       <strong>Account</strong>
     </CDropdownHeader>
     <CDropdownItem>
-      <CIcon name="cil-bell"/> Updates
+      <CIcon name="cil-settings"/> Updates
       <CBadge color="info" class="ml-auto">{{ itemsCount }}</CBadge>
     </CDropdownItem>
     <CDropdownItem>
@@ -66,7 +66,9 @@
 </template>
 
 <script>
+  import { freeSet } from '@coreui/icons'
 export default {
+  freeSet,
   name: 'TheHeaderDropdownAccnt',
   data () {
     return { 
