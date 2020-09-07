@@ -53,6 +53,28 @@ const gamemodeData = {
     "AirSuperiority0": {"display_name": "Air Superiority"},
 }
 
+const coopSPMaps = {
+    "Coop_002": {"display_name": "Hit and Run"},
+    "Coop_003": {"display_name": "Drop 'Em Like Liquid"},
+    "Coop_006": {"display_name": "Fire from the Sky"},
+    "Coop_007": {"display_name": "Operation Exodus"},
+    "Coop_009": {"display_name": "Exfiltration"},
+    "Coop_010": {"display_name": "The Eleventh Hour"},
+    "SP_Bank": {"display_name": "Operation Guillotine"},
+    "SP_Earthquake": {"display_name": "Operation Swordbreaker"},
+    "SP_Earthquake2": {"display_name": "Uprising"},
+    "SP_Finale": {"display_name": "The Great Destroyer"},
+    "SP_Interrogation": {"display_name": "Intro"},
+    "SP_Jet": {"display_name": "Going Hunting"},
+    "SP_New_York": {"display_name": "Semper Fidelis"},
+    "SP_Paris": {"display_name": "Comrades"},
+    "SP_Sniper": {"display_name": "Night Shift"},
+    "SP_Tank": {"display_name": "Thunder Run"},
+    "SP_Tank_b": {"display_name": "Fear No Evil"},
+    "SP_Valley": {"display_name": "Rock and a Hard Place"},
+    "SP_Villa": {"display_name": "Kaffarov"},
+}
+
 
 
 Vue.prototype.$bf3_getMapImage = (map) => {return "https://eaassets-a.akamaihd.net/bl-cdn/cdnprefix/production-284-20170531/public/base/bf3/map_images/992x164/mp_013.jpg"}
@@ -67,4 +89,33 @@ Vue.prototype.$bf3_getGamemodeDisplayName = (gamemode) => {
         return gamemodeData[gamemode].display_name
     else
         return gamemode
+}
+Vue.prototype.$bf3_getAllAvailableMapsForSelect = () => {
+    let maps = Object.getOwnPropertyNames(mapData)
+    let mapsForSelect = []
+    maps.forEach(function (map) {
+        mapsForSelect.push({value: map, label: mapData[map].display_name + ' (' + map + ')'})
+    })
+    Object.getOwnPropertyNames(coopSPMaps).forEach(function (map) {
+        mapsForSelect.push({value: map, label: coopSPMaps[map].display_name + ' (' + map + ')'})
+    })
+    return mapsForSelect
+}
+
+Vue.prototype.$bf3_getAllAvailableGamemodesForSelect = () => {
+    let gamemodes = Object.getOwnPropertyNames(gamemodeData)
+    let gamemodesForSelect = []
+    gamemodes.forEach(function (gamemode) {
+        gamemodesForSelect.push({value: gamemode, label: gamemodeData[gamemode].display_name})
+    })
+    return gamemodesForSelect
+}
+
+Vue.prototype.$bf3_isSPCoopMap = (map) => {
+    return coopSPMaps[map] != null
+}
+
+Vue.prototype.$bf3_isMapGmCombinationPossible = (map, gamemode) => {
+    if(coopSPMaps[map]) return true
+    return mapData[map].supported_gamemodes.includes(gamemode)
 }

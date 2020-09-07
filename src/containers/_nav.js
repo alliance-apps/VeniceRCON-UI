@@ -58,14 +58,14 @@ export default [
       {
         _name: 'CSidebarNavItem',
         name: 'Maplist',
-        to: '/theme/typography',
+        to: '/#id/maps',
         serverSpecific: true,
         icon: 'cil-pencil'
       },
       {
         _name: 'CSidebarNavItem',
         name: 'Configuration',
-        to: '/theme/typography',
+        to: '/#id/config',
         serverSpecific: true,
         icon: 'cil-pencil'
       },

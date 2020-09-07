@@ -63,12 +63,24 @@ const mutations = {
     event.changes.forEach(change => {
       let pos = change[0].lastIndexOf('.')
       let prepath = change[0].substring(0,pos)
+      //console.log(prepath)
       let postpath = change[0].substring(pos+1)
       let target = state[variable][event.id]
       if(prepath !== "") target = deep_value(target, prepath)
       //console.log("prepath " + prepath + " - postpath " + postpath)
+
+
       if(change[1] === null) Vue.set(target, postpath, undefined)
       else Vue.set(target, postpath, change[1])
+
+
+      if(prepath.includes("players.")) {
+        Vue.set(state[variable][event.id], "playersArray", [])
+        Vue.set(state[variable][event.id], "playersArray", JSON.parse(JSON.stringify(Object.values(state.instances[event.id].players))))
+      }
+
+
+
     })
   },
   setPermissions(state, permissions) {
@@ -93,8 +105,20 @@ const actions = {
 
 
 const getters = {
-  getInstances() {
-    return state.instances
+  hasPermission(permission) {
+    if(state.globalPermissions.includes(permission)) {
+      console.log("User does have permission")
+      return true;
+    }
+    /*
+    else if(instance != -1) {
+      if(state.permissions[instance].inccludes(permission)) {
+        alert("User does have permission")
+        return true;
+      }
+    }*/
+    console.log("User does NOT have permission")
+    return false;
   }
 }
 

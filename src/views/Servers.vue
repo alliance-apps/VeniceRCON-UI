@@ -15,6 +15,10 @@
 
         <br>
         <small>(This screen has no design yet, obviously)</small>
+
+        <button v-on:click="test">Test</button>
+
+
     </div>
 </template>
 
@@ -30,7 +34,9 @@
             return {}
         },
         methods: {
-
+            test() {
+                this.$store.getters.hasPermission['INSTANCE#ACCESS']
+            }
         }
     }
 </script>
