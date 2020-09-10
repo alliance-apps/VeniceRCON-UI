@@ -30,7 +30,7 @@
       </CHeaderNavItem>
 
       <CDropdown
-              v-if="$route.params.id"
+              v-if="$route.params.id && $store.state.instances[$route.params.id]"
               color="default"
               :toggler-text="($store.state.instances[$route.params.id].serverinfo.name || $store.state.instances[$route.params.id].host)"
               class="m-2  d-none d-md-block"
@@ -46,7 +46,7 @@
         <li class="p-1 d-none d-md-block"><img src="https://eaassets-a.akamaihd.net/bl-cdn/cdnprefix/production-284-20170531/public/base/bf3/map_images/146x79/mp_013.jpg" height="25px"></li>
         <li class="breadcrumb-item p-1"><b>Strike at Karkand</b></li>
         <li class="breadcrumb-item p-1">Conquest Assault (alt.)</li>
-        <li class="breadcrumb-item p-1 d-none d-md-block"><CIcon name="cif-us"/> 50 <CIcon name="cif-us"/> 50</li>
+        <li class="breadcrumb-item p-1 d-none d-md-block"><CIcon name="cif-us"/> 50 <CIcon name="cif-ru"/> 50</li>
         <li class="breadcrumb-item p-1 d-none d-md-block"><b>Duration</b> 2h 35min</li>
         <li class="breadcrumb-item p-1 d-none d-md-block"><b>Round</b> 1/2</li>
         <li class="breadcrumb-item p-1 d-none d-md-block"><b>Next Map</b> Damavand Peak (Rush)</li>

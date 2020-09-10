@@ -61,6 +61,7 @@ const User = () => import('@/views/users/User')
 const Players = () => import('@/views/Players')
 const Configuration = () => import('@/views/Configuration')
 const Maplist = () => import('@/views/Maplist')
+const Chat = () => import('@/views/Chat')
 
 
 import CRenderFunctionCustom from "../views/base/CRenderFunctionCustom";
@@ -150,6 +151,11 @@ function configRoutes () {
           path: ':id/config',
           name: 'Configuration',
           component: Configuration
+        },
+        {
+          path: ':id/chat',
+          name: 'Chat',
+          component: Chat
         },
         {
           path: 'charts',

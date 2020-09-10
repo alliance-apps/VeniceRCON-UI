@@ -37,7 +37,7 @@ export default [
       {
         _name: 'CSidebarNavItem',
         name: 'Chat',
-        to: '/theme/typography',
+        to: '/#id/chat',
         serverSpecific: true,
         icon: 'cil-pencil'
       },

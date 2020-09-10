@@ -8,7 +8,7 @@
                     <router-link :to="key + '/dashboard'">#{{ instance.id }} | {{ instance.host }} | {{ instance.serverinfo.name }} | {{ instance.serverinfo.map }} ({{ instance.serverinfo.mode }}) | {{ instance.serverinfo.uptime }}</router-link>
                 </div>
                 <div v-else>
-                    <router-link :to="key + '/dashboard'">[DISCONNECTED] {{ instance.host }}</router-link>
+                    [DISCONNECTED] {{ instance.host }} <a @click="connect(key)">Try connect</a>
                 </div>
             </div>
         </div>
@@ -24,6 +24,8 @@
 
 <script>
 
+    import axios from "axios";
+
     export default {
         name: 'Servers',
         components: {
@@ -36,6 +38,15 @@
         methods: {
             test() {
                 this.$store.getters.hasPermission['INSTANCE#ACCESS']
+            },
+            connect(instance_id) {
+                axios.patch('instances/' + instance_id + '/start', {})
+                    .then((response) => {
+                        console.log(response)
+                    })
+                    .catch(() => {
+                        alert("We couldnt connect because fuck you")
+                    })
             }
         }
     }

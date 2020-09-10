@@ -69,6 +69,9 @@
 
                         })
                 })
+                socket.on("INSTANCE#CHAT", event => {
+                    this.$store.commit("receiveChat", event)
+                })
             }
         },
 

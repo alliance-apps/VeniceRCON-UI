@@ -3,7 +3,8 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import CoreuiVue from '@coreui/vue'
-import { iconsSet as icons } from './assets/icons/icons.js'
+//import { iconsSet as icons } from './assets/icons/icons.js'
+import { freeSet, flagSet } from "@coreui/icons";
 import axios from 'axios';
 import store from './store'
 
@@ -35,7 +36,7 @@ new Vue({
   el: '#app',
   router,
   store,
-  icons,
+  icons: {...flagSet, ...freeSet},
   template: '<App/>',
   components: {
     App

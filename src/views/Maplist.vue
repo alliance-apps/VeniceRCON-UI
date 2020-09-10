@@ -3,10 +3,13 @@
         <CCard>
             <CCardHeader>
                 <slot name="header">
-                    <CIcon name="cil-grid"/> <b>Edit maplist</b>
+                    <CIcon name="cil-list-numbered"/> <b>Maplist</b>
                 </slot>
             </CCardHeader>
             <CCardBody>
+                <CAlert color="warning" v-if="next_changed" closeButton>
+                    You can restart or end the current round/run the next round on the Dashboard
+                </CAlert>
                 <CDataTable
 
                         bordered
@@ -14,6 +17,13 @@
                         :fields="fields"
                         hover
                 >
+                    <template #index="{item}">
+                        <td class="py-2">
+                            {{ item.index }}
+                            <CBadge color="primary" v-if="$store.state.instances[$route.params.id].mapInfo.index == item.index">Current</CBadge>
+                            <CBadge color="success" v-if="$store.state.instances[$route.params.id].mapInfo.next == item.index">Next</CBadge>
+                        </td>
+                    </template>
 
                     <template #map="{item}">
                         <td class="py-2">
@@ -27,7 +37,31 @@
                         </td>
                     </template>
 
-
+                    <template #move="{item}">
+                        <td class="py-2">
+                            <CButton
+                                    color="primary"
+                                    variant="outline"
+                                    square
+                                    size="sm"
+                                    @click="(item.index < $store.state.instances[$route.params.id].maps.length - 1) && moveMap(item.index, item.index + 1)"
+                                    :disabled="item.index >= $store.state.instances[$route.params.id].maps.length - 1"
+                            >
+                                <CIcon name="cil-arrow-bottom"/>
+                            </CButton>
+                            &nbsp;
+                            <CButton
+                                    color="primary"
+                                    variant="outline"
+                                    square
+                                    size="sm"
+                                    @click="item.index != 0 && moveMap(item.index, item.index - 1)"
+                                    :disabled="item.index == 0"
+                            >
+                                <CIcon name="cil-arrow-top"/>
+                            </CButton>
+                        </td>
+                    </template>
 
                     <template #remove="{item}">
                         <td class="py-2">
@@ -38,18 +72,32 @@
                                     size="sm"
                                     @click="removeMap(item)"
                             >
-                                Remove
+                                <CIcon name="cil-trash"/>
                             </CButton>
                         </td>
                     </template>
 
+                    <template #next="{item}">
+                        <td class="py-2">
+                            <CButton
+                                    v-if="$store.state.instances[$route.params.id].mapInfo.next != item.index"
+                                    color="primary"
+                                    square
+                                    size="sm"
+                                    @click="setNext(item)"
+                            >
+                                Set as next
+                            </CButton>
+                        </td>
+                    </template>
                 </CDataTable>
             </CCardBody>
         </CCard>
         <CCard>
             <CCardHeader>
                 <slot name="header">
-                    <CIcon name="cil-grid"/> <b>Add map</b>
+                    <CIcon name="cil-library-add"/> <b>Add map</b>
+
                     <CButton
                             class="float-right"
                             color="success"
@@ -65,12 +113,7 @@
                 <CAlert color="warning" v-if="$bf3_isSPCoopMap(addmap.map)">
                     You have selected a singleplayer/coop map. This is only possible with special mods. Only select this if you know exactly what you are doing!
                 </CAlert>
-                <CAlert color="danger" v-if="!$bf3_isMapGmCombinationPossible(addmap.map, addmap.gamemode)">
-                    The map-gamemode combination you selected is not possible.
-                </CAlert>
                 <CRow>
-
-
                     <CCol sm="4">
                         <CSelect
                                 label="Map"
@@ -82,7 +125,7 @@
                         <CSelect
                                 label="Gamemode"
                                 :value.sync="addmap.gamemode"
-                                :options="$bf3_getAllAvailableGamemodesForSelect()"
+                                :options="$bf3_getAllAvailableGamemodesForSelect(addmap.map)"
                         />
                     </CCol>
                     <CCol sm="2">
@@ -100,23 +143,14 @@
                         />
                     </CCol>
                 </CRow>
-
-
             </CCardBody>
         </CCard>
-
-        {{ addmap }}
-
-
-        {{ $bf3_isSPCoopMap(addmap.map) }}
-
-        {{ $bf3_isMapGmCombinationPossible(addmap.map, addmap.gamemode) }}
+        {{ $bf3_getAllAvailableGamemodesForSelect(addmap.map) }}
     </div>
 </template>
 
 <script>
     import axios from "axios";
-    import store from "../store";
 
     export default {
         name: 'Players',
@@ -125,7 +159,7 @@
                 type: Array,
                 default () {
 
-                    return ['index', 'map', 'mode', 'rounds', 'remove']
+                    return ['index', 'map', 'mode', 'rounds', 'move', 'remove', 'next']
                 }
             },
         },
@@ -134,6 +168,7 @@
         },
         data () {
             return {
+                next_changed: false,
                 addmap: {
                     map: "MP_001",
                     gamemode: "RushLarge0",
@@ -155,7 +190,7 @@
         },
         methods: {
             removeMap(map) {
-                axios.delete('instances/' + this.$route.params.id + '/maps/' + (map.index - 1), {})
+                axios.delete('instances/' + this.$route.params.id + '/maps/' + (map.index - 1))
                     .then((response) => {
                         console.log(response)
                     })
@@ -171,7 +206,37 @@
                     .catch(() => {
                         alert("We couldnt log you in because fuck you")
                     })
+            },
+            setNext(map) {
+                this.next_changed = true
+                axios.post('instances/' + this.$route.params.id + '/maps/' + (map.index) + '/next')
+                    .then((response) => {
+                        console.log(response)
+                    })
+                    .catch(() => {
+                        alert("We couldnt log you in because fuck you")
+                    })
+            },
+            moveMap(fromIndex, toIndex) {
+                axios.patch('instances/' + this.$route.params.id + '/maps/' + fromIndex + '/position/' + toIndex)
+                    .then((response) => {
+                        console.log(response)
+                    })
+                    .catch(() => {
+                        alert("We couldnt log you in because fuck you")
+                    })
             }
+        },
+        mounted() {
+            this.next_changed = false
+            //TODO: Verify if update request is actually required
+            axios.get('instances/' + this.$route.params.id + '/maps/current')
+                .then((response) => {
+                    this.$store.state.instances[this.$route.params.id].mapInfo = response.data
+                })
+                .catch(() => {
+                    alert("We couldnt log you in because fuck you")
+                })
         }
     }
 </script>

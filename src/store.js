@@ -29,6 +29,7 @@ const state = {
   globalPermissions: [],
   permissions: {},
   instances: {},
+  chats: {}
 }
 
 const mutations = {
@@ -82,6 +83,16 @@ const mutations = {
 
 
     })
+  },
+  receiveChat(state, event) {
+    for(let i = 0; i < event.messages.length; i++) {
+      let chat = event.messages[i]
+      if(!state.chats[chat.instance]) Vue.set(state.chats, chat.instance, [])
+      //if(!state.chats[chat.instance].chats) state.chats[chat.instance].chats = []
+      chat.created = new Date(chat.created)
+      state.chats[chat.instance].push(chat)
+      //console.log(event.messages[i])
+    }
   },
   setPermissions(state, permissions) {
     for(const permission of permissions) {
