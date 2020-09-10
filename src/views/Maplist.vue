@@ -102,7 +102,6 @@
                             class="float-right"
                             color="success"
                             label="Rounds"
-                            :disabled="!$bf3_isMapGmCombinationPossible(addmap.map, addmap.gamemode)"
                             @click="addMap()"
                     >
                         Add to rotation
@@ -145,7 +144,6 @@
                 </CRow>
             </CCardBody>
         </CCard>
-        {{ $bf3_getAllAvailableGamemodesForSelect(addmap.map) }}
     </div>
 </template>
 
