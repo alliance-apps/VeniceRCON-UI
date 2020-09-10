@@ -17,7 +17,7 @@
 
 <script>
     export default {
-        name: 'Players',
+        name: 'Chat',
         components: {
 
         },

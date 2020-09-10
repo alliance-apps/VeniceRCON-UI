@@ -51,7 +51,7 @@ export default [
       {
         _name: 'CSidebarNavItem',
         name: 'Banlist',
-        to: '/theme/typography',
+        to: '/#id/bans',
         serverSpecific: true,
         icon: 'cil-pencil'
       },
