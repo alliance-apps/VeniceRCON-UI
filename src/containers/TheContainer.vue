@@ -7,7 +7,7 @@
         <main class="c-main">
           <CContainer fluid>
             <transition name="fade">
-              <router-view></router-view>
+              <router-view v-if="!this.$route.params.id || $store.state.instances[$route.params.id]"></router-view>
             </transition>
           </CContainer>
         </main>

@@ -5,10 +5,10 @@
   <CRow>
     <CCol sm="6" lg="6">
 
-      <PlayerList/>
+
     </CCol>
     <CCol sm="6" lg="6">
-      <PlayerList/>
+
 
     </CCol>
   </CRow>

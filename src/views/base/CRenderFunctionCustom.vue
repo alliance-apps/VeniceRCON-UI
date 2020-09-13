@@ -31,6 +31,7 @@
                 newItem[1] = {}
                 newItem[1].props = this.getProps(item)
                 if(newItem[1].props["serverSpecific"] && newItem[1].props["to"]) {
+                    if(newItem[1].props["permission"] && !this.$store.getters.hasPermission[newItem[1].props["permission"]]) return []
                     if(this.$route.params.id) newItem[1].props["to"] = newItem[1].props["to"].replace("#id", this.$route.params.id)
                     else return []
                 }

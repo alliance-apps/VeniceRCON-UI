@@ -1,6 +1,6 @@
 <template>
     <div>
-        <PlayerList/>
+        <!--PlayerList/-->
     </div>
 </template>
 

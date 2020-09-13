@@ -39,35 +39,37 @@ export default [
         name: 'Chat',
         to: '/#id/chat',
         serverSpecific: true,
-        icon: 'cil-pencil'
-      },
-      {
-        _name: 'CSidebarNavItem',
-        name: 'Events',
-        to: '/theme/typography',
-        serverSpecific: true,
-        icon: 'cil-pencil'
+        icon: 'cil-chat-bubble',
+        permission: 'EVENT#CHAT'
       },
       {
         _name: 'CSidebarNavItem',
         name: 'Banlist',
         to: '/#id/bans',
         serverSpecific: true,
-        icon: 'cil-pencil'
+        icon: 'cil-ban',
+        permission: 'BAN#ACCESS'
       },
       {
         _name: 'CSidebarNavItem',
         name: 'Maplist',
         to: '/#id/maps',
         serverSpecific: true,
-        icon: 'cil-pencil'
+        icon: 'cil-list-numbered'
+      },
+      {
+        _name: 'CSidebarNavItem',
+        name: 'Modlist',
+        to: '/#id/mods',
+        serverSpecific: true,
+        icon: 'cil-bolt',
       },
       {
         _name: 'CSidebarNavItem',
         name: 'Configuration',
         to: '/#id/config',
         serverSpecific: true,
-        icon: 'cil-pencil'
+        icon: 'cil-settings'
       },
 
       {

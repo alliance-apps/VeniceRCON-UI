@@ -1,5 +1,8 @@
 <template>
     <div>
+        <CAlert color="warning" v-if="!$store.getters.hasPermission['MAP#MANAGE']">
+            You have no permission to edit this list
+        </CAlert>
         <CCard>
             <CCardHeader>
                 <slot name="header">
@@ -39,27 +42,29 @@
 
                     <template #move="{item}">
                         <td class="py-2">
-                            <CButton
-                                    color="primary"
-                                    variant="outline"
-                                    square
-                                    size="sm"
-                                    @click="(item.index < $store.state.instances[$route.params.id].maps.length - 1) && moveMap(item.index, item.index + 1)"
-                                    :disabled="item.index >= $store.state.instances[$route.params.id].maps.length - 1"
-                            >
-                                <CIcon name="cil-arrow-bottom"/>
-                            </CButton>
-                            &nbsp;
-                            <CButton
-                                    color="primary"
-                                    variant="outline"
-                                    square
-                                    size="sm"
-                                    @click="item.index != 0 && moveMap(item.index, item.index - 1)"
-                                    :disabled="item.index == 0"
-                            >
-                                <CIcon name="cil-arrow-top"/>
-                            </CButton>
+                            <div v-if="$store.getters.hasPermission['MAP#MANAGE']">
+                                <CButton
+                                        color="primary"
+                                        variant="outline"
+                                        square
+                                        size="sm"
+                                        @click="(item.index < $store.state.instances[$route.params.id].maps.length - 1) && moveMap(item.index, item.index + 1)"
+                                        :disabled="item.index >= $store.state.instances[$route.params.id].maps.length - 1"
+                                >
+                                    <CIcon name="cil-arrow-bottom"/>
+                                </CButton>
+                                &nbsp;
+                                <CButton
+                                        color="primary"
+                                        variant="outline"
+                                        square
+                                        size="sm"
+                                        @click="item.index != 0 && moveMap(item.index, item.index - 1)"
+                                        :disabled="item.index == 0"
+                                >
+                                    <CIcon name="cil-arrow-top"/>
+                                </CButton>
+                            </div>
                         </td>
                     </template>
 
@@ -70,6 +75,7 @@
                                     variant="outline"
                                     square
                                     size="sm"
+                                    v-if="$store.getters.hasPermission['MAP#MANAGE']"
                                     @click="removeMap(item)"
                             >
                                 <CIcon name="cil-trash"/>
@@ -80,7 +86,7 @@
                     <template #next="{item}">
                         <td class="py-2">
                             <CButton
-                                    v-if="$store.state.instances[$route.params.id].mapInfo.next != item.index"
+                                    v-if="$store.getters.hasPermission['MAP#MANAGE'] && $store.state.instances[$route.params.id].mapInfo.next != item.index"
                                     color="primary"
                                     square
                                     size="sm"
@@ -93,7 +99,8 @@
                 </CDataTable>
             </CCardBody>
         </CCard>
-        <CCard>
+
+        <CCard v-if="this.$store.getters.hasPermission['MAP#MANAGE']">
             <CCardHeader>
                 <slot name="header">
                     <CIcon name="cil-library-add"/> <b>Add map</b>

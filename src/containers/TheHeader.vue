@@ -35,22 +35,28 @@
               :toggler-text="($store.state.instances[$route.params.id].serverinfo.name || $store.state.instances[$route.params.id].host)"
               class="m-2  d-none d-md-block"
       >
-        <CDropdownItem v-for="(instance, key) in $store.state.instances" :to="'/' + instance.id + '/players'">#{{ key }} {{ instance.serverinfo.name || "Not connected" }} ({{ ($store.state.instances[$route.params.id].serverinfo.address || ('(Not connected)')) }})</CDropdownItem>
+        <CDropdownItem v-for="(instance, key) in $store.state.instances" :to='$router.history.current.path.replace("/" + $route.params.id + "/", "/" + instance.id +"/")'>#{{ key }} {{ instance.serverinfo.name || "Not connected" }} ({{ ($store.state.instances[$route.params.id].serverinfo.address || ('(Not connected)')) }})</CDropdownItem>
       </CDropdown>
 
 
       <TheHeaderDropdownAccnt/>
     </CHeaderNav>
-    <CSubheader class="px-3" v-if="this.$route.params.id">
+    <CSubheader class="px-3" v-if="this.$route.params.id && $store.state.instances[$route.params.id]">
       <ol class="border-0 mb-0 breadcrumb">
-        <li class="p-1 d-none d-md-block"><img src="https://eaassets-a.akamaihd.net/bl-cdn/cdnprefix/production-284-20170531/public/base/bf3/map_images/146x79/mp_013.jpg" height="25px"></li>
-        <li class="breadcrumb-item p-1"><b>Strike at Karkand</b></li>
-        <li class="breadcrumb-item p-1">Conquest Assault (alt.)</li>
-        <li class="breadcrumb-item p-1 d-none d-md-block"><CIcon name="cif-us"/> 50 <CIcon name="cif-ru"/> 50</li>
-        <li class="breadcrumb-item p-1 d-none d-md-block"><b>Duration</b> 2h 35min</li>
-        <li class="breadcrumb-item p-1 d-none d-md-block"><b>Round</b> 1/2</li>
-        <li class="breadcrumb-item p-1 d-none d-md-block"><b>Next Map</b> Damavand Peak (Rush)</li>
-        <li class="breadcrumb-item p-1 d-none d-md-block"><b>Uptime</b> 1d 23h</li>
+        <li class="p-1 d-none d-md-block"><img :src="'https://eaassets-a.akamaihd.net/bl-cdn/cdnprefix/production-284-20170531/public/base/bf3/map_images/146x79/' + $store.state.instances[$route.params.id].serverinfo.map.toLowerCase() + '.jpg'" height="25px"></li>
+        <li class="breadcrumb-item p-1"><b>{{ $bf3_getMapDisplayName($store.state.instances[$route.params.id].serverinfo.map) }}</b></li>
+        <li class="breadcrumb-item p-1">{{ $bf3_getGamemodeDisplayName($store.state.instances[$route.params.id].serverinfo.mode) }}</li>
+        <li class="breadcrumb-item p-1 d-none d-md-block" v-if="$store.state.instances[$route.params.id].serverinfo.scores[0]">
+          <CIcon name="cif-us"/>
+          {{ $store.state.instances[$route.params.id].serverinfo.scores[0] }}
+          <CIcon name="cif-ru"/>
+          <span v-if="$store.state.instances[$route.params.id].serverinfo.mode != 'RushLarge0'"> {{ $store.state.instances[$route.params.id].serverinfo.scores[1] }}</span>
+          <span v-else> &#8734;</span>
+        </li>
+        <li class="breadcrumb-item p-1 d-none d-md-block"><b>Duration</b> {{ Math.round($store.state.instances[$route.params.id].serverinfo.roundTime / 60) }} min</li>
+        <li class="breadcrumb-item p-1 d-none d-md-block"><b>Round</b> {{ $store.state.instances[$route.params.id].serverinfo.roundsPlayed + 1 }}/{{ $store.state.instances[$route.params.id].serverinfo.roundsTotal}}</li>
+        <li class="breadcrumb-item p-1 d-none d-md-block"><b>Next Map</b> {{ $bf3_getMapDisplayName($store.state.instances[$route.params.id].maps[$store.state.instances[$route.params.id].mapInfo.next].map) }} ({{ $bf3_getGamemodeDisplayName($store.state.instances[$route.params.id].maps[$store.state.instances[$route.params.id].mapInfo.next].mode) }})</li>
+        <li class="breadcrumb-item p-1 d-none d-md-block"><b>Uptime</b> {{ Math.round($store.state.instances[$route.params.id].serverinfo.uptime / 60) }} min</li>
 
       </ol>
 

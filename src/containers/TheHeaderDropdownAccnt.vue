@@ -59,7 +59,7 @@
     <CDropdownItem>
       <CIcon name="cil-shield-alt" /> Lock Account
     </CDropdownItem>
-    <CDropdownItem>
+    <CDropdownItem @click="$store.commit('setJwtToken', null); $router.push('/loading')">
       <CIcon name="cil-lock-locked" /> Logout
     </CDropdownItem>
   </CDropdown>

@@ -42,6 +42,7 @@
                                     variant="outline"
                                     square
                                     size="sm"
+                                    :disabled="!$store.getters.hasPermission['BAN#DELETE']"
                                     @click="removeBan(item.subset[0], item.subset[1])"
                             >
                                 <CIcon name="cil-trash"/>
@@ -55,7 +56,7 @@
         </CCard>
 
 
-        <CCard>
+        <CCard v-if="this.$store.getters.hasPermission['BAN#CREATE']">
             <CCardHeader>
                 <slot name="header">
                     <CIcon name="cil-library-add"/> <b>Add ban</b>
@@ -199,6 +200,7 @@
                             break;
                     }
                 }
+                //TODO: Route needs to be fixed (duration)
                 axios.post('instances/' + this.$route.params.id + '/bans', {subset: this.addban.type, id: playerid, durationType: this.addban.length, duration: duration, reason: this.addban.reason})
                     .then((response) => {
                         console.log(response)

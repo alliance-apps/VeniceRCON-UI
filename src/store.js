@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from "axios";
 Vue.use(Vuex)
-var _ = require('lodash');
+//var _ = require('lodash');
+import router from "./router";
 
 
 var deep_value = function(obj, path){
@@ -70,18 +71,17 @@ const mutations = {
       if(prepath !== "") target = deep_value(target, prepath)
       //console.log("prepath " + prepath + " - postpath " + postpath)
 
-
       if(change[1] === null) Vue.set(target, postpath, undefined)
       else Vue.set(target, postpath, change[1])
-
 
       if(prepath.includes("players.")) {
         Vue.set(state[variable][event.id], "playersArray", [])
         Vue.set(state[variable][event.id], "playersArray", JSON.parse(JSON.stringify(Object.values(state.instances[event.id].players))))
       }
 
-
-
+      if(postpath == "state" && router.currentRoute.params.id) {
+        router.push('/servers')
+      }
     })
   },
   receiveChat(state, event) {
