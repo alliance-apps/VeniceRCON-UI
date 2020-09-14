@@ -116,19 +116,19 @@ const actions = {
 
 
 const getters = {
-  hasPermission(permission) {
+  hasPermission: (state) => (permission, id) => {
     if(state.globalPermissions.includes(permission)) {
       console.log("User does have permission")
       return true;
     }
-    /*
-    else if(instance != -1) {
-      if(state.permissions[instance].inccludes(permission)) {
+
+    else if(id && state.permissions[id]) {
+      if(state.permissions[id].includes(permission)) {
         alert("User does have permission")
         return true;
       }
-    }*/
-    console.log("User does NOT have permission")
+    }
+    console.log("User does NOT have permission " + permission + " alt " + id)
     return false;
   }
 }

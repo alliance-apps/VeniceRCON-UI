@@ -23,8 +23,11 @@ axios.interceptors.response.use(function (response) {
 });*/
 
 
-import bf3helpers from './services/bf3helpers'
+import bf3helpers from './services/bf3helpers' //Don't remove
 
+
+import Notifications from 'vue-notification'
+Vue.use(Notifications)
 
 
 

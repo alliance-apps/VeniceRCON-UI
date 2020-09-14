@@ -14,6 +14,7 @@
         <TheFooter/>
       </div>
     </CWrapper>
+    <notifications group="foo" position="top center"/>
   </div>
 </template>
 

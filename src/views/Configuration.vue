@@ -1,6 +1,6 @@
 <template>
     <div>
-        <CAlert color="warning" v-if="$store.getters.hasPermission['VARIABLE#MODIFY']">
+        <CAlert color="warning" v-if="$store.getters.hasPermission('VARIABLE#MODIFY', $route.params.id)">
             Changes here are not persistent and will be reset after server restart. Please use Startup.txt for persistent changes.
         </CAlert>
         <CAlert color="warning" v-else>
@@ -31,7 +31,7 @@
                                 color="success"
                                 square
                                 size="sm"
-                                :disabled="!$store.getters.hasPermission['VARIABLE#MODIFY']"
+                                :disabled="!$store.getters.hasPermission('VARIABLE#MODIFY', $route.params.id)"
                                 @click="applyConfig()"
                         >
                             <CIcon name="cil-save"/>&nbsp;Save
@@ -229,14 +229,6 @@
                         />&emsp;
                         <label for="SunFlareEnabled">Color Correction</label>
                     </CCol>
-                    <CCol sm="2" v-if="$store.state.instances[$route.params.id].version == 'VU'">
-                        <input
-                                type="checkbox"
-                                id="SpawnProtectionEnabled"
-                                v-model="vars.SpawnProtectionEnabled"
-                        />&emsp;
-                        <label for="SunFlareEnabled">Spawn protection</label>
-                    </CCol>
                 </CRow>
 
 
@@ -373,6 +365,12 @@
                         <CInput
                                 label="Squad size"
                                 v-model="vars.SquadSize"
+                        />
+                    </CCol>
+                    <CCol sm="4" v-if="$store.state.instances[$route.params.id].version == 'VU'">
+                        <CInput
+                                label="Server banner URL"
+                                v-model="vars.serverBanner"
                         />
                     </CCol>
                 </CRow>

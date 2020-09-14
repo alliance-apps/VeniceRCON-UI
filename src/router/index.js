@@ -100,8 +100,8 @@ router.beforeEach((to, from, next) => {
             if(to.params.id && store.state.instances[to.params.id] && store.state.instances[to.params.id].state != 2)
                 router.push('/servers')
 
-            if(to.params.id && !store.state.permissions[to.params.id])
-                router.push('/servers')
+            //if(to.params.id && !store.state.permissions[to.params.id])
+            //    router.push('/servers')
 
             next()
         }

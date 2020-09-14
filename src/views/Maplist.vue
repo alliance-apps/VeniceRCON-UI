@@ -1,6 +1,6 @@
 <template>
     <div>
-        <CAlert color="warning" v-if="!$store.getters.hasPermission['MAP#MANAGE']">
+        <CAlert color="warning" v-if="!$store.getters.hasPermission('MAP#MANAGE', $route.params.id)">
             You have no permission to edit this list
         </CAlert>
         <CCard>
@@ -42,7 +42,7 @@
 
                     <template #move="{item}">
                         <td class="py-2">
-                            <div v-if="$store.getters.hasPermission['MAP#MANAGE']">
+                            <div v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)">
                                 <CButton
                                         color="primary"
                                         variant="outline"
@@ -75,7 +75,7 @@
                                     variant="outline"
                                     square
                                     size="sm"
-                                    v-if="$store.getters.hasPermission['MAP#MANAGE']"
+                                    v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)"
                                     @click="removeMap(item)"
                             >
                                 <CIcon name="cil-trash"/>
@@ -86,7 +86,7 @@
                     <template #next="{item}">
                         <td class="py-2">
                             <CButton
-                                    v-if="$store.getters.hasPermission['MAP#MANAGE'] && $store.state.instances[$route.params.id].mapInfo.next != item.index"
+                                    v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id) && $store.state.instances[$route.params.id].mapInfo.next != item.index"
                                     color="primary"
                                     square
                                     size="sm"
@@ -100,7 +100,7 @@
             </CCardBody>
         </CCard>
 
-        <CCard v-if="this.$store.getters.hasPermission['MAP#MANAGE']">
+        <CCard v-if="this.$store.getters.hasPermission('MAP#MANAGE', $route.params.id)">
             <CCardHeader>
                 <slot name="header">
                     <CIcon name="cil-library-add"/> <b>Add map</b>

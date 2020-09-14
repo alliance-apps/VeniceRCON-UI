@@ -13,7 +13,7 @@
                                         color="primary"
                                         square
                                         size="sm"
-                                        @click="reloadMods()"
+                                        @click="reloadExtensions()"
                                 >
                                     <CIcon name="cil-reload"/>&nbsp;Reload extensions
                                 </CButton>
@@ -107,9 +107,22 @@
         },
         methods: {
             reloadMods() {
-                this.mods = ["fairroundstart", "advancedrcon", "heinzketchup"]
-                this.mods_active = ["fairroundstart", "advancedrcon"]
-                this.mods_available = ["fairroundstart", "advancedrcon", "der-thorsten-mod", "heinzketchup"]
+                axios.get('instances/' + this.$route.params.id + '/mods')
+                    .then((response) => {
+                        //.join('|||').toLowerCase().split('|||')
+                        this.mods = response.data.next
+                        this.mods_active = response.data.running
+                        this.mods_available = response.data.available
+                    })
+                    .catch(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: 'Unable to load mods'
+                        });
+                    })
             },
             getModColourModList(mod) {
                 if(this.mods_active.includes(mod)) return "success"
@@ -117,15 +130,53 @@
                 else return "secondary"
             },
             removeMod(mod) {
-                this.$delete(this.mods, this.mods.indexOf(mod))
-                //TODO: Make ACTUAL request
+                //this.$delete(this.mods, this.mods.indexOf(mod))
+                axios.delete('instances/' + this.$route.params.id + '/mods/' + mod)
+                    .then(() => {
+                        this.reloadMods()
+                    })
+                    .catch(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: 'Unable to load mods'
+                        })
+                        this.reloadMods()
+                    })
             },
             addMod(mod) {
-                this.mods.push(mod)
-                //TODO: Make ACTUAL request
+                axios.post('instances/' + this.$route.params.id + '/mods/' + mod)
+                    .then(() => {
+                        this.reloadMods()
+                    })
+                    .catch(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: 'Unable to load mods'
+                        })
+                        this.reloadMods()
+                    })
             },
             reloadExtensions() {
-                //TODO: Reload extensions (also, maybe display user with warning)
+                axios.patch('instances/' + this.$route.params.id + '/mods/reload')
+                    .then(() => {
+                        this.reloadMods()
+                    })
+                    .catch(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: 'Unable to load mods'
+                        })
+                        this.reloadMods()
+                    })
             }
         },
         mounted() {

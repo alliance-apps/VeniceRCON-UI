@@ -42,7 +42,7 @@
                                     variant="outline"
                                     square
                                     size="sm"
-                                    :disabled="!$store.getters.hasPermission['BAN#DELETE']"
+                                    :disabled="!$store.getters.hasPermission('BAN#DELETE', $route.params.id)"
                                     @click="removeBan(item.subset[0], item.subset[1])"
                             >
                                 <CIcon name="cil-trash"/>
@@ -56,7 +56,7 @@
         </CCard>
 
 
-        <CCard v-if="this.$store.getters.hasPermission['BAN#CREATE']">
+        <CCard v-if="this.$store.getters.hasPermission('BAN#CREATE', $route.params.id)">
             <CCardHeader>
                 <slot name="header">
                     <CIcon name="cil-library-add"/> <b>Add ban</b>
