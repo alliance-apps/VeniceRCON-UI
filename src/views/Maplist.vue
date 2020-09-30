@@ -10,9 +10,6 @@
                 </slot>
             </CCardHeader>
             <CCardBody>
-                <CAlert color="warning" v-if="next_changed" closeButton>
-                    You can restart or end the current round/run the next round on the Dashboard
-                </CAlert>
                 <CDataTable
 
                         bordered
@@ -44,6 +41,17 @@
                         <td class="py-2">
                             <div v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)">
                                 <CButton
+                                        color="danger"
+                                        variant="outline"
+                                        square
+                                        size="sm"
+                                        v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)"
+                                        @click="removeMap(item)"
+                                >
+                                    <CIcon name="cil-trash"/>
+                                </CButton>
+                                &nbsp;
+                                <CButton
                                         color="primary"
                                         variant="outline"
                                         square
@@ -64,38 +72,33 @@
                                 >
                                     <CIcon name="cil-arrow-top"/>
                                 </CButton>
+                                &nbsp;
+                                <CButton
+                                        v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id) && $store.state.instances[$route.params.id].mapInfo.next != item.index"
+                                        color="primary"
+                                        variant="outline"
+                                        square
+                                        size="sm"
+                                        @click="setNext(item, false)"
+                                >
+                                    Play next
+                                </CButton>
+                                &nbsp;
+                                <CButton
+                                        v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id) && $store.state.instances[$route.params.id].mapInfo.next != item.index"
+                                        color="primary"
+                                        variant="outline"
+                                        square
+                                        size="sm"
+                                        @click="setNext(item, true)"
+                                >
+                                    Play now
+                                </CButton>
                             </div>
                         </td>
                     </template>
 
-                    <template #remove="{item}">
-                        <td class="py-2">
-                            <CButton
-                                    color="primary"
-                                    variant="outline"
-                                    square
-                                    size="sm"
-                                    v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)"
-                                    @click="removeMap(item)"
-                            >
-                                <CIcon name="cil-trash"/>
-                            </CButton>
-                        </td>
-                    </template>
 
-                    <template #next="{item}">
-                        <td class="py-2">
-                            <CButton
-                                    v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id) && $store.state.instances[$route.params.id].mapInfo.next != item.index"
-                                    color="primary"
-                                    square
-                                    size="sm"
-                                    @click="setNext(item)"
-                            >
-                                Set as next
-                            </CButton>
-                        </td>
-                    </template>
                 </CDataTable>
             </CCardBody>
         </CCard>
@@ -164,7 +167,7 @@
                 type: Array,
                 default () {
 
-                    return ['index', 'map', 'mode', 'rounds', 'move', 'remove', 'next']
+                    return ['index', 'map', 'mode', 'rounds', 'move']
                 }
             },
         },
@@ -173,7 +176,6 @@
         },
         data () {
             return {
-                next_changed: false,
                 addmap: {
                     map: "MP_001",
                     gamemode: "RushLarge0",
@@ -195,7 +197,7 @@
         },
         methods: {
             removeMap(map) {
-                axios.delete('instances/' + this.$route.params.id + '/maps/' + (map.index - 1))
+                axios.delete('instances/' + this.$route.params.id + '/maps/' + (map.index))
                     .then((response) => {
                         console.log(response)
                     })
@@ -205,43 +207,87 @@
             },
             addMap() {
                 axios.post('instances/' + this.$route.params.id + '/maps', {map: this.addmap.map, mode: this.addmap.gamemode, rounds: this.addmap.rounds, index: this.addmap.insertpos})
-                    .then((response) => {
-                        console.log(response)
+                    .then(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'success',
+                            title: 'Success',
+                            duration: 5000,
+                            text: 'Map has been added to list'
+                        })
                     })
-                    .catch(() => {
-                        alert("We couldnt log you in because fuck you")
+                    .catch((error) => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: error.response.data.message
+                        })
                     })
             },
-            setNext(map) {
-                this.next_changed = true
+            setNext(map, now) {
                 axios.post('instances/' + this.$route.params.id + '/maps/' + (map.index) + '/next')
                     .then((response) => {
                         console.log(response)
+                        if (now) {
+                            axios.post('instances/' + this.$route.params.id + '/maps/nextRound')
+                                .then(() => {
+                                    this.$notify({
+                                        group: 'foo',
+                                        type: 'success',
+                                        title: 'Success',
+                                        duration: 5000,
+                                        text: 'Next map/gamemode is being run now'
+                                    })
+                                })
+                                .catch((error) => {
+                                    this.$notify({
+                                        group: 'foo',
+                                        type: 'error',
+                                        title: 'Error',
+                                        duration: 5000,
+                                        text: error.response.data.message
+                                    })
+                                })
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'success',
+                                title: 'Success',
+                                duration: 5000,
+                                text: 'Next map/gamemode have been changed'
+                            })
+                        }
                     })
-                    .catch(() => {
-                        alert("We couldnt log you in because fuck you")
+                    .catch((error) => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: error.response.data.message
+                        })
                     })
             },
             moveMap(fromIndex, toIndex) {
                 axios.patch('instances/' + this.$route.params.id + '/maps/' + fromIndex + '/position/' + toIndex)
-                    .then((response) => {
-                        console.log(response)
+                    .then(() => {
+
                     })
-                    .catch(() => {
-                        alert("We couldnt log you in because fuck you")
+                    .catch((error) => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: error.response.data.message
+                        })
                     })
             }
         },
         mounted() {
-            this.next_changed = false
-            //TODO: Verify if update request is actually required
-            axios.get('instances/' + this.$route.params.id + '/maps/current')
-                .then((response) => {
-                    this.$store.state.instances[this.$route.params.id].mapInfo = response.data
-                })
-                .catch(() => {
-                    alert("We couldnt log you in because fuck you")
-                })
+
         }
     }
 </script>

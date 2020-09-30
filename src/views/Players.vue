@@ -1,11 +1,13 @@
 <template>
     <div>
-        <PlayerList/>
-
-
-        <br><br>
-        {{ Object.values(JSON.parse(JSON.stringify(this.$store.state.instances[$route.params.id].players))) }}
-
+        <CRow>
+            <CCol sm="6">
+                <PlayerList :team-id="1"/>
+            </CCol>
+            <CCol sm="6">
+                <PlayerList :team-id="2"/>
+            </CCol>
+        </CRow>
     </div>
 </template>
 

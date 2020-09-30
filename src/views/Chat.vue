@@ -9,10 +9,8 @@
                 </slot>
             </CCardHeader>
             <CCardBody>
-                <span v-for="chat in $store.state.chats[$route.params.id]">[{{ chat.created.toLocaleTimeString('en-GB') }}] <b>{{ chat.name + ' @ ' + chat.subset }}:</b> {{ chat.message }}<br></span>
 
-                <form @submit.prevent="sendMessage()" v-if="$store.getters.hasPermission['PLAYER#MESSAGE']">
-                    <br>
+                <form @submit.prevent="sendMessage()" v-if="$store.getters.hasPermission('PLAYER#MESSAGE', $route.params.id)">
                     <CRow>
                         <CCol sm="7">
                             <CInput
@@ -37,13 +35,14 @@
                                     type="submit"
                                     block
                                     color="success"
-                                    label="Rounds"
                             >
                                 Send
                             </CButton>
                         </CCol>
                     </CRow>
                 </form>
+
+                <span v-for="chat in $store.state.chats[$route.params.id]">[{{ chat.created.toLocaleDateString('en-GB') }} {{ chat.created.toLocaleTimeString('en-GB') }}] <b>{{ chat.name + ' @ ' + chat.subset }}:</b> {{ chat.message }}<br></span>
 
             </CCardBody>
         </CCard>

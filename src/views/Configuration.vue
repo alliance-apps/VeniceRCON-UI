@@ -370,7 +370,7 @@
                     <CCol sm="4" v-if="$store.state.instances[$route.params.id].version == 'VU'">
                         <CInput
                                 label="Server banner URL"
-                                v-model="vars.serverBanner"
+                                v-model="vars.ServerBanner"
                         />
                     </CCol>
                 </CRow>

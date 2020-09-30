@@ -47,7 +47,7 @@
 
                 const socket = io.connect(store.state.backendHost, { query: `auth_token=${store.state.jwt}`})
                 socket.on("error", () => {
-                    alert("We have lost websocket connection. Please reload.")
+                    location.reload()
                 })
                 socket.on("INSTANCE#ADD", event => {
                     this.$store.commit("setObjectProp", ["instances", event.state.id, event.state])

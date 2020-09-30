@@ -1,95 +1,224 @@
 <template>
     <div>
-        <CRow>
-            <CCol sm="6">
+
                 <CCard>
                     <CCardHeader>
-                        <slot name="header">
-                            <CIcon name="cil-grid"/> <b>0/88</b>
+                        <slot name="header" >
+                            <div v-if="teamId == 1">
+                                <CIcon name="cif-us"/> <b>US Army</b>
+                            </div>
+                            <div v-if="teamId == 2">
+                                <CIcon name="cif-ru"/> <b>RU Army</b>
+                            </div>
                         </slot>
+
                     </CCardHeader>
                     <CCardBody>
                         <CDataTable
-                                :hover="hover"
-                                :striped="striped"
-                                :bordered="bordered"
-                                :small="small"
-                                :fixed="fixed"
-                                :items="getPlayersInTeam(1)"
+                                fixed
+                                :items="getPlayersInTeam(teamId)"
                                 :fields="fields"
-                                :items-per-page="small ? 10 : 5"
                                 pagination
-                                sorter
-                                table-filter
                         >
-                            <template #status="{item}">
+
+
+                            <template #kdr="{item}">
                                 <td>
-                                    <CBadge :color="getBadge(item.status)">{{item.status}}</CBadge>
+                                    <div>{{ item.kills }}:{{ item.deaths }}</div>
                                 </td>
                             </template>
 
 
                             <template #ping="{item}">
                                 <td>
-                                    <CIcon name="cil-signal-cellular-4" class="text-success" v-if="item.ping < 33" />
-                                    <CIcon name="cil-signal-cellular-3" class="text-warning" v-else-if="item.ping < 80" />
-                                    <CIcon name="cil-signal-cellular-0" class="text-danger" v-else />
-                                    {{ item.ping }}ms
+                                    <CIcon name="cil-wifi-signal-4" class="text-success" v-if="item.ping < 40" />
+                                    <CIcon name="cil-wifi-signal-2" class="text-warning" v-else-if="item.ping < 150" />
+                                    <CIcon name="cil-warning" class="text-danger" v-else />
+                                    {{ item.ping }}
                                 </td>
                             </template>
 
                             <template #show_details="{item, index}">
                                 <td class="py-2">
-                                    <CButton
-                                            color="primary"
-                                            variant="outline"
-                                            square
-                                            size="sm"
-                                            @click="toggleDetails(item, index)"
+                                    <CDropdown
+                                            color="secondary"
+                                            toggler-text=""
+                                            class="sm"
                                     >
-                                        {{Boolean(playerDetailsToggled[item.playerGuid]) ? 'Hide' : 'Show'}}
-                                    </CButton>
+                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#MOVE', $route.params.id)" @click="movePlayer(item.guid, teamId == 1 ? 2 : 1)">Move to other team</CDropdownItem>
+                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#MOVE', $route.params.id)" @click="movePlayer(item.guid, teamId)">Kick from squad</CDropdownItem>
+                                        <CDropdownDivider ></CDropdownDivider>
+                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#KILL', $route.params.id)" @click="killPlayerModal.modal = true;">Kill</CDropdownItem>
+                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#KICK', $route.params.id)" @click="kickPlayerModal.modal = true;">Kick</CDropdownItem>
+                                        <CDropdownItem :disabled="!$store.getters.hasPermission('BAN#CREATE', $route.params.id)" @click="banPlayerModal.modal = true;">Ban</CDropdownItem>
+                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#MESSAGE', $route.params.id)" @click="messagePlayerModal.modal = true;">Message</CDropdownItem>
+                                    </CDropdown>
                                 </td>
+
+                                <CModal
+                                        :title="'Kill player ' + item.name"
+                                        color=""
+                                        :show.sync="killPlayerModal.modal"
+                                >
+                                    <CInput
+                                            label="Reason"
+                                            placeholder="Enter reason for kill"
+                                            :value.sync="killPlayerModal.reason"
+                                    />
+                                    <template #footer="{}">
+                                        <CButton
+                                                color="warning"
+                                                :disabled="killPlayerModal.reason.length < 1"
+                                                @click="killPlayer(item.guid); killPlayerModal.modal = false"
+                                        >
+                                            Kill {{ item.name }}
+                                        </CButton>
+                                    </template>
+                                </CModal>
+
+                                <CModal
+                                        :title="'Kick player ' + item.name"
+                                        color="warning"
+                                        :show.sync="kickPlayerModal.modal"
+                                >
+                                    <CInput
+                                            label="Reason"
+                                            placeholder="Enter reason for kick"
+                                            :value.sync="kickPlayerModal.reason"
+                                    />
+                                    <template #footer="{}">
+                                        <CButton
+                                                color="warning"
+                                                :disabled="kickPlayerModal.reason.length < 1"
+                                                @click="kickPlayer(item.guid); kickPlayerModal.modal = false"
+                                        >
+                                            Kick {{ item.name }}
+                                        </CButton>
+                                    </template>
+                                </CModal>
+
+                                <CModal
+                                        :title="'Ban player ' + item.name"
+                                        color="danger"
+                                        :show.sync="banPlayerModal.modal"
+                                >
+                                    <CInput
+                                            label="Reason"
+                                            placeholder="Enter reason for ban"
+                                            :value.sync="banPlayerModal.reason"
+                                    />
+
+
+                                    <CSelect
+                                            label="Ban type"
+                                            :value.sync="banPlayerModal.type"
+                                            :options="[{value: 'name', label: 'Name: ' + item.name}, {value: 'guid', label: 'GUID: ' + item.guid}, {value: 'ip', label: 'IPv4 address: ' + item.ip}]"
+                                    />
+
+                                    <CSelect
+                                            label="Length"
+                                            :value.sync="banPlayerModal.length"
+                                            :options="[{value: 'perm', label: 'Permanent'}, {value: 'seconds', label: 'Temporary'}]"
+                                    />
+                                    <CInput
+                                            label="Length"
+                                            type="number"
+                                            :disabled="banPlayerModal.length == 'perm'"
+                                            :value.sync="banPlayerModal.lengthval"
+                                    />
+                                    <CSelect
+                                            label="Unit"
+                                            :value.sync="banPlayerModal.unit"
+                                            :disabled="banPlayerModal.length == 'perm'"
+                                            :options="[{value: 1, label: 'Minutes'}, {value: 2, label: 'Hours'}, {value: 3, label: 'Days'}, {value: 4, label: 'Weeks'}]"
+                                    />
+
+
+
+                                    <template #footer="{}">
+                                        <CButton
+                                                color="danger"
+                                                :disabled="banPlayerModal.reason.length < 1"
+                                                @click="addBan(item.name, item.guid, item.ip); banPlayerModal.modal = false"
+                                        >
+                                            Ban {{ item.name }}
+                                        </CButton>
+                                    </template>
+                                </CModal>
+
+                                <CModal
+                                        :title="'Message player ' + item.name"
+                                        :show.sync="messagePlayerModal.modal"
+                                >
+                                    <CInput
+                                            label="Message"
+                                            placeholder="Enter message..."
+                                            :value.sync="messagePlayerModal.message"
+                                    />
+                                    <template #footer="{}">
+                                        <CButton
+                                                color="primary"
+                                                :disabled="messagePlayerModal.message.length < 1"
+                                                @click="messagePlayer(item.guid, false); messagePlayerModal.modal = false"
+                                        >
+                                            Message {{ item.name }}
+                                        </CButton>
+                                        <CButton
+                                                color="primary"
+                                                :disabled="messagePlayerModal.message.length < 1"
+                                                @click="messagePlayer(item.guid, true); messagePlayerModal.modal = false"
+                                        >
+                                            Yell at {{ item.name }}
+                                        </CButton>
+                                    </template>
+                                </CModal>
+
+
                             </template>
 
-                            <template #details="{item}">
-                                <CCollapse :show="Boolean(playerDetailsToggled[item.playerGuid])" :duration="collapseDuration">
-                                    <CCardBody>
-                                        <CMedia :aside-image-props="{ height: 102 }">
-                                            <h4>
-                                                Test
-                                            </h4>
-                                            <p class="text-muted">User since: Test</p>
-                                            <CButton size="sm" color="info" class="">
-                                                User Settings
-                                            </CButton>
-                                            <CButton size="sm" color="danger" class="ml-1">
-                                                Delete
-                                            </CButton>
-                                        </CMedia>
-                                    </CCardBody>
-                                </CCollapse>
-                            </template>
+
                         </CDataTable>
                     </CCardBody>
                 </CCard>
-            </CCol>
-        </CRow>
-
-
-
-
-
     </div>
 </template>
 
+<style>
+    .table-responsive{
+        overflow-y:visible;
+        overflow-x:visible;
+    }
+</style>
+
 <script>
+    import axios from "axios";
+
     export default {
         data() {
             return {
                 // Initialized to zero to begin
                 playerDetailsToggled: [],
-                collapseDuration: 0
+                collapseDuration: 0,
+                killPlayerModal: {
+                    modal: false,
+                    reason: "",
+                },
+                kickPlayerModal: {
+                    modal: false,
+                    reason: "",
+                },
+                banPlayerModal: {
+                    modal: false,
+                    type: "guid",
+                    reason: "",
+                    length: "perm",
+                    lengthval: 0,
+                    unit: 1,
+                },
+                messagePlayerModal: {
+                    modal: false,
+                    message: "",
+                },
             }
         },
 
@@ -100,7 +229,7 @@
                 type: Array,
                 default () {
 
-                    return ['name', 'squad', 'kills', 'deaths', 'score', 'ping', {
+                    return ['name', 'squad', 'kdr', 'score', 'ping', {
                         key: 'show_details',
                         label: '',
                         _style: 'width:1%',
@@ -119,6 +248,8 @@
             small: Boolean,
             fixed: Boolean,
             dark: Boolean,
+
+            teamId: Number
         },
         methods: {
             getBadge (status) {
@@ -131,6 +262,13 @@
                 this.$set(this.playerDetailsToggled, item.playerGuid, !this.playerDetailsToggled[item.playerGuid])
                 this.collapseDuration = 300
                 this.$nextTick(() => { this.collapseDuration = 0})
+            },
+            getSquadNames() {
+                let squads = []
+                for(let i = 0; i <= 12; i++) {
+                    squads.push(this.getSquadName(i))
+                }
+                return squads
             },
             getSquadName(squadId) {
                 switch (squadId) {
@@ -164,6 +302,7 @@
                 }
             },
             getPlayersInTeam(teamId) {
+                //let players = JSON.parse('[ { "name": "cat24max2", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 1, "kills": 28, "deaths": 17, "score": 50, "rank": "true", "ping": 38, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },  { "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" } ,{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 190, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 45, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" }] ')
                 let players = Object.values(JSON.parse(JSON.stringify(this.$store.state.instances[this.$route.params.id].players))).filter(function(player) {
                     return player.teamId == teamId
                 })
@@ -171,7 +310,133 @@
                     players[i].squad = this.getSquadName(players[i].squadId)
                 }
                 return players
-            }
-        }
+            },
+            movePlayer(playerGuid, teamId) {
+                axios.post('instances/' + this.$route.params.id + '/players/' + playerGuid + '/move', {teamId: teamId, squadId: 0, kill: true})
+                    .then(() => {
+
+                    })
+                    .catch(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: 'Unable to move player'
+                        })
+                    })
+            },
+            killPlayer(playerGuid) {
+                axios.post('instances/' + this.$route.params.id + '/players/' + playerGuid + '/kill', {reason: this.killPlayerModal.reason})
+                    .then(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'success',
+                            title: 'Player killed',
+                            duration: 5000,
+                            text: 'The player has been killed'
+                        })
+                    })
+                    .catch((error) => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: error.response.data.message
+                        })
+                    })
+                this.killPlayerModal.reason = ""
+            },
+            kickPlayer(playerGuid) {
+                axios.post('instances/' + this.$route.params.id + '/players/' + playerGuid + '/kick', {reason: this.kickPlayerModal.reason})
+                    .then(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'success',
+                            title: 'Player kicked',
+                            duration: 5000,
+                            text: 'The player has been kicked'
+                        })
+                    })
+                    .catch((error) => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: error.response.data.message
+                        })
+                    })
+                this.kickPlayerModal.reason = ""
+            },
+            addBan(name, guid, ip) {
+                let playerid
+                let duration = this.banPlayerModal.lengthval
+                if(this.banPlayerModal.type == "name") playerid = name
+                if(this.banPlayerModal.type == "guid") playerid = guid
+                if(this.banPlayerModal.type == "ip") playerid = ip
+                if(this.banPlayerModal.length == "seconds") {
+                    switch(this.banPlayerModal.unit) {
+                        case 1:
+                            duration = this.banPlayerModal.lengthval * 60
+                            break;
+                        case 2:
+                            duration = this.banPlayerModal.lengthval * 60 * 60
+                            break;
+                        case 3:
+                            duration = this.banPlayerModal.lengthval * 60 * 60 * 24
+                            break;
+                        case 4:
+                            duration = this.banPlayerModal.lengthval * 60 * 60 * 24 * 7
+                            break;
+                    }
+                }
+                axios.post('instances/' + this.$route.params.id + '/bans', {subset: this.banPlayerModal.type, id: playerid, durationType: this.banPlayerModal.length, duration: duration, reason: this.banPlayerModal.reason})
+                    .then(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'success',
+                            title: 'Player banned',
+                            duration: 5000,
+                            text: 'The player has been banned'
+                        })
+                        this.banPlayerModal.reason = ""
+                    })
+                    .catch((error) => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: error.response.data.message
+                        })
+                    })
+            },
+            messagePlayer(playerGuid, yell) {
+                axios.post('instances/' + this.$route.params.id + '/players/' + playerGuid + '/message', {message: this.messagePlayerModal.message, subset: "player", yell: yell, yellDuration: 15})
+                    .then(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'success',
+                            title: 'Player messaged',
+                            duration: 5000,
+                            text: 'The player has been messaged'
+                        })
+                        this.messagePlayerModal.reason = ""
+                    })
+                    .catch((error) => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: error.response.data.message
+                        })
+                    })
+
+            },
+        },
+
     }
 </script>

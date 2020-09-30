@@ -91,6 +91,12 @@ const mutations = {
       //if(!state.chats[chat.instance].chats) state.chats[chat.instance].chats = []
       chat.created = new Date(chat.created)
       state.chats[chat.instance].push(chat)
+      state.chats[chat.instance].sort(function(a, b) {
+        return b.id - a.id
+      })
+      //if(state.chats[chat.instance].length > 50) {
+      //  state.chats[chat.instance].shift()
+      //}
       //console.log(event.messages[i])
     }
   },
@@ -118,17 +124,17 @@ const actions = {
 const getters = {
   hasPermission: (state) => (permission, id) => {
     if(state.globalPermissions.includes(permission)) {
-      console.log("User does have permission")
+      //console.log("User does have permission")
       return true;
     }
 
     else if(id && state.permissions[id]) {
       if(state.permissions[id].includes(permission)) {
-        alert("User does have permission")
+        //alert("User does have permission")
         return true;
       }
     }
-    console.log("User does NOT have permission " + permission + " alt " + id)
+    //console.log("User does NOT have permission " + permission + " alt " + id)
     return false;
   }
 }

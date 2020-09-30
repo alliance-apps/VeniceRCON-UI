@@ -38,7 +38,7 @@
                     <template #remove="{item}">
                         <td class="py-2">
                             <CButton
-                                    color="primary"
+                                    color="danger"
                                     variant="outline"
                                     square
                                     size="sm"
@@ -167,9 +167,7 @@
         },
         methods: {
             removeBan(subset, id) {
-                alert(subset + ' - ' + id)
-                //TODO: This is not working
-                axios.delete('instances/' + this.$route.params.id + '/bans', {subset: subset, id: id})
+                axios.delete('instances/' + this.$route.params.id + '/bans/' + subset + '/' + id)
                     .then((response) => {
                         console.log(response)
                         this.reloadBans()
@@ -200,7 +198,6 @@
                             break;
                     }
                 }
-                //TODO: Route needs to be fixed (duration)
                 axios.post('instances/' + this.$route.params.id + '/bans', {subset: this.addban.type, id: playerid, durationType: this.addban.length, duration: duration, reason: this.addban.reason})
                     .then((response) => {
                         console.log(response)

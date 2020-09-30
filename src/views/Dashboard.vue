@@ -1,6 +1,86 @@
 <template>
     <div>
-        <WidgetsDropdown/>
+
+        <CRow>
+            <CCol sm="6" lg="12" style="height: 170px; max-height: 200px">
+                <!-- this.$bf3_getMapDisplayName(this.$store.state.instances[$route.params.id].serverinfo.map) -->
+                <MapRoundWidget
+                        class="h-100"
+                        color="primary"
+                        :text="this.$bf3_getGamemodeDisplayName(this.$store.state.instances[$route.params.id].serverinfo.mode)"
+                        :header="this.$bf3_getMapDisplayName(this.$store.state.instances[$route.params.id].serverinfo.map)"
+                        :style="'background-image: linear-gradient( rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45) ), url(\'' + this.$bf3_getMapImage(this.$store.state.instances[$route.params.id].serverinfo.map) +  '\'); background-repeat: no-repeat; background-size: cover;'"
+                >
+                    <template #default>
+                        <CDropdown
+                                color="transparent p-0"
+                                placement="bottom-end"
+                        >
+                            <template #toggler-content>
+                                <CIcon name="cil-location-pin"/>
+                            </template>
+                            <CDropdownItem @click="roundAction('restartRound', 0)">Restart round</CDropdownItem>
+                            <CDropdownItem @click="roundAction('nextRound', 0)">Run next round</CDropdownItem>
+                            <CDropdownItem @click="roundAction('endRound', 1)">End round (US wins)</CDropdownItem>
+                            <CDropdownItem @click="roundAction('endRound', 2)">End round (RU wins)</CDropdownItem>
+                        </CDropdown>
+                    </template>
+                    <template #footer>
+                        <div class="card-body row text-center">
+
+                            <div class="col">
+                                <div  class="text-value-lg">
+                                    {{ $store.state.instances[$route.params.id].serverinfo.slots + '/' + $store.state.instances[$route.params.id].serverinfo.totalSlots }}
+                                </div>
+                                <div  class="text-uppercase text-muted small">
+                                    Players
+                                </div>
+                            </div>
+
+
+                            <div class="col">
+                                <div  class="text-value-lg">
+                                    {{ $store.state.instances[$route.params.id].serverinfo.scores[0] || "&#8734;" }}
+                                </div>
+                                <div  class="text-uppercase text-muted small">
+                                    US
+                                </div>
+                            </div>
+
+
+                            <div class="col">
+                                <div class="text-value-lg" v-if="$store.state.instances[$route.params.id].serverinfo.mode == 'RushLarge0'">
+                                    &#8734;
+                                </div>
+                                <div class="text-value-lg" v-else>
+                                    {{ $store.state.instances[$route.params.id].serverinfo.scores[1] || "&#8734;" }}
+                                </div>
+                                <div  class="text-uppercase text-muted small">
+                                    RU
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div  class="text-value-lg">
+                                    {{ ($store.state.instances[$route.params.id].serverinfo.roundsPlayed + 1) + '/' + $store.state.instances[$route.params.id].serverinfo.roundsTotal }}
+                                </div>
+                                <div  class="text-uppercase text-muted small">
+                                    Round
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                    </template>
+                </MapRoundWidget>
+            </CCol>
+
+
+
+        </CRow>
+
         <br>
         <CRow>
             <CCol sm="6" lg="6">
@@ -24,23 +104,22 @@
         <br><br>Global Permissions: {{ this.$store.state.globalPermissions }}
         <br><br>Serverdata: {{ this.$store.state.instances[this.$route.params.id] }}
 
-        <br><br>
 
-        <ul>
-            <li v-for="(instance, key) in this.$store.state.instances[this.$route.params.id].players">{{ instance }}</li>
-        </ul>
     </div>
 </template>
 
 <script>
     import WidgetsDropdown from './widgets/WidgetsDropdown'
     import PlayerList from "./widgets/PlayerList";
+    import MapRoundWidget from "./base/MapRoundWidget";
+
+    import axios from "axios";
 
     export default {
         name: 'Dashboard',
         components: {
-            WidgetsDropdown,
-            PlayerList
+            PlayerList,
+            MapRoundWidget
         },
         computed: {
 
@@ -51,81 +130,29 @@
             }
         },
         data () {
-            return {
-                selected: 'Month',
-                tableItems: [
-                    {
-                        avatar: { url: 'img/avatars/1.jpg', status: 'success' },
-                        user: { name: 'Yiorgos Avraamu', new: true, registered: 'Jan 1, 2015' },
-                        country: { name: 'USA', flag: 'cif-us' },
-                        usage: { value: 50, period: 'Jun 11, 2015 - Jul 10, 2015' },
-                        payment: { name: 'Mastercard', icon: 'cib-cc-mastercard' },
-                        activity: '10 sec ago'
-                    },
-                    {
-                        avatar: { url: 'img/avatars/2.jpg', status: 'danger' },
-                        user: { name: 'Avram Tarasios', new: false, registered: 'Jan 1, 2015' },
-                        country: { name: 'Brazil', flag: 'cif-br' },
-                        usage: { value: 22, period: 'Jun 11, 2015 - Jul 10, 2015' },
-                        payment: { name: 'Visa', icon: 'cib-cc-visa' },
-                        activity: '5 minutes ago'
-                    },
-                    {
-                        avatar: { url: 'img/avatars/3.jpg', status: 'warning' },
-                        user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2015' },
-                        country: { name: 'India', flag: 'cif-in' },
-                        usage: { value: 74, period: 'Jun 11, 2015 - Jul 10, 2015' },
-                        payment: { name: 'Stripe', icon: 'cib-stripe' },
-                        activity: '1 hour ago'
-                    },
-                    {
-                        avatar: { url: 'img/avatars/4.jpg', status: '' },
-                        user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2015' },
-                        country: { name: 'France', flag: 'cif-fr' },
-                        usage: { value: 98, period: 'Jun 11, 2015 - Jul 10, 2015' },
-                        payment: { name: 'PayPal', icon: 'cib-paypal' },
-                        activity: 'Last month'
-                    },
-                    {
-                        avatar: { url: 'img/avatars/5.jpg', status: 'success' },
-                        user: { name: 'Agapetus Tadeáš', new: true, registered: 'Jan 1, 2015' },
-                        country: { name: 'Spain', flag: 'cif-es' },
-                        usage: { value: 22, period: 'Jun 11, 2015 - Jul 10, 2015' },
-                        payment: { name: 'Google Wallet', icon: 'cib-google-pay' },
-                        activity: 'Last week'
-                    },
-                    {
-                        avatar: { url: 'img/avatars/6.jpg', status: 'danger' },
-                        user: { name: 'Friderik Dávid', new: true, registered: 'Jan 1, 2015' },
-                        country: { name: 'Poland', flag: 'cif-pl' },
-                        usage: { value: 43, period: 'Jun 11, 2015 - Jul 10, 2015' },
-                        payment: { name: 'Amex', icon: 'cib-cc-amex' },
-                        activity: 'Last week'
-                    }
-                ],
-                tableFields: [
-                    { key: 'avatar', label: '', _classes: 'text-center' },
-                    { key: 'user' },
-                    { key: 'country', _classes: 'text-center' },
-                    { key: 'usage' },
-                    { key: 'payment', label: 'Payment method', _classes: 'text-center' },
-                    { key: 'activity' },
-                ]
-            }
+            return {}
         },
         methods: {
-            color (value) {
-                let $color
-                if (value <= 25) {
-                    $color = 'info'
-                } else if (value > 25 && value <= 50) {
-                    $color = 'success'
-                } else if (value > 50 && value <= 75) {
-                    $color = 'warning'
-                } else if (value > 75 && value <= 100) {
-                    $color = 'danger'
-                }
-                return $color
+            roundAction(action, winningTeam) {
+                axios.post('instances/' + this.$route.params.id + '/maps/' + action, {winner: winningTeam})
+                    .then(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'success',
+                            title: 'Success',
+                            duration: 5000,
+                            text: 'The action was exectued successfully'
+                        })
+                    })
+                    .catch((error) => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: error.response.data.message
+                        })
+                    })
             }
         }
     }

@@ -32,7 +32,7 @@ export default [
         name: 'Players',
         to: '/#id/players',
         serverSpecific: true,
-        icon: 'cil-drop'
+        icon: 'cil-user'
       },
       {
         _name: 'CSidebarNavItem',
@@ -62,7 +62,7 @@ export default [
         name: 'Modlist',
         to: '/#id/mods',
         serverSpecific: true,
-        icon: 'cil-bolt',
+        icon: 'cil-tag',
       },
       {
         _name: 'CSidebarNavItem',

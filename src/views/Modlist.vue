@@ -70,13 +70,6 @@
         </CRow>
 
 
-
-
-
-        {{ mods }}
-
-
-
     </div>
 </template>
 
