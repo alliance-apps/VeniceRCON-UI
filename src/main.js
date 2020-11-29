@@ -8,19 +8,57 @@ import { freeSet, flagSet } from "@coreui/icons";
 import axios from 'axios';
 import store from './store'
 
-axios.defaults.baseURL = store.state.backendHost + '/api/'
+
+//Setting Axios defaults, checking if direct or foreign connection
 axios.defaults.headers.common = {'Authorization': 'Bearer ' + localStorage.getItem('jwt')}
+axios.defaults.timeout = 10000
 
-/*
-axios.interceptors.response.use(function (response) {
-  return response;
-}, function (error) {
-  if (401 === error.response.status) {
+let url = window.location.protocol + '//' + window.location.host + '/'
+let directionConnection = localStorage.getItem('directConnection')
 
-  } else {
-    return Promise.reject(error);
-  }
-});*/
+//If value isn't set, default to direct connection
+if(directionConnection === null) {
+    store.commit('updatePersistent', ['directConnection', true])
+    directionConnection = true
+}
+
+if(directionConnection) {
+    if(url === "http://localhost:8080/") {
+        //This is useful for debugging locally. Port 8000 and port 8080 get treated as direct connection
+        url = "http://localhost:8000/"
+    }
+    axios.defaults.baseURL = url + 'api/'
+} else {
+    let customBackend = localStorage.getItem('customBackend')
+    if(customBackend === null) {
+        store.commit('updatePersistent', ['directConnection', true])
+        directionConnection = true
+    } else {
+        axios.defaults.baseURL = customBackend + '/api/'
+    }
+}
+
+console.log("axios.defaults.baseURL = " + axios.defaults.baseURL)
+
+
+
+
+
+axios.interceptors.request.use(function (config) {
+    //console.log(config)
+    if(config.baseURL.includes("localhost:8080") || config.url.includes("localhost:8080")) {
+        config.baseURL = config.baseURL.replace("localhost:8080", "localhost:8000")
+        config.url = config.url.replace("localhost:8080", "localhost:8000")
+    }
+
+    //config.baseURL = config.baseURL.replace('//', '/')
+    if(config.baseURL.includes('//')) {
+        //config.baseURL = config.baseURL.replace('//', '/')
+    }
+    return config
+}, function () {
+
+});
 
 
 import bf3helpers from './services/bf3helpers' //Don't remove
@@ -36,12 +74,12 @@ Vue.use(CoreuiVue)
 Vue.prototype.$log = console.log.bind(console)
 
 new Vue({
-  el: '#app',
-  router,
-  store,
-  icons: {...flagSet, ...freeSet},
-  template: '<App/>',
-  components: {
-    App
-  }
+    el: '#app',
+    router,
+    store,
+    icons: {...flagSet, ...freeSet},
+    template: '<App/>',
+    components: {
+        App
+    }
 })

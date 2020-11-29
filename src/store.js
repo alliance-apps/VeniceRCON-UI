@@ -47,7 +47,7 @@ const mutations = {
     localStorage.setItem(variable, value)
 
     if(variable === 'backendHost') {
-      axios.defaults.baseURL = value + '/api/'
+      axios.defaults.baseURL = value.replace(/\/$/, "") + '/api/'
     }
   },
   setJwtToken(state, token) {
@@ -136,6 +136,9 @@ const getters = {
     }
     //console.log("User does NOT have permission " + permission + " alt " + id)
     return false;
+  },
+  getBackendHost: (state) => {
+    return state.backendHost
   }
 }
 

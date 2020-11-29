@@ -74,7 +74,7 @@
                                 </CButton>
                                 &nbsp;
                                 <CButton
-                                        v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id) && $store.state.instances[$route.params.id].mapInfo.next != item.index"
+                                        v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)"
                                         color="primary"
                                         variant="outline"
                                         square
@@ -85,7 +85,7 @@
                                 </CButton>
                                 &nbsp;
                                 <CButton
-                                        v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id) && $store.state.instances[$route.params.id].mapInfo.next != item.index"
+                                        v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)"
                                         color="primary"
                                         variant="outline"
                                         square
@@ -127,6 +127,7 @@
                         <CSelect
                                 label="Map"
                                 :value.sync="addmap.map"
+                                @change="mapChanged()"
                                 :options="$bf3_getAllAvailableMapsForSelect()"
                         />
                     </CCol>
@@ -196,6 +197,11 @@
             }
         },
         methods: {
+            mapChanged() {
+                if(!this.$bf3_getAllAvailableGamemodesForSelect(this.addmap.map).includes(this.addmap.gamemode)) {
+                    this.addmap.gamemode = this.$bf3_getAllAvailableGamemodesForSelect(this.addmap.map)[0].value
+                }
+            },
             removeMap(map) {
                 axios.delete('instances/' + this.$route.params.id + '/maps/' + (map.index))
                     .then((response) => {

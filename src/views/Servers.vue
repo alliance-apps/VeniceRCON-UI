@@ -1,11 +1,64 @@
 <template>
     <div>
         <CRow>
+            <CCol sm="6">
+                <CButton
+                        @click="createServerModal = true"
+                        color="success"
+                >
+                    Add server
+                </CButton>
+            </CCol>
+        </CRow>
+        <br>
+        <CRow>
 
+            <CModal
+                    title="Add server"
+                    color="success"
+                    :show.sync="createServerModal"
+            >
+                <CAlert color="warning" v-if="newServer.error">
+                    {{ newServer.error }}
+                    <div v-if="newServer.error.includes('ENOTFOUND')">
+                        The specified hostname could not be found (DNS error)
+                    </div>
+                    <div v-if="newServer.error.includes('ECONNREFUSED')">
+                        Connection to port refused by firewall/NAT
+                    </div>
+                </CAlert>
+                <CRow>
+                    <CCol sm="8">
+                        <CInput
+                                label="Hostname or IPv4 address"
+                                :value.sync="newServer.host"
+                        />
+                    </CCol>
+                    <CCol sm="4">
+                        <CInput
+                                label="Port"
+                                type="number"
+                                :value.sync="newServer.port"
+                        />
+                    </CCol>
+                </CRow>
+                <CInput
+                        label="Password"
+                        :value.sync="newServer.password"
+                />
+                <template #footer="{}">
+                    <CButton
+                            color="primary"
+                            @click="addServer()"
+                            :disabled="!addServerInputValidator() || newServer.trying"
+                    >
+                        <CSpinner color="secondary" size="sm" v-if="newServer.trying"/>
+                        Add server
+                    </CButton>
+                </template>
+            </CModal>
 
-
-
-
+            {{ $store.state.instances }}
 
             <CCol sm="6" v-for="(instance, key) in $store.state.instances">
                 <CCard v-if="instance">
@@ -72,7 +125,16 @@
 
         },
         data () {
-            return {}
+            return {
+                createServerModal: false,
+                newServer: {
+                    host: "",
+                    port: 47200,
+                    password: "",
+                    trying: false,
+                    error: null,
+                }
+            }
         },
         methods: {
             serverBoxColour(state) {
@@ -99,6 +161,36 @@
                             text: 'Unable to connect to this server<br>' + error.response.data.message
                         });
                     })
+            },
+            addServer() {
+                this.newServer.trying = true
+                axios.post('instances', {"host": this.newServer.host, "port": this.newServer.port, "password": this.newServer.password})
+                    .then(() => {
+                        this.newServer.trying = false
+                        this.createServerModal = false
+                        this.$notify({
+                            group: 'foo',
+                            type: 'success',
+                            title: 'Connection successful',
+                            duration: 5000,
+                            text: 'You can now interact with this server...'
+                        });
+                    })
+                    .catch((error) => {
+                        this.newServer.trying = false
+                        if(error.response) this.newServer.error = error.response.data.message
+                        else this.newServer.error = "Timeout"
+                    })
+            },
+            addServerInputValidator() {
+                if(this.newServer.port < 1024 || this.newServer.port > 65535) return false
+                if (!/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(this.newServer.host)) {
+                    if (/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/.test(this.newServer.host)) {
+                        return true
+                    }
+                    return false
+                }
+                return true
             }
         }
     }

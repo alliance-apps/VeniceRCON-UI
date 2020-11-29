@@ -104,11 +104,13 @@ Vue.prototype.$bf3_getAllAvailableMapsForSelect = () => {
 
 Vue.prototype.$bf3_getAllAvailableGamemodesForSelect = (map) => {
     let supported
+    let allModes = Object.getOwnPropertyNames(gamemodeData)
     if (!mapData[map]) supported = Object.getOwnPropertyNames(gamemodeData)
     else supported = mapData[map].supported_gamemodes
     let gamemodesForSelect = []
-    supported.forEach(function (gamemode) {
-        gamemodesForSelect.push({value: gamemode, label: gamemodeData[gamemode].display_name})
+    allModes.forEach(function (gamemode) {
+        if(supported.includes(gamemode)) gamemodesForSelect.push({value: gamemode, label: gamemodeData[gamemode].display_name})
+        //else gamemodesForSelect.push({value: gamemode, label: gamemodeData[gamemode].display_name, disabled: true})
     })
     return gamemodesForSelect
 }

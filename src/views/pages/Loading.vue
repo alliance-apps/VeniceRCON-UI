@@ -1,7 +1,11 @@
 <template>
-    <CSpinner
-            color="primary"
-            style="position: fixed;
+    <div>
+        <CAlert color="danger" v-show="error !== ''">
+            <b>Error: </b> {{ error }}
+        </CAlert>
+        <CSpinner
+                color="primary"
+                style="position: fixed;
   z-index: 999;
   margin: auto;
   top: 0;
@@ -11,18 +15,25 @@
   width: 50px;
   height: 50px;"
 
-    />
+        />
+    </div>
+
 </template>
 
 <script>
     import store from "../../store";
     import axios from "axios";
-    import io from "socket.io-client"
-
+    import { io } from 'socket.io-client';
+    import { Manager } from "socket.io-client";
 
 
     export default {
         name: 'Loading',
+        data() {
+            return {
+                error: '',
+            }
+        },
         mounted() {
             if(this.$store.state.loaded) this.$router.push('/dashboard')
 
@@ -38,15 +49,33 @@
                         if (this.$route.query.redirect) this.$router.push(this.$route.query.redirect)
                         else this.$router.push('/servers')
                     })
-                    .catch(() => {
-                        store.commit('set', ['authorized', false])
-                        store.commit('setJwtToken', null)
-                        this.$router.push('/login')
+                    .catch((error) => {
+                        if(error.response) {
+                            store.commit('set', ['authorized', false])
+                            store.commit('setJwtToken', null)
+                            this.$router.push('/login')
+                        } else {
+                            this.error = "We are having connection problems. Contact your admin or try again later..."
+                        }
+
                     })
 
+                let url = 'http://localhost:8000'
 
-                const socket = io.connect(store.state.backendHost, { query: `auth_token=${store.state.jwt}`})
-                socket.on("error", () => {
+
+                console.log(store.state.jwt)
+
+                const manager = new Manager(url, {
+                    autoConnect: true,
+                })
+
+                let socket = manager.socket(url, {
+                    auth: { auth_token: store.state.jwt }
+                })
+
+
+                //const socket = io.connect('http://localhost:8000', { auth: store.state.jwt})
+                socket.io.on("error", () => {
                     location.reload()
                 })
                 socket.on("INSTANCE#ADD", event => {
@@ -72,6 +101,9 @@
                 socket.on("INSTANCE#CHAT", event => {
                     this.$store.commit("receiveChat", event)
                 })
+
+
+
             }
         },
 
