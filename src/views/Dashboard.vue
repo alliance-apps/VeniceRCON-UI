@@ -98,13 +98,6 @@
 
 
 
-
-        User: {{ this.$store.state.user }}
-        <br><br>Instance Permissions: {{ this.$store.state.permissions }}
-        <br><br>Global Permissions: {{ this.$store.state.globalPermissions }}
-        <br><br>Serverdata: {{ this.$store.state.instances[this.$route.params.id] }}
-
-
     </div>
 </template>
 

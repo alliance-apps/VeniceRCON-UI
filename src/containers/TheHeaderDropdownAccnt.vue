@@ -18,21 +18,8 @@
     <CDropdownHeader tag="div" class="text-center" color="light">
       <strong>Account</strong>
     </CDropdownHeader>
-    <CDropdownItem>
-      <CIcon name="cil-settings"/> Updates
-      <CBadge color="info" class="ml-auto">{{ itemsCount }}</CBadge>
-    </CDropdownItem>
-    <CDropdownItem>
-      <CIcon name="cil-envelope-open" /> Messages
-      <CBadge color="success" class="ml-auto">{{ itemsCount }}</CBadge>
-    </CDropdownItem>
-    <CDropdownItem>
-      <CIcon name="cil-task" /> Tasks
-      <CBadge color="danger" class="ml-auto">{{ itemsCount }}</CBadge>
-    </CDropdownItem>
-    <CDropdownItem>
-      <CIcon name="cil-comment-square" /> Comments
-      <CBadge color="warning" class="ml-auto">{{ itemsCount }}</CBadge>
+    <CDropdownItem @click="$router.push('/profile')">
+      <CIcon name="cil-user" /> Profile
     </CDropdownItem>
     <CDropdownHeader
       tag="div"
@@ -41,26 +28,16 @@
     >
       <strong>Settings</strong>
     </CDropdownHeader>
-    <CDropdownItem>
-      <CIcon name="cil-user" /> Profile
+
+    <CDropdownItem @click="$router.push('/usermanagement')">
+      <CIcon name="cil-user" /> User management
     </CDropdownItem>
-    <CDropdownItem>
-      <CIcon name="cil-settings" /> Settings
-    </CDropdownItem>
-    <CDropdownItem>
-      <CIcon name="cil-dollar" /> Payments
-      <CBadge color="secondary" class="ml-auto">{{ itemsCount }}</CBadge>
-    </CDropdownItem>
-    <CDropdownItem>
-      <CIcon name="cil-file" /> Projects
-      <CBadge color="primary" class="ml-auto">{{ itemsCount }}</CBadge>
+    <CDropdownItem @click="$router.push('/repository')" v-show="$store.getters.hasPermission('PLUGINREPOSITORY#ACCESS', $route.params.id)">
+      <CIcon name="cil-file" /> Repositories
     </CDropdownItem>
     <CDropdownDivider/>
-    <CDropdownItem>
-      <CIcon name="cil-shield-alt" /> Lock Account
-    </CDropdownItem>
     <CDropdownItem @click="$store.commit('setJwtToken', null); $router.push('/loading')">
-      <CIcon name="cil-lock-locked" /> Logout
+      <CIcon name="cil-account-logout" /> Logout
     </CDropdownItem>
   </CDropdown>
 </template>

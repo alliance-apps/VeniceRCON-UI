@@ -64,6 +64,10 @@ const Maplist = () => import('@/views/Maplist')
 const Chat = () => import('@/views/Chat')
 const Banlist = () => import('@/views/Banlist')
 const Modlist = () => import('@/views/Modlist')
+const Repository = () => import('@/views/Repository')
+const Profile = () => import('@/views/Profile')
+const UsermanagementList = () => import('@/views/UsermanagementList')
+const Usermanagement = () => import('@/views/Usermanagement')
 
 
 import CRenderFunctionCustom from "../views/base/CRenderFunctionCustom";
@@ -137,6 +141,26 @@ function configRoutes () {
                     path: 'servers',
                     name: 'Servers',
                     component: Servers
+                },
+                {
+                    path: 'repository',
+                    name: 'Repository',
+                    component: Repository
+                },
+                {
+                    path: 'profile',
+                    name: 'Profile',
+                    component: Profile
+                },
+                {
+                    path: 'usermanagement',
+                    name: 'Usermanagement',
+                    component: UsermanagementList
+                },
+                {
+                    path: 'usermanagement/:idalt',
+                    name: 'Usermanagement',
+                    component: Usermanagement
                 },
                 {
                     path: ':id/dashboard',

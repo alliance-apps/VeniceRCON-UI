@@ -23,7 +23,8 @@ const state = {
   authorized: false,
   sidebarShow: 'responsive',
   sidebarMinimize: false,
-  backendHost: localStorage.getItem('backendHost') || 'https://rconcloud-api.allianceapps.io',
+  customBackend: localStorage.getItem('customBackend') || 'https://',
+  directConnection: localStorage.getItem('directConnection') || 1,
   activeServer: localStorage.getItem('activeServer') || 0,
   jwt: localStorage.getItem('jwt'),
   user: null,
@@ -43,12 +44,14 @@ const mutations = {
     state.sidebarShow = sidebarClosed ? true : 'responsive'
   },
   updatePersistent (state, [variable, value]) {
+    if(variable === 'customBackend') {
+      console.log("consoleBackend = " + value)
+      value = value.replace(/\/$/, "")
+      axios.defaults.baseURL = value + '/api/'
+    }
+
     Vue.set(state, variable, value)
     localStorage.setItem(variable, value)
-
-    if(variable === 'backendHost') {
-      axios.defaults.baseURL = value.replace(/\/$/, "") + '/api/'
-    }
   },
   setJwtToken(state, token) {
     state.jwt = token

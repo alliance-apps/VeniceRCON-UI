@@ -69,7 +69,7 @@
                     autoConnect: true,
                 })
 
-                let socket = manager.socket(url, {
+                let socket = manager.socket('/', {
                     auth: { auth_token: store.state.jwt }
                 })
 
