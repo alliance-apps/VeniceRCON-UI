@@ -4,10 +4,10 @@
                 <CCard>
                     <CCardHeader>
                         <slot name="header" >
-                            <div v-if="teamId == 1">
+                            <div v-show="teamId === 1">
                                 <CIcon name="cif-us"/> <b>US Army</b>
                             </div>
-                            <div v-if="teamId == 2">
+                            <div v-show="teamId === 2">
                                 <CIcon name="cif-ru"/> <b>RU Army</b>
                             </div>
                         </slot>
@@ -18,7 +18,6 @@
                                 fixed
                                 :items="getPlayersInTeam(teamId)"
                                 :fields="fields"
-                                pagination
                         >
 
 
@@ -31,9 +30,9 @@
 
                             <template #ping="{item}">
                                 <td>
-                                    <CIcon name="cil-wifi-signal-4" class="text-success" v-if="item.ping < 40" />
-                                    <CIcon name="cil-wifi-signal-2" class="text-warning" v-else-if="item.ping < 150" />
-                                    <CIcon name="cil-warning" class="text-danger" v-else />
+                                    <CIcon name="cil-wifi-signal-4" class="text-success" v-show="item.ping < 40" />
+                                    <CIcon name="cil-wifi-signal-2" class="text-warning" v-show="item.ping >= 40 && item.ping < 150" />
+                                    <CIcon name="cil-warning" class="text-danger" v-show="item.ping >= 150" />
                                     {{ item.ping }}
                                 </td>
                             </template>
@@ -48,28 +47,28 @@
                                         <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#MOVE', $route.params.id)" @click="movePlayer(item.guid, teamId == 1 ? 2 : 1)">Move to other team</CDropdownItem>
                                         <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#MOVE', $route.params.id)" @click="movePlayer(item.guid, teamId)">Kick from squad</CDropdownItem>
                                         <CDropdownDivider ></CDropdownDivider>
-                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#KILL', $route.params.id)" @click="killPlayerModal.modal = true;">Kill</CDropdownItem>
-                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#KICK', $route.params.id)" @click="kickPlayerModal.modal = true;">Kick</CDropdownItem>
-                                        <CDropdownItem :disabled="!$store.getters.hasPermission('BAN#CREATE', $route.params.id)" @click="banPlayerModal.modal = true;">Ban</CDropdownItem>
-                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#MESSAGE', $route.params.id)" @click="messagePlayerModal.modal = true;">Message</CDropdownItem>
+                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#KILL', $route.params.id)" @click="item.killPlayerModal.modal = true;">Kill</CDropdownItem>
+                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#KICK', $route.params.id)" @click="item.kickPlayerModal.modal = true;">Kick</CDropdownItem>
+                                        <CDropdownItem :disabled="!$store.getters.hasPermission('BAN#CREATE', $route.params.id)" @click="item.banPlayerModal.modal = true;">Ban</CDropdownItem>
+                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#MESSAGE', $route.params.id)" @click="item.messagePlayerModal.modal = true;">Message</CDropdownItem>
                                     </CDropdown>
                                 </td>
 
                                 <CModal
                                         :title="'Kill player ' + item.name"
                                         color=""
-                                        :show.sync="killPlayerModal.modal"
+                                        :show.sync="item.killPlayerModal.modal"
                                 >
                                     <CInput
                                             label="Reason"
                                             placeholder="Enter reason for kill"
-                                            :value.sync="killPlayerModal.reason"
+                                            :value.sync="item.killPlayerModal.reason"
                                     />
                                     <template #footer="{}">
                                         <CButton
                                                 color="warning"
-                                                :disabled="killPlayerModal.reason.length < 1"
-                                                @click="killPlayer(item.guid); killPlayerModal.modal = false"
+                                                :disabled="item.killPlayerModal.reason.length < 1"
+                                                @click="killPlayer(item.guid); item.killPlayerModal.modal = false"
                                         >
                                             Kill {{ item.name }}
                                         </CButton>
@@ -79,18 +78,18 @@
                                 <CModal
                                         :title="'Kick player ' + item.name"
                                         color="warning"
-                                        :show.sync="kickPlayerModal.modal"
+                                        :show.sync="item.kickPlayerModal.modal"
                                 >
                                     <CInput
                                             label="Reason"
                                             placeholder="Enter reason for kick"
-                                            :value.sync="kickPlayerModal.reason"
+                                            :value.sync="item.kickPlayerModal.reason"
                                     />
                                     <template #footer="{}">
                                         <CButton
                                                 color="warning"
-                                                :disabled="kickPlayerModal.reason.length < 1"
-                                                @click="kickPlayer(item.guid); kickPlayerModal.modal = false"
+                                                :disabled="item.kickPlayerModal.reason.length < 1"
+                                                @click="kickPlayer(item.guid); item.kickPlayerModal.modal = false"
                                         >
                                             Kick {{ item.name }}
                                         </CButton>
@@ -100,36 +99,36 @@
                                 <CModal
                                         :title="'Ban player ' + item.name"
                                         color="danger"
-                                        :show.sync="banPlayerModal.modal"
+                                        :show.sync="item.banPlayerModal.modal"
                                 >
                                     <CInput
                                             label="Reason"
                                             placeholder="Enter reason for ban"
-                                            :value.sync="banPlayerModal.reason"
+                                            :value.sync="item.banPlayerModal.reason"
                                     />
 
 
                                     <CSelect
                                             label="Ban type"
-                                            :value.sync="banPlayerModal.type"
+                                            :value.sync="item.banPlayerModal.type"
                                             :options="[{value: 'name', label: 'Name: ' + item.name}, {value: 'guid', label: 'GUID: ' + item.guid}, {value: 'ip', label: 'IPv4 address: ' + item.ip}]"
                                     />
 
                                     <CSelect
                                             label="Length"
-                                            :value.sync="banPlayerModal.length"
+                                            :value.sync="item.banPlayerModal.length"
                                             :options="[{value: 'perm', label: 'Permanent'}, {value: 'seconds', label: 'Temporary'}]"
                                     />
                                     <CInput
                                             label="Length"
                                             type="number"
-                                            :disabled="banPlayerModal.length == 'perm'"
-                                            :value.sync="banPlayerModal.lengthval"
+                                            :disabled="item.banPlayerModal.length == 'perm'"
+                                            :value.sync="item.banPlayerModal.lengthval"
                                     />
                                     <CSelect
                                             label="Unit"
-                                            :value.sync="banPlayerModal.unit"
-                                            :disabled="banPlayerModal.length == 'perm'"
+                                            :value.sync="item.banPlayerModal.unit"
+                                            :disabled="item.banPlayerModal.length == 'perm'"
                                             :options="[{value: 1, label: 'Minutes'}, {value: 2, label: 'Hours'}, {value: 3, label: 'Days'}, {value: 4, label: 'Weeks'}]"
                                     />
 
@@ -138,8 +137,8 @@
                                     <template #footer="{}">
                                         <CButton
                                                 color="danger"
-                                                :disabled="banPlayerModal.reason.length < 1"
-                                                @click="addBan(item.name, item.guid, item.ip); banPlayerModal.modal = false"
+                                                :disabled="item.banPlayerModal.reason.length < 1"
+                                                @click="addBan(item.name, item.guid, item.ip); item.banPlayerModal.modal = false"
                                         >
                                             Ban {{ item.name }}
                                         </CButton>
@@ -148,25 +147,25 @@
 
                                 <CModal
                                         :title="'Message player ' + item.name"
-                                        :show.sync="messagePlayerModal.modal"
+                                        :show.sync="item.messagePlayerModal.modal"
                                 >
                                     <CInput
                                             label="Message"
                                             placeholder="Enter message..."
-                                            :value.sync="messagePlayerModal.message"
+                                            :value.sync="item.messagePlayerModal.message"
                                     />
                                     <template #footer="{}">
                                         <CButton
                                                 color="primary"
-                                                :disabled="messagePlayerModal.message.length < 1"
-                                                @click="messagePlayer(item.guid, false); messagePlayerModal.modal = false"
+                                                :disabled="item.messagePlayerModal.message.length < 1"
+                                                @click="messagePlayer(item.guid, false); item.messagePlayerModal.modal = false"
                                         >
                                             Message {{ item.name }}
                                         </CButton>
                                         <CButton
                                                 color="primary"
-                                                :disabled="messagePlayerModal.message.length < 1"
-                                                @click="messagePlayer(item.guid, true); messagePlayerModal.modal = false"
+                                                :disabled="item.messagePlayerModal.message.length < 1"
+                                                @click="messagePlayer(item.guid, true); item.messagePlayerModal.modal = false"
                                         >
                                             Yell at {{ item.name }}
                                         </CButton>
@@ -308,6 +307,26 @@
                 })
                 for(let i = 0; i < players.length; i++) {
                     players[i].squad = this.getSquadName(players[i].squadId)
+                    players[i].killPlayerModal = {
+                        modal: false,
+                        reason: "",
+                    }
+                    players[i].kickPlayerModal = {
+                        modal: false,
+                        reason: "",
+                    }
+                    players[i].banPlayerModal = {
+                        modal: false,
+                        type: "guid",
+                        reason: "",
+                        length: "perm",
+                        lengthval: 0,
+                        unit: 1,
+                    }
+                    players[i].messagePlayerModal = {
+                        modal: false,
+                        message: "",
+                    }
                 }
                 return players
             },

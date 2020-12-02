@@ -420,9 +420,33 @@
 
                 axios.patch('instances/' + this.$route.params.id + '/vars', submit)
                     .then(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'success',
+                            title: 'Configuration updated',
+                            duration: 5000,
+                            text: 'Changes may require a round restart'
+                        });
                         this.getConfig()
                     })
-                    .catch(() => {
+                    .catch((error) => {
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Configuration error',
+                                duration: 5000,
+                                text: error.response.data
+                            });
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Configuration error',
+                                duration: 5000,
+                                text: 'Something went wrong...'
+                            });
+                        }
                         this.getConfig()
                     })
 
@@ -461,8 +485,24 @@
                         this.vars = vars
                         this.vars_pre = JSON.parse(JSON.stringify(vars))
                     })
-                    .catch(() => {
-                        alert("We couldnt log you in because fuck you")
+                    .catch((error) => {
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Configuration error',
+                                duration: 5000,
+                                text: error.response.data.message
+                            });
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Configuration error',
+                                duration: 5000,
+                                text: 'Something went wrong...'
+                            });
+                        }
                     })
             }
         },

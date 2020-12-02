@@ -24,8 +24,7 @@ const state = {
   sidebarShow: 'responsive',
   sidebarMinimize: false,
   customBackend: localStorage.getItem('customBackend') || 'https://',
-  directConnection: localStorage.getItem('directConnection') || 1,
-  activeServer: localStorage.getItem('activeServer') || 0,
+  directConnection: localStorage.getItem('directConnection') ? 2 : 1,
   jwt: localStorage.getItem('jwt'),
   user: null,
   globalPermissions: [],
@@ -45,7 +44,6 @@ const mutations = {
   },
   updatePersistent (state, [variable, value]) {
     if(variable === 'customBackend') {
-      console.log("consoleBackend = " + value)
       value = value.replace(/\/$/, "")
       axios.defaults.baseURL = value + '/api/'
     }

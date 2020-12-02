@@ -28,8 +28,8 @@
                             >
                                 <span class="align-middle">
                                     {{ mod }}
-                                    <CBadge color="secondary" v-if="mods.includes(mod) && !mods_active.includes(mod)"> Pending activation on restart</CBadge>
-                                    <CBadge color="danger" v-if="!mods.includes(mod) && mods_active.includes(mod)"> Pending removal on restart</CBadge>
+                                    <CBadge color="secondary" v-show="mods.includes(mod) && !mods_active.includes(mod)"> Pending activation on restart</CBadge>
+                                    <CBadge color="danger" v-show="!mods.includes(mod) && mods_active.includes(mod)"> Pending removal on restart</CBadge>
                                 </span>
 
 
@@ -39,7 +39,7 @@
                                         label="Rounds"
                                         size="sm"
                                         shape="pill"
-                                        v-if="mods.includes(mod)"
+                                        v-show="mods.includes(mod)"
                                         @click="removeMod(mod)"
                                 >
                                     <CIcon name="cil-check-alt"/>
@@ -53,7 +53,7 @@
                                         label="Rounds"
                                         size="sm"
                                         shape="pill"
-                                        v-if="!mods.includes(mod)"
+                                        v-show="!mods.includes(mod)"
                                         @click="addMod(mod)"
                                 >
                                     <CIcon name="cil-check-alt"/>

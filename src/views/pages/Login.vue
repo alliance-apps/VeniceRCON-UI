@@ -94,7 +94,7 @@
                 <CButton
                         color="primary"
                         @click="register()"
-                        :disabled="(password != confirmPassword) || (password.length < 6) || loginDisabled"
+                        :disabled="(password !== confirmPassword) || (password.length < 6) || loginDisabled"
                 >
                     Create account
                 </CButton>
@@ -142,6 +142,7 @@
         mounted() {
             //this.customBackend = this.$store.state.customBackend
             //this.directConnection = this.$store.state.directConnection
+            this.directConnection = this.$store.state.directConnection
 
             axios.get(this.url + 'api')
                 .then((response) => {
@@ -157,6 +158,7 @@
                     this.directConnectionPossible = false
                     this.error = 'Direct connection not possible'
                 })
+
         },
         methods: {
             login: function() {

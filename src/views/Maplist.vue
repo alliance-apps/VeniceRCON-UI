@@ -1,6 +1,6 @@
 <template>
     <div>
-        <CAlert color="warning" v-if="!$store.getters.hasPermission('MAP#MANAGE', $route.params.id)">
+        <CAlert color="warning" v-show="!$store.getters.hasPermission('MAP#MANAGE', $route.params.id)">
             You have no permission to edit this list
         </CAlert>
         <CCard>
@@ -20,8 +20,8 @@
                     <template #index="{item}">
                         <td class="py-2">
                             {{ item.index }}
-                            <CBadge color="primary" v-if="$store.state.instances[$route.params.id].mapInfo.index == item.index">Current</CBadge>
-                            <CBadge color="success" v-if="$store.state.instances[$route.params.id].mapInfo.next == item.index">Next</CBadge>
+                            <CBadge color="primary" v-show="$store.state.instances[$route.params.id].mapInfo.index === item.index">Current</CBadge>
+                            <CBadge color="success" v-show="$store.state.instances[$route.params.id].mapInfo.next === item.index">Next</CBadge>
                         </td>
                     </template>
 
@@ -39,13 +39,13 @@
 
                     <template #move="{item}">
                         <td class="py-2">
-                            <div v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)">
+                            <div v-show="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)">
                                 <CButton
                                         color="danger"
                                         variant="outline"
                                         square
                                         size="sm"
-                                        v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)"
+                                        v-show="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)"
                                         @click="removeMap(item)"
                                 >
                                     <CIcon name="cil-trash"/>
@@ -74,7 +74,7 @@
                                 </CButton>
                                 &nbsp;
                                 <CButton
-                                        v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)"
+                                        v-show="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)"
                                         color="primary"
                                         variant="outline"
                                         square
@@ -85,7 +85,7 @@
                                 </CButton>
                                 &nbsp;
                                 <CButton
-                                        v-if="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)"
+                                        v-show="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)"
                                         color="primary"
                                         variant="outline"
                                         square
@@ -103,7 +103,7 @@
             </CCardBody>
         </CCard>
 
-        <CCard v-if="this.$store.getters.hasPermission('MAP#MANAGE', $route.params.id)">
+        <CCard v-show="this.$store.getters.hasPermission('MAP#MANAGE', $route.params.id)">
             <CCardHeader>
                 <slot name="header">
                     <CIcon name="cil-library-add"/> <b>Add map</b>
@@ -119,7 +119,7 @@
                 </slot>
             </CCardHeader>
             <CCardBody>
-                <CAlert color="warning" v-if="$bf3_isSPCoopMap(addmap.map)">
+                <CAlert color="warning" v-show="$bf3_isSPCoopMap(addmap.map)">
                     You have selected a singleplayer/coop map. This is only possible with special mods. Only select this if you know exactly what you are doing!
                 </CAlert>
                 <CRow>

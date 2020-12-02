@@ -60,19 +60,19 @@
 
                     })
 
-                let url = 'http://localhost:8000'
+                //let url = 'http://localhost:8000'
+                let url = axios.defaults.baseURL.replace('/api/', '')
 
 
-                console.log(store.state.jwt)
+                //TODO: Fix websocket URL
+                console.log("Connecting websocket to " + url)
 
                 const manager = new Manager(url, {
                     autoConnect: true,
                 })
-
                 let socket = manager.socket('/', {
                     auth: { auth_token: store.state.jwt }
                 })
-
 
                 //const socket = io.connect('http://localhost:8000', { auth: store.state.jwt})
                 socket.io.on("error", () => {
@@ -85,8 +85,9 @@
                     //if(event.length > 2) console.log(event)
                     this.$store.commit("lodashSet", ["instances", event])
                 })
-                socket.on("INSTANCE#REMOVE", event => {
-                    this.$store.commit("setObjectProp", ["instances", event.state.id, undefined])
+                socket.on("INSTANCE#REMOVE", () => {
+                    location.reload() //This is a dirty fix, but instances are not removed that often
+                    //this.$store.commit("setObjectProp", ["instances", event.state.id, undefined])
                 })
                 socket.on("SELF#PERMISSION_UPDATE", () => {
                     axios.get('auth/whoami')

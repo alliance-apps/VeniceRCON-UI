@@ -10,7 +10,7 @@
             </CCardHeader>
             <CCardBody>
 
-                <form @submit.prevent="sendMessage()" v-if="$store.getters.hasPermission('PLAYER#MESSAGE', $route.params.id)">
+                <form @submit.prevent="sendMessage()" v-show="$store.getters.hasPermission('PLAYER#MESSAGE', $route.params.id)">
                     <CRow>
                         <CCol sm="7">
                             <CInput
@@ -86,7 +86,7 @@
                         this.sendmessage.message = ""
                     })
                     .catch(() => {
-                        alert("We couldnt log you in because fuck you")
+
                     })
             }
         }

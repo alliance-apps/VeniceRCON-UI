@@ -159,14 +159,24 @@
                         this.repo_url = ''
                         this.repo_branch = 'main'
                     })
-                    .catch(() => {
-                        this.$notify({
-                            group: 'foo',
-                            type: 'error',
-                            title: 'Error',
-                            duration: 5000,
-                            text: 'Unable to add repository'
-                        })
+                    .catch((error) => {
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Error',
+                                duration: 10000,
+                                text: 'Unable to add repository<br>' + error.response.data.message
+                            })
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Error',
+                                duration: 5000,
+                                text: 'Unable to add repository'
+                            })
+                        }
                     })
             }
         }

@@ -49,10 +49,10 @@
 
 
                             <div class="col">
-                                <div class="text-value-lg" v-if="$store.state.instances[$route.params.id].serverinfo.mode == 'RushLarge0'">
+                                <div class="text-value-lg" v-show="$store.state.instances[$route.params.id].serverinfo.mode === 'RushLarge0'">
                                     &#8734;
                                 </div>
-                                <div class="text-value-lg" v-else>
+                                <div class="text-value-lg" v-show="$store.state.instances[$route.params.id].serverinfo.mode !== 'RushLarge0'">
                                     {{ $store.state.instances[$route.params.id].serverinfo.scores[1] || "&#8734;" }}
                                 </div>
                                 <div  class="text-uppercase text-muted small">
@@ -68,43 +68,27 @@
                                     Round
                                 </div>
                             </div>
-
-
                         </div>
-
-
                     </template>
                 </MapRoundWidget>
             </CCol>
-
-
-
         </CRow>
-
         <br>
         <CRow>
-            <CCol sm="6" lg="6">
-
-
+            <CCol sm="6">
+                <PlayerList :team-id="1"/>
             </CCol>
-            <CCol sm="6" lg="6">
-
-
+            <CCol sm="6">
+                <PlayerList :team-id="2"/>
             </CCol>
         </CRow>
-
-
-
-
-
-
     </div>
 </template>
 
 <script>
-    import WidgetsDropdown from './widgets/WidgetsDropdown'
     import PlayerList from "./widgets/PlayerList";
     import MapRoundWidget from "./base/MapRoundWidget";
+    import Chat from './Chat'
 
     import axios from "axios";
 
@@ -112,7 +96,8 @@
         name: 'Dashboard',
         components: {
             PlayerList,
-            MapRoundWidget
+            MapRoundWidget,
+            Chat
         },
         computed: {
 

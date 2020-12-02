@@ -30,8 +30,8 @@
 
                     <template #remaining="{item}">
                         <td class="py-2">
-                            <span v-if="item.timeout[0] == 'perm'">Permanent</span>
-                            <span v-else>{{ Math.round(item.timeout[1] / 3600) }}h {{ Math.round(item.timeout[1] % 3600 / 60) }}m</span>
+                            <span v-show="item.timeout[0] === 'perm'">Permanent</span>
+                            <span v-show="item.timeout[0] !== 'perm'">{{ Math.round(item.timeout[1] / 3600) }}h {{ Math.round(item.timeout[1] % 3600 / 60) }}m</span>
                         </td>
                     </template>
 
@@ -56,7 +56,7 @@
         </CCard>
 
 
-        <CCard v-if="this.$store.getters.hasPermission('BAN#CREATE', $route.params.id)">
+        <CCard v-show="this.$store.getters.hasPermission('BAN#CREATE', $route.params.id)">
             <CCardHeader>
                 <slot name="header">
                     <CIcon name="cil-library-add"/> <b>Add ban</b>
@@ -85,17 +85,17 @@
                         <CInput
                                 label="Name"
                                 :value.sync="addban.name"
-                                v-if="addban.type == 'name'"
+                                v-show="addban.type === 'name'"
                         />
                         <CInput
                                 label="GUID"
                                 :value.sync="addban.guid"
-                                v-if="addban.type == 'guid'"
+                                v-show="addban.type === 'guid'"
                         />
                         <CInput
                                 label="IPv4 address"
                                 :value.sync="addban.ip"
-                                v-if="addban.type == 'ip'"
+                                v-show="addban.type === 'ip'"
                         />
                     </CCol>
                     <CCol sm="3">
@@ -115,7 +115,7 @@
                         <CInput
                                 label="Length"
                                 type="number"
-                                :disabled="addban.length == 'perm'"
+                                :disabled="addban.length === 'perm'"
                                 :value.sync="addban.lengthval"
                         />
                     </CCol>
@@ -123,7 +123,7 @@
                         <CSelect
                                 label="Unit"
                                 :value.sync="addban.unit"
-                                :disabled="addban.length == 'perm'"
+                                :disabled="addban.length === 'perm'"
                                 :options="[{value: 1, label: 'Minutes'}, {value: 2, label: 'Hours'}, {value: 3, label: 'Days'}, {value: 4, label: 'Weeks'}]"
                         />
                     </CCol>
