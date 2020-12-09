@@ -68,6 +68,7 @@ const Repository = () => import('@/views/Repository')
 const Profile = () => import('@/views/Profile')
 const UsermanagementList = () => import('@/views/UsermanagementList')
 const Usermanagement = () => import('@/views/Usermanagement')
+const Plugins = () => import('@/views/Plugins')
 
 
 import CRenderFunctionCustom from "../views/base/CRenderFunctionCustom";
@@ -197,6 +198,13 @@ function configRoutes () {
                     name: 'Modlist',
                     component: Modlist
                 },
+                {
+                    path: ':id/plugins',
+                    name: 'Plugins',
+                    component: Plugins
+                },
+
+
                 {
                     path: 'charts',
                     name: 'Charts',

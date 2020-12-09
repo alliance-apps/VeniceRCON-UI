@@ -24,9 +24,11 @@ const state = {
   sidebarShow: 'responsive',
   sidebarMinimize: false,
   customBackend: localStorage.getItem('customBackend') || 'https://',
-  directConnection: localStorage.getItem('directConnection') ? 2 : 1,
+  directConnection: localStorage.getItem('directConnection') ? parseInt(localStorage.getItem('directConnection')) : 1,
+  directConnectionUrl: null,
   jwt: localStorage.getItem('jwt'),
   user: null,
+  email: '',
   globalPermissions: [],
   permissions: {},
   instances: {},
@@ -138,8 +140,13 @@ const getters = {
     //console.log("User does NOT have permission " + permission + " alt " + id)
     return false;
   },
-  getBackendHost: (state) => {
-    return state.backendHost
+  hasInstanceUserPermissions: (state) => () => {
+    const instanceUserAccesPermission = 'INSTANCEUSER#ACCESS'
+    if(state.globalPermissions.includes(instanceUserAccesPermission)) return true
+    for(let key in state.permissions) {
+      if(state.permissions[key].includes(instanceUserAccesPermission)) return true
+    }
+    return false
   }
 }
 

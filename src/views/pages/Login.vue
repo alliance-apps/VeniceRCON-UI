@@ -2,12 +2,11 @@
     <CContainer class="d-flex content-center min-vh-100">
         <CRow>
             <CCol>
-                <CAlert color="primary" v-show="true">
+                <CAlert color="primary" v-show="false">
                     directConnectionPossible: {{ directConnectionPossible }}<br>
                     directConnection: {{ directConnection }}<br>
                     customBackend: {{ customBackend }}<br>
                     $store.state.customBackend: {{ $store.state.customBackend }}<br>
-                    backupDirectConnectUrl : {{ backupDirectConnectUrl }}<br>
                 </CAlert>
                 <CAlert color="danger" v-show="error !== ''">
                     <b>Error: </b> {{ error }}
@@ -136,7 +135,7 @@
                 registerModal: false,
                 token: '',
                 confirmPassword: '',
-                backupDirectConnectUrl: null
+                //backupDirectConnectUrl: null
             }
         },
         mounted() {
@@ -167,11 +166,9 @@
                 this.error = ''
                 if (this.directConnection === 1) {
                     store.commit('updatePersistent', ['directConnection', this.directConnection])
-                    if(this.backupDirectConnectUrl !== null) {
-                        axios.defaults.baseURL = this.backupDirectConnectUrl
-                    }
+                    axios.defaults.baseURL = store.state.directConnectionUrl
                 } else if (this.directConnection === 2) {
-                    this.backupDirectConnectUrl = axios.defaults.baseURL
+                    //this.backupDirectConnectUrl = axios.defaults.baseURL
                     store.commit('updatePersistent', ['directConnection', this.directConnection])
                     store.commit('updatePersistent', ['customBackend', this.customBackend])
                 }
@@ -198,11 +195,9 @@
                 this.error = ''
                 if (this.directConnection === 1) {
                     store.commit('updatePersistent', ['directConnection', this.directConnection])
-                    if(this.backupDirectConnectUrl !== null) {
-                        axios.defaults.baseURL = this.backupDirectConnectUrl
-                    }
+                    axios.defaults.baseURL = store.state.directConnectionUrl
                 } else if (this.directConnection === 2) {
-                    this.backupDirectConnectUrl = axios.defaults.baseURL
+                    //this.backupDirectConnectUrl = axios.defaults.baseURL
                     store.commit('updatePersistent', ['directConnection', this.directConnection])
                     store.commit('updatePersistent', ['customBackend', this.customBackend])
                 }

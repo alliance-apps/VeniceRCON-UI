@@ -44,6 +44,7 @@
                     .then((response) => {
                         store.commit('set', ['user', response.data.token])
                         store.commit('setPermissions', response.data.permissions)
+                        store.commit('set', ['email', response.data.email])
                         store.commit('set', ['loaded', true])
                         store.commit('set', ['authorized', true])
                         if (this.$route.query.redirect) this.$router.push(this.$route.query.redirect)

@@ -25,18 +25,19 @@
       tag="div"
       class="text-center"
       color="light"
+      v-show="$store.getters.hasInstanceUserPermissions() || $store.getters.hasPermission('PLUGINREPOSITORY#ACCESS', $route.params.id)"
     >
       <strong>Settings</strong>
     </CDropdownHeader>
 
-    <CDropdownItem @click="$router.push('/usermanagement')">
+    <CDropdownItem @click="$router.push('/usermanagement')" v-show="$store.getters.hasInstanceUserPermissions()">
       <CIcon name="cil-user" /> User management
     </CDropdownItem>
     <CDropdownItem @click="$router.push('/repository')" v-show="$store.getters.hasPermission('PLUGINREPOSITORY#ACCESS', $route.params.id)">
       <CIcon name="cil-file" /> Repositories
     </CDropdownItem>
     <CDropdownDivider/>
-    <CDropdownItem @click="$store.commit('setJwtToken', null); $router.push('/loading')">
+    <CDropdownItem @click="$store.commit('setJwtToken', null); $router.push('/loading')" >
       <CIcon name="cil-account-logout" /> Logout
     </CDropdownItem>
   </CDropdown>

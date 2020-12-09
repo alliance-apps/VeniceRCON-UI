@@ -64,16 +64,13 @@
 
                     <template #delete="{item}">
                         <td class="py-2">
-                            <CButton
-                                    color="danger"
-                                    variant="outline"
-                                    square
-                                    size="sm"
-                                    :disabled="!$store.getters.hasPermission('PLUGINREPOSITORY#REMOVE', $route.params.id)"
-                                    @click="deleteRepository(item.id)"
-                            >
-                                <CIcon name="cil-trash"/>
-                            </CButton>
+                            <confirm-delete
+                                    title="Are you sure you want to delete this repository?"
+                                    button-color="danger"
+                                    :confirm-function="deleteRepository"
+                                    :arg="item.id"
+                                    :has-permission="$store.getters.hasPermission('PLUGINREPOSITORY#REMOVE', null)"
+                            ></confirm-delete>
                         </td>
                     </template>
 
@@ -85,6 +82,7 @@
 
 <script>
     import axios from "axios";
+    import ConfirmDelete from "./modals/ConfirmDelete";
 
     const fields = [
         { key: 'id', label: 'ID'},
@@ -96,7 +94,7 @@
     export default {
         name: 'Repositories',
         components: {
-
+            ConfirmDelete
 
         },
         data () {

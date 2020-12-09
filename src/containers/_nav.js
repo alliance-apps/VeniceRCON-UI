@@ -63,6 +63,7 @@ export default [
         to: '/#id/mods',
         serverSpecific: true,
         icon: 'cil-tag',
+        permission: 'MOD#ACCESS'
       },
       {
         _name: 'CSidebarNavItem',
@@ -75,13 +76,14 @@ export default [
       {
         _name: 'CSidebarNavItem',
         name: 'Plugins',
-        to: '/plugins',
+        to: '/#id/plugins',
         serverSpecific: true,
         icon: 'cil-speedometer',
         badge: {
           color: 'primary',
           text: 'Coming SoonTM'
-        }
+        },
+        permission: 'PLUGIN#ACCESS'
       },
 
 
@@ -100,7 +102,7 @@ export default [
       {
         _name: 'CSidebarNavItem',
         name: 'Rent a server',
-        href: 'http://coreui.io/pro/vue/',
+        href: 'https://allianceapps.io/vuserver',
         icon: { name: 'cil-layers', class: 'text-white' },
         _class: 'bg-danger text-white',
         target: '_blank'

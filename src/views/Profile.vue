@@ -5,7 +5,7 @@
                 <CCard>
                     <CCardHeader>
                         <slot name="header" >
-                            Password
+                            Change password and E-Mail
                         </slot>
                         <CButton
                                 class="float-right"
@@ -13,26 +13,34 @@
                                 square
                                 size="sm"
                                 @click="changePassword()"
-                                :disabled="oldPassword == newPassword || newPassword != newPasswordConfirm || oldPassword.length < 6 || newPassword < 6"
+                                :disabled="oldPassword == newPassword || newPassword != newPasswordConfirm || oldPassword.length < 6"
                         >
-                            Update password
+                            Update
                         </CButton>
                     </CCardHeader>
                     <CCardBody>
                         <CInput
                                 label="Old Password"
                                 type="password"
+                                placeholder="Required for password email change"
                                 :value.sync="oldPassword"
                         />
                         <CInput
                                 label="New Password"
                                 type="password"
+                                placeholder="Leave empty for no change"
                                 :value.sync="newPassword"
                         />
                         <CInput
                                 label="New Password again"
                                 type="password"
+                                placeholder="Leave empty for no change"
                                 :value.sync="newPasswordConfirm"
+                        />
+                        <CInput
+                                label="E-Mail"
+                                type="text"
+                                :value.sync="email"
                         />
                     </CCardBody>
                 </CCard>
@@ -132,6 +140,7 @@
                 oldPassword: '',
                 newPassword: '',
                 newPasswordConfirm: '',
+                email: this.$store.state.email || '',
                 playerBindings: [],
                 bindingGuid: ''
             }
@@ -141,6 +150,47 @@
         },
         methods: {
             changePassword() {
+                let body = {currentPassword: this.oldPassword, email: this.email}
+                if(this.newPassword.length > 5) body.newPassword = this.newPassword
+                if(this.email.length === 0) body.email = null
+
+                // TODO: This is not 100% working
+
+                axios.post('auth/update-self', body)
+                    .then(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'success',
+                            title: 'Profile updated',
+                            duration: 5000,
+                            text: 'Your information has been updated'
+                        });
+                        this.oldPassword = ''
+                        this.newPassword = ''
+                        this.newPasswordConfirm = ''
+                    })
+                    .catch((error) => {
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Profile update error',
+                                duration: 5000,
+                                text: 'Something went wrong<br>' + error.response.data.message
+                            });
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Profile update error',
+                                duration: 5000,
+                                text: 'Something went wrong'
+                            });
+                        }
+
+                    })
+            },
+            changeEmail() {
                 axios.post('auth/update-password', {oldPassword: this.oldPassword, newPassword: this.newPassword})
                     .then(() => {
                         this.$notify({

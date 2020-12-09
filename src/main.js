@@ -14,16 +14,20 @@ axios.defaults.headers.common = {'Authorization': 'Bearer ' + localStorage.getIt
 axios.defaults.timeout = 10000
 
 let url = window.location.protocol + '//' + window.location.host + '/'
+//axios.defaults.baseURL = url + 'api/'
+if(url === "http://localhost:8080/") {
+    //This is useful for debugging locally. Port 8000 and port 8080 get treated as direct connection
+    console.log("Local dev environment detected")
+    url = "http://localhost:8000/"
+}
+store.commit('set', ['directConnectionUrl', url + 'api/'])
 let directionConnection = store.state.directConnection
 
+console.log(typeof directionConnection)
+console.log(directionConnection)
 
 if(directionConnection === 1) {
     console.log("Direct connection is being used")
-    if(url === "http://localhost:8080/") {
-        //This is useful for debugging locally. Port 8000 and port 8080 get treated as direct connection
-        console.log("Local dev environment detected")
-        url = "http://localhost:8000/"
-    }
     axios.defaults.baseURL = url + 'api/'
 } else if(directionConnection === 2) {
     let customBackend = localStorage.getItem('customBackend')

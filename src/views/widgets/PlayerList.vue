@@ -16,17 +16,21 @@
                     <CCardBody>
                         <CDataTable
                                 fixed
-                                :items="getPlayersInTeam(teamId)"
+                                :items="oldTeamData = getPlayersInTeam(teamId)"
                                 :fields="fields"
                         >
 
+                            <template #squad="{item}">
+                                <td>
+                                    <div>{{ getSquadName(item.squadId)}}</div>
+                                </td>
+                            </template>
 
                             <template #kdr="{item}">
                                 <td>
                                     <div>{{ item.kills }}:{{ item.deaths }}</div>
                                 </td>
                             </template>
-
 
                             <template #ping="{item}">
                                 <td>
@@ -44,139 +48,137 @@
                                             toggler-text=""
                                             class="sm"
                                     >
-                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#MOVE', $route.params.id)" @click="movePlayer(item.guid, teamId == 1 ? 2 : 1)">Move to other team</CDropdownItem>
+                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#MOVE', $route.params.id)" @click="movePlayer(item.guid, teamId === 1 ? 2 : 1)">Move to other team</CDropdownItem>
                                         <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#MOVE', $route.params.id)" @click="movePlayer(item.guid, teamId)">Kick from squad</CDropdownItem>
                                         <CDropdownDivider ></CDropdownDivider>
-                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#KILL', $route.params.id)" @click="item.killPlayerModal.modal = true;">Kill</CDropdownItem>
-                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#KICK', $route.params.id)" @click="item.kickPlayerModal.modal = true;">Kick</CDropdownItem>
-                                        <CDropdownItem :disabled="!$store.getters.hasPermission('BAN#CREATE', $route.params.id)" @click="item.banPlayerModal.modal = true;">Ban</CDropdownItem>
-                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#MESSAGE', $route.params.id)" @click="item.messagePlayerModal.modal = true;">Message</CDropdownItem>
+                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#KILL', $route.params.id)" @click="currentModalPlayer = item; killPlayerModal.modal = true;">Kill</CDropdownItem>
+                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#KICK', $route.params.id)" @click="currentModalPlayer = item; kickPlayerModal.modal = true;">Kick</CDropdownItem>
+                                        <CDropdownItem :disabled="!$store.getters.hasPermission('BAN#CREATE', $route.params.id)" @click="currentModalPlayer = item; banPlayerModal.modal = true;">Ban</CDropdownItem>
+                                        <CDropdownItem :disabled="!$store.getters.hasPermission('PLAYER#MESSAGE', $route.params.id)" @click="currentModalPlayer = item; messagePlayerModal.modal = true;">Message</CDropdownItem>
                                     </CDropdown>
                                 </td>
 
-                                <CModal
-                                        :title="'Kill player ' + item.name"
-                                        color=""
-                                        :show.sync="item.killPlayerModal.modal"
-                                >
-                                    <CInput
-                                            label="Reason"
-                                            placeholder="Enter reason for kill"
-                                            :value.sync="item.killPlayerModal.reason"
-                                    />
-                                    <template #footer="{}">
-                                        <CButton
-                                                color="warning"
-                                                :disabled="item.killPlayerModal.reason.length < 1"
-                                                @click="killPlayer(item.guid); item.killPlayerModal.modal = false"
-                                        >
-                                            Kill {{ item.name }}
-                                        </CButton>
-                                    </template>
-                                </CModal>
-
-                                <CModal
-                                        :title="'Kick player ' + item.name"
-                                        color="warning"
-                                        :show.sync="item.kickPlayerModal.modal"
-                                >
-                                    <CInput
-                                            label="Reason"
-                                            placeholder="Enter reason for kick"
-                                            :value.sync="item.kickPlayerModal.reason"
-                                    />
-                                    <template #footer="{}">
-                                        <CButton
-                                                color="warning"
-                                                :disabled="item.kickPlayerModal.reason.length < 1"
-                                                @click="kickPlayer(item.guid); item.kickPlayerModal.modal = false"
-                                        >
-                                            Kick {{ item.name }}
-                                        </CButton>
-                                    </template>
-                                </CModal>
-
-                                <CModal
-                                        :title="'Ban player ' + item.name"
-                                        color="danger"
-                                        :show.sync="item.banPlayerModal.modal"
-                                >
-                                    <CInput
-                                            label="Reason"
-                                            placeholder="Enter reason for ban"
-                                            :value.sync="item.banPlayerModal.reason"
-                                    />
-
-
-                                    <CSelect
-                                            label="Ban type"
-                                            :value.sync="item.banPlayerModal.type"
-                                            :options="[{value: 'name', label: 'Name: ' + item.name}, {value: 'guid', label: 'GUID: ' + item.guid}, {value: 'ip', label: 'IPv4 address: ' + item.ip}]"
-                                    />
-
-                                    <CSelect
-                                            label="Length"
-                                            :value.sync="item.banPlayerModal.length"
-                                            :options="[{value: 'perm', label: 'Permanent'}, {value: 'seconds', label: 'Temporary'}]"
-                                    />
-                                    <CInput
-                                            label="Length"
-                                            type="number"
-                                            :disabled="item.banPlayerModal.length == 'perm'"
-                                            :value.sync="item.banPlayerModal.lengthval"
-                                    />
-                                    <CSelect
-                                            label="Unit"
-                                            :value.sync="item.banPlayerModal.unit"
-                                            :disabled="item.banPlayerModal.length == 'perm'"
-                                            :options="[{value: 1, label: 'Minutes'}, {value: 2, label: 'Hours'}, {value: 3, label: 'Days'}, {value: 4, label: 'Weeks'}]"
-                                    />
-
-
-
-                                    <template #footer="{}">
-                                        <CButton
-                                                color="danger"
-                                                :disabled="item.banPlayerModal.reason.length < 1"
-                                                @click="addBan(item.name, item.guid, item.ip); item.banPlayerModal.modal = false"
-                                        >
-                                            Ban {{ item.name }}
-                                        </CButton>
-                                    </template>
-                                </CModal>
-
-                                <CModal
-                                        :title="'Message player ' + item.name"
-                                        :show.sync="item.messagePlayerModal.modal"
-                                >
-                                    <CInput
-                                            label="Message"
-                                            placeholder="Enter message..."
-                                            :value.sync="item.messagePlayerModal.message"
-                                    />
-                                    <template #footer="{}">
-                                        <CButton
-                                                color="primary"
-                                                :disabled="item.messagePlayerModal.message.length < 1"
-                                                @click="messagePlayer(item.guid, false); item.messagePlayerModal.modal = false"
-                                        >
-                                            Message {{ item.name }}
-                                        </CButton>
-                                        <CButton
-                                                color="primary"
-                                                :disabled="item.messagePlayerModal.message.length < 1"
-                                                @click="messagePlayer(item.guid, true); item.messagePlayerModal.modal = false"
-                                        >
-                                            Yell at {{ item.name }}
-                                        </CButton>
-                                    </template>
-                                </CModal>
-
-
                             </template>
-
-
                         </CDataTable>
+
+                        <CModal
+                                :title="'Kill player ' + currentModalPlayer.name"
+                                color=""
+                                :show.sync="killPlayerModal.modal"
+                        >
+                            <CInput
+                                    label="Reason"
+                                    placeholder="Enter reason for kill"
+                                    :value.sync="killPlayerModal.reason"
+                                    @keyup.enter="killPlayer(currentModalPlayer.guid); killPlayerModal.modal = false"
+                            />
+                            <template #footer="{}">
+                                <CButton
+                                        color="warning"
+                                        :disabled="killPlayerModal.reason.length < 1"
+                                        @click="killPlayer(currentModalPlayer.guid); killPlayerModal.modal = false"
+                                >
+                                    Kill {{ currentModalPlayer.name }}
+                                </CButton>
+                            </template>
+                        </CModal>
+
+                        <CModal
+                                :title="'Kick player ' + currentModalPlayer.name"
+                                color="warning"
+                                :show.sync="kickPlayerModal.modal"
+                        >
+                            <CInput
+                                    label="Reason"
+                                    placeholder="Enter reason for kick"
+                                    :value.sync="kickPlayerModal.reason"
+                                    @keyup.enter="kickPlayer(currentModalPlayer.guid); kickPlayerModal.modal = false"
+                            />
+                            <template #footer="{}">
+                                <CButton
+                                        color="warning"
+                                        :disabled="kickPlayerModal.reason.length < 1"
+                                        @click="kickPlayer(currentModalPlayer.guid); kickPlayerModal.modal = false"
+                                >
+                                    Kick {{ currentModalPlayer.name }}
+                                </CButton>
+                            </template>
+                        </CModal>
+
+                        <CModal
+                                :title="'Ban player ' + currentModalPlayer.name"
+                                color="danger"
+                                :show.sync="banPlayerModal.modal"
+                        >
+                            <CInput
+                                    label="Reason"
+                                    placeholder="Enter reason for ban"
+                                    :value.sync="banPlayerModal.reason"
+                            />
+
+                            <CSelect
+                                    label="Ban type"
+                                    :value.sync="banPlayerModal.type"
+                                    :options="[{value: 'name', label: 'Name: ' + currentModalPlayer.name}, {value: 'guid', label: 'GUID: ' + currentModalPlayer.guid}, {value: 'ip', label: 'IPv4 address: ' + currentModalPlayer.ip}]"
+                            />
+
+                            <CSelect
+                                    label="Length"
+                                    :value.sync="banPlayerModal.length"
+                                    :options="[{value: 'perm', label: 'Permanent'}, {value: 'seconds', label: 'Temporary'}]"
+                            />
+                            <CInput
+                                    label="Length"
+                                    type="number"
+                                    :disabled="banPlayerModal.length === 'perm'"
+                                    :value.sync="banPlayerModal.lengthval"
+                            />
+                            <CSelect
+                                    label="Unit"
+                                    :value.sync="banPlayerModal.unit"
+                                    :disabled="banPlayerModal.length === 'perm'"
+                                    :options="[{value: 1, label: 'Minutes'}, {value: 2, label: 'Hours'}, {value: 3, label: 'Days'}, {value: 4, label: 'Weeks'}]"
+                            />
+                            <template #footer="{}">
+                                <CButton
+                                        color="danger"
+                                        :disabled="banPlayerModal.reason.length < 1"
+                                        @click="addBan(currentModalPlayer.name, currentModalPlayer.guid, currentModalPlayer.ip); banPlayerModal.modal = false"
+                                >
+                                    Ban {{ currentModalPlayer.name }}
+                                </CButton>
+                            </template>
+                        </CModal>
+
+                        <CModal
+                                :title="'Message player ' + currentModalPlayer.name"
+                                :show.sync="messagePlayerModal.modal"
+                        >
+                            <CInput
+                                    label="Message"
+                                    placeholder="Enter message..."
+                                    :value.sync="messagePlayerModal.message"
+                                    @keyup.enter="messagePlayer(currentModalPlayer.guid, false); messagePlayerModal.modal = false"
+                            />
+                            <template #footer="{}">
+                                <CButton
+                                        color="primary"
+                                        :disabled="messagePlayerModal.message.length < 1"
+                                        @click="messagePlayer(currentModalPlayer.guid, false); messagePlayerModal.modal = false"
+                                >
+                                    Message {{ currentModalPlayer.name }}
+                                </CButton>
+                                <CButton
+                                        color="primary"
+                                        :disabled="messagePlayerModal.message.length < 1"
+                                        @click="messagePlayer(currentModalPlayer.guid, true); messagePlayerModal.modal = false"
+                                >
+                                    Yell at {{ currentModalPlayer.name }}
+                                </CButton>
+                            </template>
+                        </CModal>
+
+
                     </CCardBody>
                 </CCard>
     </div>
@@ -191,13 +193,18 @@
 
 <script>
     import axios from "axios";
+    import Vue from "vue";
 
     export default {
         data() {
             return {
                 // Initialized to zero to begin
                 playerDetailsToggled: [],
+                oldTeamData: [],
                 collapseDuration: 0,
+
+                currentModalPlayer: {},
+
                 killPlayerModal: {
                     modal: false,
                     reason: "",
@@ -303,32 +310,12 @@
             getPlayersInTeam(teamId) {
                 //let players = JSON.parse('[ { "name": "cat24max2", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 1, "kills": 28, "deaths": 17, "score": 50, "rank": "true", "ping": 38, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },  { "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" } ,{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 190, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 45, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" }] ')
                 let players = Object.values(JSON.parse(JSON.stringify(this.$store.state.instances[this.$route.params.id].players))).filter(function(player) {
-                    return player.teamId == teamId
+                    return player.teamId === teamId
                 })
-                for(let i = 0; i < players.length; i++) {
-                    players[i].squad = this.getSquadName(players[i].squadId)
-                    players[i].killPlayerModal = {
-                        modal: false,
-                        reason: "",
-                    }
-                    players[i].kickPlayerModal = {
-                        modal: false,
-                        reason: "",
-                    }
-                    players[i].banPlayerModal = {
-                        modal: false,
-                        type: "guid",
-                        reason: "",
-                        length: "perm",
-                        lengthval: 0,
-                        unit: 1,
-                    }
-                    players[i].messagePlayerModal = {
-                        modal: false,
-                        message: "",
-                    }
-                }
                 return players
+            },
+            showModal(type, guid) {
+                Vue.set(this.killPlayerModals[guid], 'modal', true)
             },
             movePlayer(playerGuid, teamId) {
                 axios.post('instances/' + this.$route.params.id + '/players/' + playerGuid + '/move', {teamId: teamId, squadId: 0, kill: true})

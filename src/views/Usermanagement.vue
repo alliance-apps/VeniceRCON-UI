@@ -3,12 +3,11 @@
         <CCard>
             <CCardHeader>
                 <slot name="header" >
-                    Instance #{{ this.$route.params.idalt }} - User list
+                    <b>Instance #{{ this.$route.params.idalt }} - User list</b>
                 </slot>
 
             </CCardHeader>
             <CCardBody>
-                {{ users }}
                 <CDataTable
                         :items="users"
                         :fields="userfields"
@@ -21,6 +20,7 @@
                                     color="primary"
                                     square
                                     size="sm"
+                                    :disabled="!$store.getters.hasPermission('INSTANCEUSER#UPDATE', $route.params.idalt)"
                             >
                                 Edit Permissions
                             </CButton>
@@ -28,16 +28,13 @@
                     </template>
                     <template #delete="{item}">
                         <td class="py-2">
-                            <CButton
-                                    color="danger"
-                                    variant="outline"
-                                    square
-                                    size="sm"
-                                    :disabled="!$store.getters.hasPermission('PLUGINREPOSITORY#REMOVE', $route.params.id)"
-                                    @click="removeUser(item.userId)"
-                            >
-                                <CIcon name="cil-trash"/>
-                            </CButton>
+                            <confirm-delete
+                                    title="Are you sure you want to delete this user?"
+                                    button-color="danger"
+                                    :confirm-function="removeUser"
+                                    :arg="item.userId"
+                                    :has-permission="$store.getters.hasPermission('INSTANCEUSER#REMOVE', $route.params.idalt)"
+                            ></confirm-delete>
                         </td>
                     </template>
                 </CDataTable>
@@ -46,7 +43,7 @@
         <CCard>
             <CCardHeader>
                 <slot name="header" >
-                    Instance #{{ this.$route.params.idalt }} - Invite tokens
+                    <b>Instance #{{ this.$route.params.idalt }} - Invite tokens</b>
                 </slot>
                 <CButton
                         class="float-right"
@@ -54,6 +51,7 @@
                         square
                         size="sm"
                         @click="createNewInviteToken()"
+                        :disabled="!$store.getters.hasPermission('INSTANCEUSER#CREATE', $route.params.idalt)"
                 >
                     Create new token
                 </CButton>
@@ -76,7 +74,7 @@
                                     variant="outline"
                                     square
                                     size="sm"
-                                    :disabled="!$store.getters.hasPermission('PLUGINREPOSITORY#REMOVE', $route.params.id)"
+                                    :disabled="!$store.getters.hasPermission('INSTANCEUSER#REMOVE', $route.params.idalt)"
                                     @click="deleteInviteToken(item)"
                             >
                                 <CIcon name="cil-trash"/>
@@ -91,6 +89,7 @@
 
 <script>
     import axios from "axios";
+    import ConfirmDelete from "./modals/ConfirmDelete";
 
     const userfields = [
         { key: 'userId', label: 'ID'},
@@ -107,12 +106,13 @@
         { key: 'user_username', label: 'Used by'},
         { key: 'inv_token', label: 'Token'},
         { key: 'inv_created', label: 'Created at'},
-        { key: 'delete' },
+        //{ key: 'delete' },
     ]
 
     export default {
         name: 'Usermanagement',
         components: {
+            ConfirmDelete
 
         },
         data () {
