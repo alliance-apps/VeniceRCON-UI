@@ -78,7 +78,7 @@ export default [
         name: 'Plugins',
         to: '/#id/plugins',
         serverSpecific: true,
-        icon: 'cil-speedometer',
+        icon: 'cil-input-power',
         badge: {
           color: 'primary',
           text: 'Coming SoonTM'

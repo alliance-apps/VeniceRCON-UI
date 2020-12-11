@@ -30,8 +30,6 @@
                 </ul>
             </CCardBody>
         </CCard>
-
-        {{ $store.getters.hasInstanceUserPermissions() }}
     </div>
 </template>
 

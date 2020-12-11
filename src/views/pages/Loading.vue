@@ -77,7 +77,7 @@
 
                 //const socket = io.connect('http://localhost:8000', { auth: store.state.jwt})
                 socket.io.on("error", () => {
-                    location.reload()
+                    this.error = "We are having connection problems. Try reloading..."
                 })
                 socket.on("INSTANCE#ADD", event => {
                     this.$store.commit("setObjectProp", ["instances", event.state.id, event.state])

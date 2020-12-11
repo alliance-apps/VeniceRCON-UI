@@ -1,6 +1,37 @@
 <template>
     <div>
-        {{ plugins }}
+        <CCard>
+            <CCardHeader>
+                <CIcon name="cil-input-power"/> <b>Plugin Store</b>
+
+
+            </CCardHeader>
+            <CCardBody>
+                <CRow>
+                    <CCol sm="4" v-for="(plugin, key) in plugins">
+                        <CCard>
+                            <CCardHeader>
+                                <slot name="header">
+                                    <b>{{ plugin.name }} ({{ plugin.version }})</b>
+                                    <CButton
+                                            class="float-right"
+                                            color="success"
+                                            square
+                                            size="sm"
+                                    >
+                                        Install
+                                    </CButton>
+                                </slot>
+                            </CCardHeader>
+                            <CCardBody>
+                                {{ plugin.description }}<br>
+                                <small>{{ plugin.uuid }}</small>
+                            </CCardBody>
+                        </CCard>
+                    </CCol>
+                </CRow>
+            </CCardBody>
+        </CCard>
     </div>
 </template>
 
@@ -19,7 +50,7 @@
             }
         },
         mounted() {
-            this.loadPlugins()
+            this.loadPluginsFromStore()
         },
         methods: {
             loadPluginsFromStore() {

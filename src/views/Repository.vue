@@ -116,7 +116,13 @@
                         this.repositories = response.data
                     })
                     .catch(() => {
-                        alert("We couldnt log you in because fuck you")
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: 'Unable to load repositories'
+                        })
                     })
             },
             deleteRepository(id) {

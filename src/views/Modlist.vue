@@ -128,13 +128,13 @@
                     .then(() => {
                         this.reloadMods()
                     })
-                    .catch(() => {
+                    .catch((error) => {
                         this.$notify({
                             group: 'foo',
                             type: 'error',
                             title: 'Error',
                             duration: 5000,
-                            text: 'Unable to load mods'
+                            text: 'Unable to remove mods<br>' + error
                         })
                         this.reloadMods()
                     })
@@ -150,7 +150,7 @@
                             type: 'error',
                             title: 'Error',
                             duration: 5000,
-                            text: 'Unable to load mods'
+                            text: 'Unable to add mods'
                         })
                         this.reloadMods()
                     })
@@ -166,7 +166,7 @@
                             type: 'error',
                             title: 'Error',
                             duration: 5000,
-                            text: 'Unable to load mods'
+                            text: 'Unable to reload mods'
                         })
                         this.reloadMods()
                     })

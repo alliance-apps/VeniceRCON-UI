@@ -14,16 +14,66 @@
                         hover
                 >
 
-                    <template #edit="{}">
+                    <template #edit="{item}">
                         <td>
                             <CButton
                                     color="primary"
                                     square
                                     size="sm"
                                     :disabled="!$store.getters.hasPermission('INSTANCEUSER#UPDATE', $route.params.idalt)"
+                                    @click="editUserPermissions(item.userId)"
                             >
                                 Edit Permissions
                             </CButton>
+                            <CModal
+                                    :title="'Edit permissions for ' + editPermissionsUser.username"
+                                    :show.sync="editPermissionsModal"
+                                    v-show="editPermissionsModal && editPermissionsUser.userId === item.userId"
+                            >
+                                <CListGroup>
+                                    <CListGroupItem
+                                            v-for="perm in permissions.getters.listPermissions()"
+                                            :color="editPermissionsUser.scopes.includes(perm) ? 'success' : 'danger'"
+                                    >
+                                    <span class="align-middle" :title="perm">
+                                        {{ permissions.getters.getDescription(perm) }}
+                                    </span>
+
+                                    <CButton
+                                            class="float-right"
+                                            color="success"
+                                            label="Rounds"
+                                            size="sm"
+                                            shape="pill"
+                                            v-show="editPermissionsUser.scopes.includes(perm)"
+                                            @click="removePermission(perm)"
+                                    >
+                                        <CIcon name="cil-check-alt"/>
+                                    </CButton>
+
+                                    <CButton
+                                            class="float-right"
+                                            color="danger"
+                                            label="Rounds"
+                                            size="sm"
+                                            shape="pill"
+                                            v-show="!editPermissionsUser.scopes.includes(perm)"
+                                            @click="addPermission(perm)"
+                                    >
+                                        <CIcon name="cil-check-alt"/>
+                                    </CButton>
+
+                                    </CListGroupItem>
+                                </CListGroup>
+                                <template #footer="{}">
+                                    <CButton
+                                            color="primary"
+                                            @click="submitPermissionChanges()"
+                                    >
+                                        Save
+                                    </CButton>
+                                </template>
+                            </CModal>
                         </td>
                     </template>
                     <template #delete="{item}">
@@ -90,6 +140,10 @@
 <script>
     import axios from "axios";
     import ConfirmDelete from "./modals/ConfirmDelete";
+    import permissions from "../permissions";
+
+    import Vue from 'vue';
+
 
     const userfields = [
         { key: 'userId', label: 'ID'},
@@ -120,7 +174,14 @@
                 users: [],
                 inviteTokens: [],
                 userfields,
-                tokenfields
+                tokenfields,
+                permissions,
+                editPermissionsModal: false,
+                editPermissionsUser: {
+                    scopes: []
+                },
+                editPermissionAdd: [],
+                editPermissionRemove: []
             }
         },
         mounted() {
@@ -205,6 +266,63 @@
                             text: 'Unable to remove user'
                         });
                     })
+            },
+            editUserPermissions(userId) {
+                axios.get('instances/' + this.$route.params.idalt + '/users/' + userId)
+                    .then((response) => {
+                        this.editPermissionsUser = response.data
+                        this.editPermissionsModal = true
+                        this.editPermissionsUser.scopesCopy = JSON.parse(JSON.stringify(this.editPermissionsUser.scopes))
+                    })
+                    .catch(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: 'Unable to load instance user'
+                        });
+                    })
+            },
+            removePermission(permission) {
+                this.editPermissionsUser.scopes = this.editPermissionsUser.scopes.filter(p => p !== permission)
+                if(this.editPermissionsUser.scopesCopy.includes(permission)) {
+                    this.editPermissionRemove.push(permission)
+                }
+                this.editPermissionAdd = this.editPermissionAdd.filter(p => p !== permission)
+            },
+            addPermission(permission) {
+                this.editPermissionsUser.scopes.push(permission)
+                if(!this.editPermissionsUser.scopesCopy.includes(permission)) {
+                    this.editPermissionAdd.push(permission)
+                }
+                this.editPermissionRemove = this.editPermissionRemove.filter(p => p !== permission)
+            },
+            submitPermissionChanges() {
+                if(this.editPermissionAdd.length > 0 || this.editPermissionRemove.length > 0) {
+                    axios.patch('instances/' + this.$route.params.idalt + '/users/' + this.editPermissionsUser.userId + '/permissions', {add: this.editPermissionAdd, remove: this.editPermissionRemove})
+                        .then(() => {
+                            this.editPermissionsModal = false
+                            this.$notify({
+                                group: 'foo',
+                                type: 'success',
+                                title: 'Permissions changed',
+                                duration: 5000,
+                                text: 'The users permissions were updated'
+                            });
+                        })
+                        .catch(() => {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Error',
+                                duration: 5000,
+                                text: 'Unable to change permissions'
+                            });
+                        })
+                }
+                this.editPermissionAdd = []
+                this.editPermissionRemove = []
             }
         }
     }
