@@ -9,7 +9,7 @@
       <CHeaderNavLink>
         <div class="c-avatar">
           <img
-            src="https://i0.wp.com/eaassets-a.akamaihd.net/battlelog/defaultavatars/default-avatar-36.png"
+            src="https://cdn.allianceapps.io/img/default-avatar-36.webp"
             class="c-avatar-img "
           />
         </div>
