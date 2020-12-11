@@ -11,8 +11,46 @@ export default [
       },
 
       {
+        _name: 'CSidebarNavItem',
+        name: 'SERVERDIRECT',
+        to: 0,
+        icon: 'cil-storage'
+      },
+      {
+        _name: 'CSidebarNavItem',
+        name: 'SERVERDIRECT',
+        to: 1,
+        icon: 'cil-storage'
+      },
+      {
+        _name: 'CSidebarNavItem',
+        name: 'SERVERDIRECT',
+        to: 2,
+        icon: 'cil-storage'
+      },
+      {
+        _name: 'CSidebarNavItem',
+        name: 'SERVERDIRECT',
+        to: 3,
+        icon: 'cil-storage'
+      },
+      {
+        _name: 'CSidebarNavItem',
+        name: 'SERVERDIRECT',
+        to: 4,
+        icon: 'cil-storage'
+      },
+      {
+        _name: 'CSidebarNavItem',
+        name: 'SERVERDIRECT',
+        to: 5,
+        icon: 'cil-storage'
+      },
+
+      {
         _name: 'CSidebarNavTitle',
         _children: ['Server'],
+        to: '/#id/dashboard',
         serverSpecific: true
       },
 
@@ -91,6 +129,7 @@ export default [
         _name: 'CSidebarNavTitle',
         _children: ['Extras']
       },
+        /*
       {
         _name: 'CSidebarNavItem',
         name: 'Download Plugins',
@@ -98,7 +137,7 @@ export default [
         icon: { name: 'cil-cloud-download', class: 'text-white' },
         _class: 'bg-success text-white',
         target: '_blank'
-      },/*
+      },*/
       {
         _name: 'CSidebarNavItem',
         name: 'Rent a server',
@@ -106,7 +145,7 @@ export default [
         icon: { name: 'cil-layers', class: 'text-white' },
         _class: 'bg-danger text-white',
         target: '_blank'
-      }*/
+      }
     ]
   }
 ]

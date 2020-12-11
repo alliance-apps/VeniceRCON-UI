@@ -55,7 +55,7 @@
                 </li>
                 <li class="breadcrumb-item p-1 d-none d-md-block"><b>Duration</b> {{ getTimeHumanReadable($store.state.instances[$route.params.id].serverinfo.roundTime) }}</li>
                 <li class="breadcrumb-item p-1 d-none d-md-block"><b>Round</b> {{ $store.state.instances[$route.params.id].serverinfo.roundsPlayed + 1 }}/{{ $store.state.instances[$route.params.id].serverinfo.roundsTotal}}</li>
-                <li class="breadcrumb-item p-1 d-none d-md-block"><b>Next Map</b> {{ $bf3_getMapDisplayName($store.state.instances[$route.params.id].maps[$store.state.instances[$route.params.id].mapInfo.next].map) }} ({{ $bf3_getGamemodeDisplayName($store.state.instances[$route.params.id].maps[$store.state.instances[$route.params.id].mapInfo.next].mode) }})</li>
+                <li class="breadcrumb-item p-1 d-none d-md-block" v-if="$store.state.instances[$route.params.id].maps.length > 0"><b>Next Map</b> {{ $bf3_getMapDisplayName($store.state.instances[$route.params.id].maps[$store.state.instances[$route.params.id].mapInfo.next].map) }} ({{ $bf3_getGamemodeDisplayName($store.state.instances[$route.params.id].maps[$store.state.instances[$route.params.id].mapInfo.next].mode) }})</li>
                 <li class="breadcrumb-item p-1 d-none d-md-block"><b>Uptime</b> {{ getTimeHumanReadable($store.state.instances[$route.params.id].serverinfo.uptime) }}</li>
 
             </ol>
@@ -83,7 +83,8 @@
                     const minutes = Math.round(seconds / 60)
                     const hours = Math.round(minutes / 60)
                     const minutesRest = minutes % 60
-                    return hours + ':' + minutesRest + 'h'
+                    if(minutesRest > 9) return hours + ':' + minutesRest + 'h'
+                    else return hours + ':0' + minutesRest + ''
                 }
             }
         }

@@ -30,7 +30,17 @@
                 newItem[0] = item._name || 'div'
                 newItem[1] = {}
                 newItem[1].props = this.getProps(item)
-                if(newItem[1].props["serverSpecific"] && newItem[1].props["to"]) {
+
+
+                if(newItem[1].props["name"] === "SERVERDIRECT") {
+                    if(this.$route.params.id) return []
+                    const instances = Object.keys(this.$store.state.instances)
+                    const server = this.$store.state.instances[instances[newItem[1].props["to"]]]
+                    if(!server) return []
+                    if(server.state !== 2) return []
+                    newItem[1].props["to"] = '/' + server.id + '/dashboard'
+                    newItem[1].props["name"] = '#' + server.id + ' - ' + server.serverinfo.slots + '/' + server.serverinfo.totalSlots
+                } else if(newItem[1].props["serverSpecific"] && newItem[1].props["to"]) {
                     if(newItem[1].props["permission"] && !this.$store.getters.hasPermission(newItem[1].props["permission"], this.$route.params.id)) return []
                     if(this.$route.params.id) newItem[1].props["to"] = newItem[1].props["to"].replace("#id", this.$route.params.id)
                     else return []
