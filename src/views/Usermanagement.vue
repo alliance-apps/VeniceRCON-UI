@@ -34,6 +34,7 @@
                                     <CListGroupItem
                                             v-for="perm in permissions.getters.listPermissions()"
                                             :color="editPermissionsUser.scopes.includes(perm) ? 'success' : 'danger'"
+                                            v-show="$store.getters.hasPermission(perm, $route.params.idalt)"
                                     >
                                     <span class="align-middle" :title="perm">
                                         {{ permissions.getters.getDescription(perm) }}
@@ -180,8 +181,6 @@
                 editPermissionsUser: {
                     scopes: []
                 },
-                editPermissionAdd: [],
-                editPermissionRemove: []
             }
         },
         mounted() {
@@ -272,7 +271,6 @@
                     .then((response) => {
                         this.editPermissionsUser = response.data
                         this.editPermissionsModal = true
-                        this.editPermissionsUser.scopesCopy = JSON.parse(JSON.stringify(this.editPermissionsUser.scopes))
                     })
                     .catch(() => {
                         this.$notify({
@@ -286,43 +284,35 @@
             },
             removePermission(permission) {
                 this.editPermissionsUser.scopes = this.editPermissionsUser.scopes.filter(p => p !== permission)
-                if(this.editPermissionsUser.scopesCopy.includes(permission)) {
-                    this.editPermissionRemove.push(permission)
-                }
-                this.editPermissionAdd = this.editPermissionAdd.filter(p => p !== permission)
+
             },
             addPermission(permission) {
                 this.editPermissionsUser.scopes.push(permission)
-                if(!this.editPermissionsUser.scopesCopy.includes(permission)) {
-                    this.editPermissionAdd.push(permission)
-                }
-                this.editPermissionRemove = this.editPermissionRemove.filter(p => p !== permission)
             },
             submitPermissionChanges() {
-                if(this.editPermissionAdd.length > 0 || this.editPermissionRemove.length > 0) {
-                    axios.patch('instances/' + this.$route.params.idalt + '/users/' + this.editPermissionsUser.userId + '/permissions', {add: this.editPermissionAdd, remove: this.editPermissionRemove})
-                        .then(() => {
-                            this.editPermissionsModal = false
-                            this.$notify({
-                                group: 'foo',
-                                type: 'success',
-                                title: 'Permissions changed',
-                                duration: 5000,
-                                text: 'The users permissions were updated'
-                            });
-                        })
-                        .catch(() => {
-                            this.$notify({
-                                group: 'foo',
-                                type: 'error',
-                                title: 'Error',
-                                duration: 5000,
-                                text: 'Unable to change permissions'
-                            });
-                        })
-                }
-                this.editPermissionAdd = []
-                this.editPermissionRemove = []
+                axios.patch('instances/' + this.$route.params.idalt + '/users/' + this.editPermissionsUser.userId + '/permissions', {scopes: this.editPermissionsUser.scopes})
+                    .then(() => {
+                        this.editPermissionsModal = false
+                        this.$notify({
+                            group: 'foo',
+                            type: 'success',
+                            title: 'Permissions changed',
+                            duration: 5000,
+                            text: 'Permissions of user ' + this.editPermissionsUser.username + ' updated'
+                        });
+                        this.editPermissionsUser = {
+                            scopes: []
+                        }
+                    })
+                    .catch(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: 'Unable to change permissions'
+                        });
+                    })
             }
         }
     }

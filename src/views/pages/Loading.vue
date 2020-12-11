@@ -4,16 +4,17 @@
             <b>Error: </b> {{ error }}
         </CAlert>
         <CSpinner
+                v-show="error === ''"
                 color="primary"
                 style="position: fixed;
-  z-index: 999;
-  margin: auto;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  width: 50px;
-  height: 50px;"
+                      z-index: 999;
+                      margin: auto;
+                      top: 0;
+                      left: 0;
+                      bottom: 0;
+                      right: 0;
+                      width: 50px;
+                      height: 50px;"
 
         />
     </div>
@@ -78,6 +79,7 @@
                 //const socket = io.connect('http://localhost:8000', { auth: store.state.jwt})
                 socket.io.on("error", () => {
                     this.error = "We are having connection problems. Try reloading..."
+                    if(this.$route.params.id) location.reload()
                 })
                 socket.on("INSTANCE#ADD", event => {
                     this.$store.commit("setObjectProp", ["instances", event.state.id, event.state])

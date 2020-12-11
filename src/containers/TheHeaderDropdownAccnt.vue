@@ -19,7 +19,7 @@
       <strong>Account</strong>
     </CDropdownHeader>
     <CDropdownItem @click="$router.push('/profile')">
-      <CIcon name="cil-user" /> Profile
+      <CIcon name="cil-user" /> Profile ({{ $store.state.user.username }})
     </CDropdownItem>
     <CDropdownHeader
       tag="div"
