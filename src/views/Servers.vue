@@ -142,7 +142,6 @@
                     </CRow>
                 </CCardBody>
             </CCard>
-        {{ $store.state.instances }}
     </div>
 </template>
 

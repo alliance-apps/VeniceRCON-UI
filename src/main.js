@@ -23,15 +23,15 @@ if(url === "http://localhost:8080/") {
 store.commit('set', ['directConnectionUrl', url + 'api/'])
 let directionConnection = store.state.directConnection
 
-console.log(typeof directionConnection)
-console.log(directionConnection)
+//console.log(typeof directionConnection)
+//console.log(directionConnection)
 
 if(directionConnection === 1) {
-    console.log("Direct connection is being used")
+    //console.log("Direct connection is being used")
     axios.defaults.baseURL = url + 'api/'
 } else if(directionConnection === 2) {
     let customBackend = localStorage.getItem('customBackend')
-    console.log("Custom backend is being used: " + customBackend)
+    //console.log("Custom backend is being used: " + customBackend)
     if(customBackend === null) {
         store.commit('updatePersistent', ['directConnection', true])
         directionConnection = true
@@ -40,10 +40,7 @@ if(directionConnection === 1) {
     }
 }
 
-console.log("axios.defaults.baseURL = " + axios.defaults.baseURL)
-
-
-
+//console.log("axios.defaults.baseURL = " + axios.defaults.baseURL)
 
 
 axios.interceptors.request.use(function (config) {
@@ -62,9 +59,9 @@ axios.interceptors.request.use(function (config) {
 
 });
 
-
-import bf3helpers from './services/bf3helpers' //Don't remove
-
+//Don't remove
+import bf3helpers from './services/bf3helpers'
+//Don't remove
 
 import Notifications from 'vue-notification'
 Vue.use(Notifications)
