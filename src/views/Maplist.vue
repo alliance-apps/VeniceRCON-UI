@@ -38,7 +38,7 @@
                     </template>
 
                     <template #move="{item}">
-                        <td class="py-2">
+                        <td>
                             <div v-show="$store.getters.hasPermission('MAP#MANAGE', $route.params.id)">
                                 <CButton
                                         color="danger"

@@ -60,10 +60,6 @@ export default [
         to: '/#id/dashboard',
         serverSpecific: true,
         icon: 'cil-speedometer',
-        badge: {
-          color: 'primary',
-          text: 'NEW'
-        }
       },
       {
         _name: 'CSidebarNavItem',

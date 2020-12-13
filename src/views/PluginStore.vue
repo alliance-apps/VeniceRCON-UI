@@ -3,8 +3,6 @@
         <CCard>
             <CCardHeader>
                 <CIcon name="cil-input-power"/> <b>Plugin Store</b>
-
-
             </CCardHeader>
             <CCardBody>
                 <CRow>
@@ -18,6 +16,7 @@
                                             color="success"
                                             square
                                             size="sm"
+                                            @click="toInstall = plugin; show = true;"
                                     >
                                         Install
                                     </CButton>
@@ -32,6 +31,26 @@
                 </CRow>
             </CCardBody>
         </CCard>
+
+
+        <CModal
+                title="Install plugin"
+                :show.sync="show"
+        >
+            <ul>
+                <li>{{ toInstall.name }}</li>
+                <li>{{ toInstall.description }}</li>
+                <li>Version {{ toInstall.version }} - {{ toInstall.uuid }}</li>
+            </ul>
+            <template #footer="{}">
+                <CButton
+                        color="success"
+                        @click="installPlugin(toInstall.uuid)"
+                >
+                    Install
+                </CButton>
+            </template>
+        </CModal>
     </div>
 </template>
 
@@ -46,7 +65,9 @@
         },
         data () {
             return {
-                plugins: []
+                plugins: [],
+                show: false,
+                toInstall: {}
             }
         },
         mounted() {
@@ -78,17 +99,17 @@
                         }
                     })
             },
-            installPlugin(store, name) {
-                axios.post('instances/' + this.$route.params.id + '/plugins/store' + store + '/' + name)
+            installPlugin(uuid) {
+                axios.post('instances/' + this.$route.params.id + '/plugins/store/' + uuid)
                     .then(() => {
                         this.$notify({
                             group: 'foo',
                             type: 'success',
                             title: 'Plugin downloaded',
                             duration: 5000,
-                            text: name + ' has been downloaded'
+                            text: this.toInstall.name + ' has been downloaded'
                         });
-                        this.loadPluginsFromStore()
+                        this.$router.push('/' + this.$route.params.id + '/plugins')
                     })
                     .catch((error) => {
                         if(error.response) {

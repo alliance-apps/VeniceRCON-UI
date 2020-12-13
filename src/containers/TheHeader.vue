@@ -43,7 +43,7 @@
         </CHeaderNav>
         <CSubheader class="px-3" v-if="this.$route.params.id && $store.state.instances[$route.params.id]">
             <ol class="border-0 mb-0 breadcrumb">
-                <li class="p-1 d-none d-md-block"><img :src="'https://eaassets-a.akamaihd.net/bl-cdn/cdnprefix/production-284-20170531/public/base/bf3/map_images/146x79/' + $store.state.instances[$route.params.id].serverinfo.map.toLowerCase() + '.jpg'" height="25px"></li>
+                <li class="p-1 d-none d-md-block"><img :src="'/maps/146x79/' + $store.state.instances[$route.params.id].serverinfo.map.toLowerCase() + '.jpg'" height="25px"></li>
                 <li class="breadcrumb-item p-1"><b>{{ $bf3_getMapDisplayName($store.state.instances[$route.params.id].serverinfo.map) }}</b></li>
                 <li class="breadcrumb-item p-1">{{ $bf3_getGamemodeDisplayName($store.state.instances[$route.params.id].serverinfo.mode) }}</li>
                 <li class="breadcrumb-item p-1 d-none d-md-block" v-if="$store.state.instances[$route.params.id].serverinfo.scores[0]">
