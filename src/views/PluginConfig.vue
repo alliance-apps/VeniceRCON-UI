@@ -1,5 +1,30 @@
 <template>
     <div>
+
+
+
+        <CCard>
+            <CCardHeader>
+                <slot name="header" >
+                    {{ plugin.name }} Settings
+                </slot>
+
+            </CCardHeader>
+            <CCardBody>
+                <div v-if="plugin.meta">
+                    <div v-for="variable in plugin.meta.vars">
+                        <plugin-variable
+                                :meta="variable"
+                                :obj="plugin.config"
+                        ></plugin-variable>
+                    </div>
+                </div>
+            </CCardBody>
+        </CCard>
+
+
+
+
         <CCard>
             <CCardHeader>
                 <slot name="header" >
@@ -12,29 +37,37 @@
                     <li>UUID: {{ plugin.uuid }}</li>
                     <li>Store Version: {{ plugin.storeVersion }}</li>
                     <li>Store: {{ plugin.store || '-' }}</li>
-                    <li>Description: {{ plugin.meta.description }}</li>
+                    <li v-if="plugin.meta">Description: {{ plugin.meta.description }}</li>
                 </ul>
 
-                <ul>
+                <ul v-if="plugin.meta">
                     <li v-for="variable in plugin.meta.vars">{{ variable }}</li>
                 </ul>
             </CCardBody>
         </CCard>
+
+        {{ plugin.config }}
     </div>
 </template>
 
 <script>
     import axios from "axios";
-
+    import PluginVariable from "./plugin/PluginVariable";
 
     export default {
         name: 'PluginConfig',
         components: {
-
+            PluginVariable
         },
         data () {
             return {
-                plugin: {}
+                plugin: {},
+                test: {
+                    hans: "Stringer",
+                    maier: {
+                        another: "Fucker"
+                    }
+                }
             }
         },
         mounted() {
@@ -67,6 +100,9 @@
 
                     })
             },
+            saveSettings() {
+                console.log(this.plugin.config)
+            }
         }
     }
 </script>
