@@ -41,7 +41,7 @@
                                 </td>
                             </template>
 
-                            <template #show_details="{item, index}">
+                            <template #show_details="{item}">
                                 <td class="py-2">
                                     <CDropdown
                                             color="secondary"

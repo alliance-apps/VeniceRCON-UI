@@ -6,7 +6,7 @@
             </CCardHeader>
             <CCardBody>
                 <CRow>
-                    <CCol sm="4" v-for="(plugin, key) in plugins">
+                    <CCol sm="4" v-for="(plugin, key) in plugins" :key="key">
                         <CCard>
                             <CCardHeader>
                                 <slot name="header">

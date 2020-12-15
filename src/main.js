@@ -59,9 +59,8 @@ axios.interceptors.request.use(function (config) {
 
 });
 
-//Don't remove
 import bf3helpers from './services/bf3helpers'
-//Don't remove
+bf3helpers.map('lint')
 
 import Notifications from 'vue-notification'
 Vue.use(Notifications)

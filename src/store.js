@@ -6,13 +6,13 @@ Vue.use(Vuex)
 import router from "./router";
 
 
-var deep_value = function(obj, path){
-  for (var i=0, path=path.split('.'), len=path.length; i<len; i++){
-    if(obj[path[i]])
-      obj = obj[path[i]];
+let deep_value = function(obj, path){
+  for (var i=0, path2=path.split('.'), len=path.length; i<len; i++){
+    if(obj[path2[i]])
+      obj = obj[path2[i]];
     else {
-      Vue.set(obj, path[i], {})
-      obj = obj[path[i]];
+      Vue.set(obj, path2[i], {})
+      obj = obj[path2[i]];
     }
   }
   return obj;
@@ -115,12 +115,6 @@ const mutations = {
   }
 }
 
-const actions = {
-  //"SOCKET_instance"() {
-  //  console.log("we received sth")
-  //}
-
-}
 
 
 

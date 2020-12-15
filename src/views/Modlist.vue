@@ -24,6 +24,7 @@
                         <CListGroup>
                             <CListGroupItem
                                     v-for="mod in mods_available"
+                                    :key="mod"
                                     :color="getModColourModList(mod)"
                             >
                                 <span class="align-middle">

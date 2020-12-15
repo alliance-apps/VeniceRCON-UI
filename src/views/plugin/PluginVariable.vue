@@ -81,7 +81,7 @@
 
             <CCollapse :show="collapse">
                 <CCard body-wrapper>
-                    <div v-for="(variable, key) in obj[meta.name]">
+                    <div v-for="(variable, key) in obj[meta.name]" :key="key">
                         <plugin-variable
                                 :meta="{name: key, description: '', type: 'strings-element', conditions: [], default: []}"
                                 :obj="obj[meta.name]"
@@ -118,7 +118,7 @@
 
             <CCollapse :show="collapse">
                 <CCard body-wrapper>
-                    <div v-for="variable in meta.vars">
+                    <div v-for="variable in meta.vars" :key="variable.name">
                         <plugin-variable
                                 :meta="variable"
                                 :obj="obj[meta.name]"

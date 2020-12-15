@@ -1,7 +1,5 @@
 import Vue from 'vue'
 
-const cdnBaseUrl = "https://eaassets-a.akamaihd.net/bl-cdn/cdnprefix/production-284-20170531/public/base/bf3/map_images/992x164/"
-
 const mapData = {
     "MP_001": {"display_name": "Grand Bazaar", "supported_gamemodes": ["ConquestLarge0", "ConquestSmall0", "RushLarge0", "SquadRush0", "SquadDeathMatch0", "TeamDeathMatch0"]},
     "MP_003": {"display_name": "Teheran Highway", "supported_gamemodes": ["ConquestLarge0", "ConquestSmall0", "RushLarge0", "SquadRush0", "SquadDeathMatch0", "TeamDeathMatch0"]},

@@ -33,6 +33,7 @@
                                 <CListGroup>
                                     <CListGroupItem
                                             v-for="perm in permissions.getters.listPermissions()"
+                                            :key="perm"
                                             :color="editPermissionsUser.scopes.includes(perm) ? 'success' : 'danger'"
                                             v-show="$store.getters.hasPermission(perm, $route.params.idalt)"
                                     >
@@ -142,8 +143,6 @@
     import axios from "axios";
     import ConfirmDelete from "./modals/ConfirmDelete";
     import permissions from "../permissions";
-
-    import Vue from 'vue';
 
 
     const userfields = [

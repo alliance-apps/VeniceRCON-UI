@@ -77,7 +77,7 @@
                     <template #url="{item}">
                         <td>
                             {{ item.url }} [<a :href="item.repositoryUrl">{{ item.branch }}</a>]<br>
-                            <small v-for="plugin in item.plugins">{{ plugin.name }} ({{ plugin.version }}), </small>
+                            <small v-for="plugin in item.plugins" :key="plugin.id">{{ plugin.name }} ({{ plugin.version }}), </small>
                         </td>
                     </template>
 

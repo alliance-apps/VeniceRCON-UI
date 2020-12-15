@@ -57,7 +57,7 @@
                         Your account is currently connected to these players. Each player displayed here can use your permissions in game through supported plugins/mods.<br><br>
                         <ul>
                             <li v-show="playerBindings.length === 0">You have no player bindings</li>
-                            <li v-for="binding in playerBindings">{{ binding.name }} ({{ binding.guid }})
+                            <li v-for="binding in playerBindings" :key="binding">{{ binding.name }} ({{ binding.guid }})
                                 <a
                                     href="javascript:void(0)"
                                     @click="removeBinding(binding.id)"
@@ -104,16 +104,16 @@
                                 Global Permissions:
                                 <ul>
                                     <li v-show="this.$store.state.globalPermissions.length === 0">You have no global permissions</li>
-                                    <li v-for="permission in this.$store.state.globalPermissions">{{ permission }}</li>
+                                    <li v-for="permission in this.$store.state.globalPermissions" :key="permission">{{ permission }}</li>
                                 </ul>
                             </li>
                             <li>
                                 Instance Permissions
                                 <ul>
-                                    <li v-for="(instance, key) in this.$store.state.permissions">
+                                    <li v-for="(instance, key) in this.$store.state.permissions" :key="key">
                                         Server #{{ key }}
                                         <ul>
-                                            <li v-for="permission in instance">{{ permission }}</li>
+                                            <li v-for="permission in instance" :key="permission">{{ permission }}</li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -204,7 +204,7 @@
                         this.newPassword = ''
                         this.newPasswordConfirm = ''
                     })
-                    .catch((error) => {
+                    .catch(() => {
                         this.$notify({
                             group: 'foo',
                             type: 'error',
@@ -232,6 +232,7 @@
                     })
             },
             removeBinding(id) {
+                console.log(id)
                 // TODO: This is not working
                 axios.delete('auth/binding')
                     .then(() => {

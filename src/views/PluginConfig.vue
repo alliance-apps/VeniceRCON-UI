@@ -12,7 +12,7 @@
             </CCardHeader>
             <CCardBody>
                 <div v-if="plugin.meta">
-                    <div v-for="variable in plugin.meta.vars">
+                    <div v-for="variable in plugin.meta.vars" :key="variable.name">
                         <plugin-variable
                                 :meta="variable"
                                 :obj="plugin.config"
@@ -40,9 +40,6 @@
                     <li v-if="plugin.meta">Description: {{ plugin.meta.description }}</li>
                 </ul>
 
-                <ul v-if="plugin.meta">
-                    <li v-for="variable in plugin.meta.vars">{{ variable }}</li>
-                </ul>
             </CCardBody>
         </CCard>
 

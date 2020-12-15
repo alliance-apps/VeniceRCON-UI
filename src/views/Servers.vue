@@ -93,7 +93,7 @@
                 </CCardHeader>
                 <CCardBody>
                     <CRow>
-                        <CCol sm="6" v-for="(instance, key) in $store.state.instances">
+                        <CCol sm="6" v-for="(instance, key) in $store.state.instances" :key="key">
                             <CCard v-show="instance">
                                 <CCardHeader :color="serverBoxColour(instance.state)">
                                     <slot name="header">
@@ -251,7 +251,7 @@
             addServerInputValidator() {
                 if(this.newServer.port < 1024 || this.newServer.port > 65535) return false
                 if (!/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(this.newServer.host)) {
-                    if (/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/.test(this.newServer.host)) {
+                    if (/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9])$/.test(this.newServer.host)) {
                         return true
                     }
                     return false

@@ -42,7 +42,7 @@
                     </CRow>
                 </form>
 
-                <span v-for="chat in $store.state.chats[$route.params.id]">[{{ chat.created.toLocaleDateString('en-GB') }} {{ chat.created.toLocaleTimeString('en-GB') }}] <b>{{ chat.name + ' @ ' + chat.subset }}:</b> {{ chat.message }}<br></span>
+                <span v-for="chat in $store.state.chats[$route.params.id]" :key="chat.id">[{{ chat.created.toLocaleDateString('en-GB') }} {{ chat.created.toLocaleTimeString('en-GB') }}] <b>{{ chat.name + ' @ ' + chat.subset }}:</b> {{ chat.message }}<br></span>
 
             </CCardBody>
         </CCard>
@@ -69,20 +69,20 @@
         methods: {
             sendMessage() {
                 let subset, subsetId
-                if(this.sendmessage.subset == "all") {
+                if(this.sendmessage.subset === "all") {
                     subset = "all"
                     subsetId = "0"
                 }
-                if(this.sendmessage.subset == "team-us") {
+                if(this.sendmessage.subset === "team-us") {
                     subset = "team"
                     subsetId = "1"
                 }
-                if(this.sendmessage.subset == "team-ru") {
+                if(this.sendmessage.subset === "team-ru") {
                     subset = "team"
                     subsetId = "2"
                 }
                 axios.post('instances/' + this.$route.params.id + '/message', {message: this.sendmessage.message, subset: subset, subsetId: subsetId, yell: this.sendmessage.yell})
-                    .then((response) => {
+                    .then(() => {
                         this.sendmessage.message = ""
                     })
                     .catch(() => {

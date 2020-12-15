@@ -88,7 +88,6 @@
 <script>
     import PlayerList from "./widgets/PlayerList";
     import MapRoundWidget from "./base/MapRoundWidget";
-    import Chat from './Chat'
 
     import axios from "axios";
 
@@ -97,7 +96,6 @@
         components: {
             PlayerList,
             MapRoundWidget,
-            Chat
         },
         computed: {
 

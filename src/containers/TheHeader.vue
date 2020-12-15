@@ -35,7 +35,7 @@
                     :toggler-text="($store.state.instances[$route.params.id].serverinfo.name || $store.state.instances[$route.params.id].host)"
                     class="m-2  d-none d-md-block"
             >
-                <CDropdownItem v-for="(instance, key) in $store.state.instances" :to='$router.history.current.path.replace("/" + $route.params.id + "/", "/" + instance.id +"/")'>#{{ key }} {{ instance.serverinfo.name || "Not connected" }} ({{ ($store.state.instances[$route.params.id].serverinfo.address || ('(Not connected)')) }})</CDropdownItem>
+                <CDropdownItem v-for="(instance, key) in $store.state.instances" :key="instance.id" :to='$router.history.current.path.replace("/" + $route.params.id + "/", "/" + instance.id +"/")'>#{{ key }} {{ instance.serverinfo.name || "Not connected" }} ({{ ($store.state.instances[$route.params.id].serverinfo.address || ('(Not connected)')) }})</CDropdownItem>
             </CDropdown>
 
 

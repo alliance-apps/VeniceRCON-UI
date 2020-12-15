@@ -9,7 +9,7 @@
             </CCardHeader>
             <CCardBody>
                 <ul>
-                    <li v-for="instance in $store.state.instances">
+                    <li v-for="instance in $store.state.instances" :key="instance.id">
                         <router-link
                                 :to="'/usermanagement/' + instance.id"
                                 v-show="$store.getters.hasPermission('INSTANCEUSER#ACCESS', instance.id)"
@@ -34,8 +34,6 @@
 </template>
 
 <script>
-    import axios from "axios";
-
 
     export default {
         name: 'UsermanagementList',
