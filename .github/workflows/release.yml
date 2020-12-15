@@ -67,8 +67,7 @@ jobs:
       - name: pack project
         run: |
           mkdir venicercon-${{ github.event.inputs.version }}
-          cp -r -t venicercon-${{ github.event.inputs.version }} public node_modules lib package*.json README.md config.default.yaml ecosystem.config.js
-          find ./venicercon-${{ github.event.inputs.version }} -name "*.js.map" -type f -delete
+          cp -r -t venicercon-${{ github.event.inputs.version }} dist
           tar -czvf venicercon-node-${{ matrix.node-version }}-${{ github.event.inputs.version }}.tar.gz venicercon-${{ github.event.inputs.version }}
       - name: upload release asset
         id: upload-release-asset 
