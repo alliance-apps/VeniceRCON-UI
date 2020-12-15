@@ -60,10 +60,6 @@ jobs:
         run: npm ci
       - name: build release
         run: npm run build
-      - name: cleanup node_modules
-        run: rm -R node_modules
-      - name: install production dependencies
-        run: npm install --only=prod
       - name: pack project
         run: |
           mkdir venicercon-${{ github.event.inputs.version }}
