@@ -60,7 +60,7 @@ axios.interceptors.request.use(function (config) {
 });
 
 import bf3helpers from './services/bf3helpers'
-bf3helpers.map('lint')
+//bf3helpers.map('lint')
 
 import Notifications from 'vue-notification'
 Vue.use(Notifications)
