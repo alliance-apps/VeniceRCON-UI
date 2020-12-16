@@ -57,7 +57,7 @@
                         Your account is currently connected to these players. Each player displayed here can use your permissions in game through supported plugins/mods.<br><br>
                         <ul>
                             <li v-show="playerBindings.length === 0">You have no player bindings</li>
-                            <li v-for="binding in playerBindings" :key="binding">{{ binding.name }} ({{ binding.guid }})
+                            <li v-for="binding in playerBindings" :key="binding.id">{{ binding.name }} ({{ binding.guid }})
                                 <a
                                     href="javascript:void(0)"
                                     @click="removeBinding(binding.id)"
@@ -151,7 +151,7 @@
         methods: {
             changePassword() {
                 let body = {currentPassword: this.oldPassword, email: this.email}
-                if(this.newPassword.length > 5) body.newPassword = this.newPassword
+                if(this.newPassword.length > 5) body.password = this.newPassword
                 if(this.email.length === 0) body.email = null
 
                 // TODO: This is not 100% working
