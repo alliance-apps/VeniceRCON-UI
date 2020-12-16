@@ -120,20 +120,30 @@ export default [
         permission: 'PLUGIN#ACCESS'
       },
 
-      /*
+      {
+        _name: 'CSidebarNavItem',
+        name: 'Logs',
+        to: '/#id/logs',
+        serverSpecific: true,
+        icon: 'cil-list',
+        permission: 'INSTANCE#LOGS'
+      },
+
+
             {
               _name: 'CSidebarNavTitle',
               _children: ['Extras']
             },
 
-            {
+            /*{
               _name: 'CSidebarNavItem',
               name: 'Download Plugins',
               href: 'https://veniceunleashed.net',
               icon: { name: 'cil-cloud-download', class: 'text-white' },
               _class: 'bg-success text-white',
               target: '_blank'
-            },
+            },*/
+
       {
         _name: 'CSidebarNavItem',
         name: 'Rent a server',
@@ -142,7 +152,7 @@ export default [
         _class: 'bg-danger text-white',
         target: '_blank'
       }
-      */
+
        
     ]
   }

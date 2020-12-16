@@ -71,6 +71,7 @@ const Usermanagement = () => import('@/views/Usermanagement')
 const Plugins = () => import('@/views/Plugins')
 const PluginStore = () => import('@/views/PluginStore')
 const PluginConfig = () => import('@/views/PluginConfig')
+const Logs = () => import('@/views/Logs')
 
 
 import CRenderFunctionCustom from "../views/base/CRenderFunctionCustom";
@@ -214,6 +215,11 @@ function configRoutes () {
                     path: ':id/plugins/:plugin',
                     name: 'PluginConfig',
                     component: PluginConfig
+                },
+                {
+                    path: ':id/logs',
+                    name: 'Logs',
+                    component: Logs
                 },
 
 
