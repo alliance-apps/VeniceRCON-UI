@@ -98,7 +98,6 @@
                                 <CCardHeader :color="serverBoxColour(instance.state)">
                                     <slot name="header">
                                         <CIcon name="cil-storage"/> <b>#{{ instance.id }} | {{ instance.serverinfo.name || instance.host}}</b>
-
                                     </slot>
                                 </CCardHeader>
                                 <CCardBody>
@@ -133,7 +132,16 @@
                                             >
                                                 CONNECT
                                             </CButton>
-
+                                        </CListGroupItem>
+                                        <CListGroupItem>
+                                            <confirm-delete
+                                                    title="Are you sure you want to delete this plugin from this instance? This will delete all configuration!"
+                                                    button-color="danger"
+                                                    :confirm-function="deleteInstance"
+                                                    :arg="instance.id"
+                                                    :has-permission="$store.getters.hasPermission('INSTANCE#DELETE', null)"
+                                            >
+                                            </confirm-delete>
                                         </CListGroupItem>
                                     </CListGroup>
                                 </CCardBody>
@@ -146,18 +154,19 @@
 </template>
 
 <script>
-
     import axios from "axios";
+    import ConfirmDelete from "./modals/ConfirmDelete";
 
     export default {
         name: 'Servers',
         components: {
-
+            ConfirmDelete
 
         },
         data () {
             return {
                 createServerModal: false,
+                editServerModal: false,
                 newServer: {
                     host: "",
                     port: 47200,
@@ -257,6 +266,37 @@
                     return false
                 }
                 return true
+            },
+            deleteInstance(id) {
+                axios.delete('instances/' + id)
+                    .then(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'success',
+                            title: 'Instance deleted',
+                            duration: 5000,
+                            text: 'Instance was successfully deleted'
+                        });
+                    })
+                    .catch((error) => {
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Instance not deleted',
+                                duration: 8000,
+                                text: error.response.data.message
+                            });
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Instance not deleted',
+                                duration: 5000,
+                                text: 'Something went wrong...'
+                            });
+                        }
+                    })
             }
         }
     }
