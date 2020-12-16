@@ -59,8 +59,8 @@ axios.interceptors.request.use(function (config) {
 
 });
 
+// eslint-disable-next-line no-unused-vars
 import bf3helpers from './services/bf3helpers'
-//bf3helpers.map('lint')
 
 import Notifications from 'vue-notification'
 Vue.use(Notifications)
