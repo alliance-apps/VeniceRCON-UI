@@ -227,7 +227,7 @@
                                 id="ColorCorrectionEnabled"
                                 v-model="vars.ColorCorrectionEnabled"
                         />&emsp;
-                        <label for="SunFlareEnabled">Color Correction</label>
+                        <label for="ColorCorrectionEnabled">Color Correction</label>
                     </CCol>
                 </CRow>
 
