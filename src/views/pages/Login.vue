@@ -97,6 +97,15 @@
                     :value.sync="token"
             />
             <CInput
+                    label="Username"
+                    :value.sync="username"
+            />
+            <CInput
+                    label="Password"
+                    type="password"
+                    :value.sync="password"
+            />
+            <CInput
                     label="Confirm password"
                     type="password"
                     :value.sync="confirmPassword"
