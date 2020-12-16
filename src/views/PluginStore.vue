@@ -28,6 +28,19 @@
                             </CCardBody>
                         </CCard>
                     </CCol>
+                    <CCol sm="4" v-show="plugins.length === 0">
+                        <CCard>
+                            <CCardHeader>
+                                <slot name="header">
+                                    <b>Store is empty :(</b>
+                                </slot>
+                            </CCardHeader>
+                            <CCardBody>
+                                 Admin needs to add repositories
+                            </CCardBody>
+                        </CCard>
+                    </CCol>
+
                 </CRow>
             </CCardBody>
         </CCard>

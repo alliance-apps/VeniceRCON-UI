@@ -1,14 +1,21 @@
 <template>
     <div>
 
-
-
         <CCard>
             <CCardHeader>
                 <slot name="header" >
                     {{ plugin.name }} Settings
                 </slot>
-
+                <CButton
+                        class="float-right"
+                        color="success"
+                        square
+                        size="sm"
+                        @click="saveSettings()"
+                        :disabled="!$store.getters.hasPermission('PLUGIN#MODIFY', $route.params.idalt)"
+                >
+                    Save
+                </CButton>
             </CCardHeader>
             <CCardBody>
                 <div v-if="plugin.meta">
@@ -21,9 +28,6 @@
                 </div>
             </CCardBody>
         </CCard>
-
-
-
 
         <CCard>
             <CCardHeader>
@@ -42,8 +46,6 @@
 
             </CCardBody>
         </CCard>
-
-        {{ plugin.config }}
     </div>
 </template>
 
@@ -98,7 +100,37 @@
                     })
             },
             saveSettings() {
-                console.log(this.plugin.config)
+                axios.patch('instances/' + this.$route.params.id + '/plugins/' + this.$route.params.plugin + '/config', this.plugin.config)
+                    .then(() => {
+                        this.$notify({
+                            group: 'foo',
+                            type: 'success',
+                            title: 'Config changed',
+                            duration: 5000,
+                            text: 'Your config changes are saved'
+                        });
+                        this.$router.push('/' + this.$route.params.id + '/plugins')
+                    })
+                    .catch((error) => {
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Config not changed',
+                                duration: 5000,
+                                text: 'Something went wrong<br>' + error.response.data.message
+                            });
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Config not changed',
+                                duration: 5000,
+                                text: 'Something went wrong'
+                            });
+                        }
+
+                    })
             }
         }
     }
