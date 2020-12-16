@@ -60,13 +60,7 @@
         },
         data () {
             return {
-                plugin: {},
-                test: {
-                    hans: "Stringer",
-                    maier: {
-                        another: "Fucker"
-                    }
-                }
+                plugin: {}
             }
         },
         mounted() {

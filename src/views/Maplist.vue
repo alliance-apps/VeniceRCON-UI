@@ -207,8 +207,24 @@
                     .then((response) => {
                         console.log(response)
                     })
-                    .catch(() => {
-                        alert("We couldnt log you in because fuck you")
+                    .catch((error) => {
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Map remove error',
+                                duration: 5000,
+                                text: 'Something went wrong<br>' + error.response.data.message
+                            });
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Map remove error',
+                                duration: 5000,
+                                text: 'Something went wrong loading plugins'
+                            });
+                        }
                     })
             },
             addMap() {
@@ -223,13 +239,23 @@
                         })
                     })
                     .catch((error) => {
-                        this.$notify({
-                            group: 'foo',
-                            type: 'error',
-                            title: 'Error',
-                            duration: 5000,
-                            text: error.response.data.message
-                        })
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Map add error',
+                                duration: 5000,
+                                text: 'Something went wrong<br>' + error.response.data.message
+                            });
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Map add error',
+                                duration: 5000,
+                                text: 'Something went wrong loading plugins'
+                            });
+                        }
                     })
             },
             setNext(map, now) {
@@ -267,13 +293,23 @@
                         }
                     })
                     .catch((error) => {
-                        this.$notify({
-                            group: 'foo',
-                            type: 'error',
-                            title: 'Error',
-                            duration: 5000,
-                            text: error.response.data.message
-                        })
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Map set next error',
+                                duration: 5000,
+                                text: 'Something went wrong<br>' + error.response.data.message
+                            });
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Map set next error',
+                                duration: 5000,
+                                text: 'Something went wrong loading plugins'
+                            });
+                        }
                     })
             },
             moveMap(fromIndex, toIndex) {
@@ -282,13 +318,23 @@
 
                     })
                     .catch((error) => {
-                        this.$notify({
-                            group: 'foo',
-                            type: 'error',
-                            title: 'Error',
-                            duration: 5000,
-                            text: error.response.data.message
-                        })
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Map move error',
+                                duration: 5000,
+                                text: 'Something went wrong<br>' + error.response.data.message
+                            });
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Map move error',
+                                duration: 5000,
+                                text: 'Something went wrong loading plugins'
+                            });
+                        }
                     })
             }
         },

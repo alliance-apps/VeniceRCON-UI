@@ -172,8 +172,24 @@
                         console.log(response)
                         this.reloadBans()
                     })
-                    .catch(() => {
-                        alert("We couldnt log you in because fuck you")
+                    .catch((error) => {
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Ban removal error',
+                                duration: 5000,
+                                text: 'Something went wrong<br>' + error.response.data.message
+                            });
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Ban removal error',
+                                duration: 5000,
+                                text: 'Something went wrong loading plugins'
+                            });
+                        }
                     })
             },
             addBan() {
@@ -203,8 +219,24 @@
                         console.log(response)
                         this.reloadBans()
                     })
-                    .catch(() => {
-                        alert("We couldnt log you in because fuck you")
+                    .catch((error) => {
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Ban error',
+                                duration: 5000,
+                                text: 'Something went wrong<br>' + error.response.data.message
+                            });
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Ban error',
+                                duration: 5000,
+                                text: 'Something went wrong loading plugins'
+                            });
+                        }
                     })
             },
             checkIfBanValid() {
@@ -239,8 +271,24 @@
                             }
                         }
                     })
-                    .catch(() => {
-                        alert("We couldnt log you in because fuck you")
+                    .catch((error) => {
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Banlist load error',
+                                duration: 5000,
+                                text: 'Something went wrong<br>' + error.response.data.message
+                            });
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Banlist load error',
+                                duration: 5000,
+                                text: 'Something went wrong loading plugins'
+                            });
+                        }
                     })
             }
         },
