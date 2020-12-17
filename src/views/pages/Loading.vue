@@ -103,6 +103,9 @@
                 socket.on("INSTANCE#CHAT", event => {
                     this.$store.commit("receiveChat", event)
                 })
+                socket.on("INSTANCE#LOG", event => {
+                    this.$store.commit("receiveLog", event)
+                })
 
 
 

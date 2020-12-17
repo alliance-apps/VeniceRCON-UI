@@ -32,7 +32,9 @@ const state = {
   globalPermissions: [],
   permissions: {},
   instances: {},
-  chats: {}
+  chats: {},
+  console: {},
+  logs: {}
 }
 
 const mutations = {
@@ -97,6 +99,22 @@ const mutations = {
       chat.created = new Date(chat.created)
       state.chats[chat.instance].push(chat)
       state.chats[chat.instance].sort(function(a, b) {
+        return b.id - a.id
+      })
+      //if(state.chats[chat.instance].length > 50) {
+      //  state.chats[chat.instance].shift()
+      //}
+      //console.log(event.messages[i])
+    }
+  },
+  receiveLog(state, event) {
+    for(let i = 0; i < event.messages.length; i++) {
+      let chat = event.messages[i]
+      if(!state.logs[chat.instanceId]) Vue.set(state.logs, chat.instanceId, [])
+      //if(!state.chats[chat.instance].chats) state.chats[chat.instance].chats = []
+      chat.created = new Date(chat.created)
+      state.logs[chat.instanceId].push(chat)
+      state.logs[chat.instanceId].sort(function(a, b) {
         return b.id - a.id
       })
       //if(state.chats[chat.instance].length > 50) {

@@ -85,7 +85,24 @@
                     .then(() => {
                         this.sendmessage.message = ""
                     })
-                    .catch(() => {
+                    .catch((error) => {
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Error sending message',
+                                duration: 5000,
+                                text: error.response.data.message
+                            });
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Error sending message',
+                                duration: 5000,
+                                text: 'Something went wrong'
+                            });
+                        }
 
                     })
             }

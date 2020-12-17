@@ -17,7 +17,12 @@
                 </CButton>
             </CCardHeader>
             <CCardBody>
+
+
                 <CTabs variant="pills" :active-tab="0">
+                    <CTab title="Live">
+                        <span v-for="chat in $store.state.logs[$route.params.id]" :key="chat.id">[{{ chat.created.toLocaleDateString('en-GB') }} {{ chat.created.toLocaleTimeString('en-GB') }}] <b v-show="chat.sourceLocation">{{ chat.sourceLocation }}:</b> {{ chat.message }}<br></span>
+                    </CTab>
                     <CTab title="Instance">
                         <span v-for="(log, key) in instanceLogs" :key="key">{{ log.created }} - {{ log.message }}<br></span>
                     </CTab>
@@ -57,7 +62,13 @@
                     })
                     .catch(() => {
                         this.refresh = false
-                        // TODO: Notification
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: 'Unable to refresh logs'
+                        });
                     })
                 axios.get('instances/' + this.$route.params.id + '/logs/plugins')
                     .then((response) => {
@@ -66,7 +77,13 @@
                     })
                     .catch(() => {
                         this.refresh = false
-                        // TODO: Notification
+                        this.$notify({
+                            group: 'foo',
+                            type: 'error',
+                            title: 'Error',
+                            duration: 5000,
+                            text: 'Unable to refresh logs'
+                        });
                     })
             },
         }
