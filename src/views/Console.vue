@@ -49,7 +49,30 @@
         },
         methods: {
             sendCommand() {
+                axios.post('instances/' + this.$route.params.id + '/raw', {words: ["serverInfo"]})
+                    .then(() => {
 
+                    })
+                    .catch((error) => {
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Error sending command',
+                                duration: 5000,
+                                text: error.response.data.message
+                            });
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Error sending command',
+                                duration: 5000,
+                                text: 'Something went wrong'
+                            });
+                        }
+
+                    })
 
 
 
