@@ -109,9 +109,6 @@
                 socket.on("INSTANCE#LOG", event => {
                     this.$store.commit("receiveLog", event)
                 })
-                socket.on("INSTANCE#CONSOLE", event => {
-                    console.log(event)
-                })
 
 
 

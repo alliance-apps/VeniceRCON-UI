@@ -7,8 +7,31 @@
                 </slot>
             </CCardHeader>
             <CCardBody>
-                This is not yet working. Check back soon :)
+                <form @submit.prevent="sendCommand()">
+                    <CRow>
+                        <CCol sm="10">
+                            <CInput
+                                    placeholder="Enter message"
+                                    :value.sync="rawSendCommand"
+                            />
+                        </CCol>
+                        <CCol sm="2">
+                            <CButton
+                                    type="submit"
+                                    block
+                                    color="success"
+                            >
+                                Send
+                            </CButton>
+                        </CCol>
+                    </CRow>
+                </form>
 
+                <div v-for="(command, key) in commandsFiltered" :key="key">
+                    [{{ command.created.toLocaleDateString('en-GB') }} {{ command.created.toLocaleTimeString('en-GB') }}]
+                    <span :style="cssColorForCommand(command.type)"><span v-for="(word, key) in command.words" :key="key">{{ word }} </span></span>
+                    <br>
+                </div>
 
             </CCardBody>
         </CCard>
@@ -18,6 +41,7 @@
 
 <script>
     import axios from "axios";
+    const regex = /(?:[^\s"]+|"[^"]*")+/g
 
     export default {
         name: 'Console',
@@ -25,15 +49,16 @@
         },
         data () {
             return {
-                refresh: false,
-                instanceLogs: [],
-                pluginLogs: [],
+                hideServerInfo: false,
+                commands: [],
+                rawSendCommand: ''
             }
         },
         mounted() {
             /** this payload enables raw console commands to be received */
+            this.$store.state.socketCon.on("INSTANCE#CONSOLE", this.receiveCommand)
             const payload = {
-                id: this.$route.params.id,
+                instance: parseInt(this.$route.params.id),
                 name: "raw",
                 set: true
             }
@@ -42,14 +67,42 @@
         destroyed() {
             /** this payload disabled raw console commands to be received */
             this.$store.state.socketCon.emit("SELF#CMD_FEATURE", {
-                id: this.$route.params.id,
+                instance: parseInt(this.$route.params.id),
                 name: "raw",
                 set: false
             })
         },
+        computed: {
+            commandsFiltered() {
+                return this.commands
+            },
+
+        },
         methods: {
+            cssColorForCommand(type) {
+                if(type === 'receive') return 'color: #0000cc'
+                return 'color: #00cc00'
+            },
+            receiveCommand(event) {
+                event.created = new Date()
+                this.commands.unshift(event)
+                if(this.commands.length > 150) {
+                    this.commands.pop()
+                }
+            },
             sendCommand() {
-                axios.post('instances/' + this.$route.params.id + '/raw', {words: ["serverInfo"]})
+                let words = []
+                let m;
+                while ((m = regex.exec(this.rawSendCommand)) !== null) {
+                    if (m.index === regex.lastIndex) {
+                        regex.lastIndex++;
+                    }
+                    m.forEach((match) => {
+                        match = match.replace('"', '')
+                        words.push(match)
+                    });
+                }
+                axios.post('instances/' + this.$route.params.id + '/raw', {words: words})
                     .then(() => {
 
                     })
@@ -73,6 +126,7 @@
                         }
 
                     })
+                this.rawSendCommand = ''
 
 
 
