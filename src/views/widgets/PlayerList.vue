@@ -16,8 +16,11 @@
                     <CCardBody>
                         <CDataTable
                                 fixed
-                                :items="oldTeamData = getPlayersInTeam(teamId)"
+                                :items="getPlayersInTeam(teamId)"
                                 :fields="fields"
+                                :pagination="false"
+                                sorter
+                                :sorterValue="{column: 'score', 'asc': false}"
                         >
 
                             <template #squad="{item}">
@@ -200,7 +203,6 @@
             return {
                 // Initialized to zero to begin
                 playerDetailsToggled: [],
-                oldTeamData: [],
                 collapseDuration: 0,
 
                 currentModalPlayer: {},
@@ -235,7 +237,7 @@
                 type: Array,
                 default () {
 
-                    return ['name', 'squad', 'kdr', 'score', 'ping', {
+                    return [{key: 'name', sorter: false}, {key: 'squad', sorter: false}, {key: 'kdr', sorter: false}, {key: 'score', sorter: true}, 'ping', {
                         key: 'show_details',
                         label: '',
                         _style: 'width:1%',
@@ -308,10 +310,10 @@
                 }
             },
             getPlayersInTeam(teamId) {
-                //let players = JSON.parse('[ { "name": "cat24max2", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 1, "kills": 28, "deaths": 17, "score": 50, "rank": "true", "ping": 38, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },  { "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" } ,{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 190, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 45, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" }] ')
                 let players = Object.values(JSON.parse(JSON.stringify(this.$store.state.instances[this.$route.params.id].players))).filter(function(player) {
                     return player.teamId === teamId
                 })
+                //players = JSON.parse('[ { "name": "cat24max2", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 1, "kills": 28, "deaths": 17, "score": 50, "rank": "true", "ping": 38, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },  { "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" } ,{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 190, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 5233, "rank": "true", "ping": 19, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" },{ "name": "cat24max3", "guid": "bae992d18b4f4a17b631214dc85fddeb", "teamId": 1, "squadId": 0, "kills": 0, "deaths": 0, "score": 0, "rank": "true", "ping": 45, "spectator": false, "playerGuid": "db808847ad4c45cb98e2ead1ce854fa5", "ip": "79.206.216.154" }] ')
                 return players
             },
             showModal(type, guid) {
