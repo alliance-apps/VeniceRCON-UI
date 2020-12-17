@@ -34,7 +34,8 @@ const state = {
   instances: {},
   chats: {},
   console: {},
-  logs: {}
+  logs: {},
+  socketCon: null
 }
 
 const mutations = {

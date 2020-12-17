@@ -63,13 +63,6 @@
                             >
                                 Config
                             </CButton>
-                            &nbsp;
-                            <CButton
-                                    color="primary"
-                                    disabled
-                            >
-                                Logs
-                            </CButton>
 
                         </td>
                     </template>

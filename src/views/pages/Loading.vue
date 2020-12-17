@@ -74,6 +74,9 @@
                     auth: { auth_token: store.state.jwt }
                 })
 
+                store.commit('set', ['socketCon', socket])
+
+
                 //const socket = io.connect('http://localhost:8000', { auth: store.state.jwt})
                 socket.io.on("error", () => {
                     this.error = "We are having connection problems. Try reloading..."
@@ -105,6 +108,9 @@
                 })
                 socket.on("INSTANCE#LOG", event => {
                     this.$store.commit("receiveLog", event)
+                })
+                socket.on("INSTANCE#CONSOLE", event => {
+                    console.log(event)
                 })
 
 

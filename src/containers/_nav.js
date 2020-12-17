@@ -129,6 +129,15 @@ export default [
         permission: 'INSTANCE#LOGS'
       },
 
+      {
+        _name: 'CSidebarNavItem',
+        name: 'Console',
+        to: '/#id/console',
+        serverSpecific: true,
+        icon: 'cil-list',
+        permission: 'INSTANCE#CONSOLE'
+      },
+
 
             {
               _name: 'CSidebarNavTitle',

@@ -72,6 +72,7 @@ const Plugins = () => import('@/views/Plugins')
 const PluginStore = () => import('@/views/PluginStore')
 const PluginConfig = () => import('@/views/PluginConfig')
 const Logs = () => import('@/views/Logs')
+const Console = () => import('@/views/Console')
 
 
 import CRenderFunctionCustom from "../views/base/CRenderFunctionCustom";
@@ -220,6 +221,11 @@ function configRoutes () {
                     path: ':id/logs',
                     name: 'Logs',
                     component: Logs
+                },
+                {
+                    path: ':id/console',
+                    name: 'Console',
+                    component: Console
                 },
 
 
