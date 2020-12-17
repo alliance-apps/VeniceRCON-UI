@@ -7,7 +7,7 @@ import router from "./router";
 
 
 let deep_value = function(obj, path){
-  for (var i=0, path2=path.split('.'), len=path.length; i<len; i++){
+  for (let i=0, path2=path.split('.'), len=path2.length; i<len; i++) {
     if(obj[path2[i]])
       obj = obj[path2[i]];
     else {
@@ -71,8 +71,10 @@ const mutations = {
       //console.log(prepath)
       let postpath = change[0].substring(pos+1)
       let target = state[variable][event.id]
+      if(change[1] === "cat24max is testing") {
+        console.log("Deep value prepath=" + prepath)
+      }
       if(prepath !== "") target = deep_value(target, prepath)
-      //console.log("prepath " + prepath + " - postpath " + postpath)
 
       if(change[1] === null) Vue.set(target, postpath, undefined)
       else Vue.set(target, postpath, change[1])
@@ -82,7 +84,7 @@ const mutations = {
         Vue.set(state[variable][event.id], "playersArray", JSON.parse(JSON.stringify(Object.values(state.instances[event.id].players))))
       }
 
-      if(postpath == "state" && router.currentRoute.params.id) {
+      if(postpath === "state" && router.currentRoute.params.id) {
         router.push('/servers')
       }
     })
