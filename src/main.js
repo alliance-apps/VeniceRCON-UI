@@ -56,8 +56,15 @@ axios.interceptors.request.use(function (config) {
     }
     return config
 }, function () {
-
 });
+
+axios.interceptors.response.use((response) => {
+    if(response.headers['authorization']) {
+        console.log("Received JWT refresh token")
+        store.commit('setJwtToken', response.headers['authorization'].replace('Bearer ', ''))
+    }
+    return response
+}, () => {})
 
 // eslint-disable-next-line no-unused-vars
 import bf3helpers from './services/bf3helpers'
@@ -66,10 +73,10 @@ import Notifications from 'vue-notification'
 Vue.use(Notifications)
 
 
-
 Vue.config.performance = true
 Vue.use(CoreuiVue)
 Vue.prototype.$log = console.log.bind(console)
+
 
 new Vue({
     el: '#app',
