@@ -218,7 +218,7 @@
                     })
             },
             createNewInviteToken() {
-                axios.post('instances/' + this.$route.params.idalt + '/users/invite')
+                axios.post('instances/' + this.$route.params.idalt + '/users/invite', {scopes: ['INSTANCE#ACCESS']})
                     .then(() => {
                         this.loadInviteTokens()
                         this.$notify({
