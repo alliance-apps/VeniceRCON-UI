@@ -38,6 +38,7 @@
                             </span>
 
                             <CSelect
+                                    v-show="false"
                                     :options="backendHostOptions"
                                     :value.sync="directConnection"
                             >
@@ -72,7 +73,7 @@
                                     <CButton color="primary" class="px-4" @click="login" :disabled="loginDisabled || (directConnection === 1 && !directConnectionPossible) || password.length < 6 || username.length < 1">Login</CButton>
                                 </CCol>
                                 <CCol col="5" class="text-right">
-                                    <CButton color="link" class="px-0">Reset password</CButton>
+                                    <CButton color="link" class="px-0" @click="forgotModal = true">Reset password</CButton>
                                 </CCol>
                                 <CCol col="4" class="text-right">
                                     <CButton color="primary" class="px-4" @click="registerModal = true" >
@@ -121,6 +122,26 @@
             </template>
         </CModal>
 
+        <CModal
+                title="Reset password"
+                color="success"
+                :show.sync="forgotModal"
+        >
+            This will only work if you have set your email address in settings. If you didn't do that, contact support.<br>
+            <CInput
+                    label="E-Mail"
+                    :value.sync="forgotEmail"
+            />
+            <template #footer="{}">
+                <CButton
+                        color="primary"
+                        @click="forgot()"
+                >
+                    Create account
+                </CButton>
+            </template>
+        </CModal>
+
 
 
     </CContainer>
@@ -156,6 +177,8 @@
                 registerModal: false,
                 token: '',
                 confirmPassword: '',
+                forgotModal: false,
+                forgotEmail: ''
                 //backupDirectConnectUrl: null
             }
         },
@@ -238,6 +261,40 @@
                         }
                     })
                 this.registerModal = false
+            },
+            forgot() {
+                axios.post('auth/forgot-password', {email: this.forgotEmail})
+                    .then(() => {
+                        this.forgotModal = false
+                        this.forgotEmail = ''
+                        this.$notify({
+                            group: 'foo',
+                            type: 'success',
+                            title: 'Email sent',
+                            duration: 5000,
+                            text: 'You should receive an email soon'
+                        });
+                    })
+                    .catch((error) => {
+                        this.forgotModal = false
+                        if(error.response) {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Error sending message',
+                                duration: 5000,
+                                text: 'Something went wrong<br>' + error.response.data.message
+                            });
+                        } else {
+                            this.$notify({
+                                group: 'foo',
+                                type: 'error',
+                                title: 'Error sending message',
+                                duration: 5000,
+                                text: 'Something went wrong'
+                            });
+                        }
+                    })
             }
         }
     }

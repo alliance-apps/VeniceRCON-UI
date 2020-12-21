@@ -11,7 +11,7 @@
                     <CRow>
                         <CCol sm="10">
                             <CInput
-                                    placeholder="Enter message"
+                                    placeholder="Enter console command"
                                     :value.sync="rawSendCommand"
                             />
                         </CCol>
