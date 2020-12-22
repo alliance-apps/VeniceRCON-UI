@@ -74,9 +74,6 @@ const mutations = {
       //console.log(prepath)
       let postpath = change[0].substring(pos+1)
       let target = state[variable][event.id]
-      if(change[1] === "cat24max is testing") {
-        console.log("Deep value prepath=" + prepath)
-      }
       if(prepath !== "") target = deep_value(target, prepath)
 
       if(change[1] === null) Vue.set(target, postpath, undefined)
