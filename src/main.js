@@ -77,7 +77,7 @@ Vue.use(CoreuiVue)
 Vue.prototype.$log = console.log.bind(console)
 
 import * as Sentry from "@sentry/browser";
-//import { Integrations } from "@sentry/tracing";
+import { Integrations } from "@sentry/tracing";
 
 Sentry.init({
     Vue,
