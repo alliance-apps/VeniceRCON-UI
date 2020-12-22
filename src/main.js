@@ -82,14 +82,14 @@ import * as Sentry from "@sentry/browser";
 Sentry.init({
     Vue,
     dsn: "https://d3b76e46e14f489380b4e8c398cf2036@o90041.ingest.sentry.io/5567700",
-    // autoSessionTracking: true,
-    // integrations: [
-    //     new Integrations.BrowserTracing(),
-    // ],
-    //
-    // // We recommend adjusting this value in production, or using tracesSampler
-    // // for finer control
-    // tracesSampleRate: 1.0,
+    autoSessionTracking: true,
+    integrations: [
+        new Integrations.BrowserTracing(),
+    ],
+
+    // We recommend adjusting this value in production, or using tracesSampler
+    // for finer control
+    tracesSampleRate: 1.0,
 });
 
 new Vue({
