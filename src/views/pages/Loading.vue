@@ -55,7 +55,8 @@
                             store.commit('setJwtToken', null)
                             this.$router.push('/login')
                         } else {
-                            this.error = "We are having connection problems. Contact your admin or try again later..."
+                            //this.error = "We are having connection problems. Contact your admin or try again later..."
+                            this.$router.push('/login')
                         }
 
                     })

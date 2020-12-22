@@ -64,7 +64,7 @@ axios.interceptors.response.use((response) => {
         store.commit('setJwtToken', response.headers['authorization'].replace('Bearer ', ''))
     }
     return response
-}, () => {})
+}, error => Promise.reject(error))
 
 // eslint-disable-next-line no-unused-vars
 import bf3helpers from './services/bf3helpers'
