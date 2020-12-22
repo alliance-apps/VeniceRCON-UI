@@ -66,8 +66,7 @@ axios.interceptors.response.use((response) => {
     return response
 }, error => Promise.reject(error))
 
-// eslint-disable-next-line no-unused-vars
-import bf3helpers from './services/bf3helpers'
+import './services/bf3helpers'
 
 import Notifications from 'vue-notification'
 Vue.use(Notifications)
