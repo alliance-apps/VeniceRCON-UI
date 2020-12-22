@@ -4,6 +4,7 @@
                 title="Add server"
                 color="success"
                 :show.sync="createServerModal"
+                v-if="newServer.error"
         >
             <CAlert color="warning" v-show="newServer.error !== ''">
                 {{ newServer.error }}
