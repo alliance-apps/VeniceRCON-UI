@@ -38,7 +38,7 @@
         </div>
         <div v-else-if="meta.type === 'number'">
             <CInput
-                    type="number"
+                    type="string"
                     :value.sync="obj[meta.name]"
                     :label="meta.name"
                     :description="meta.description"
