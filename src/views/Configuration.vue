@@ -1,9 +1,9 @@
 <template>
     <div>
-        <CAlert color="warning" v-if="$store.getters.hasPermission('VARIABLE#MODIFY', $route.params.id)">
+        <CAlert color="warning" v-show="$store.getters.hasPermission('VARIABLE#MODIFY', $route.params.id)">
             Changes here are not persistent and will be reset after server restart. Please use Startup.txt for persistent changes.
         </CAlert>
-        <CAlert color="warning" v-else>
+        <CAlert color="warning" v-show="!$store.getters.hasPermission('VARIABLE#MODIFY', $route.params.id)">
             You do not have permission to change these values. Please use Startup.txt for persistent changes.
         </CAlert>
 

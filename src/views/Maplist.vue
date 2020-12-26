@@ -3,6 +3,9 @@
         <CAlert color="warning" v-show="!$store.getters.hasPermission('MAP#MANAGE', $route.params.id)">
             You have no permission to edit this list
         </CAlert>
+        <CAlert color="warning">
+            Current and Next are not always correct after you manually changed a map (RCON issue)
+        </CAlert>
         <CCard>
             <CCardHeader>
                 <slot name="header">
