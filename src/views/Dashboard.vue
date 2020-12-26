@@ -30,7 +30,7 @@
 
                             <div class="col">
                                 <div  class="text-value-lg">
-                                    {{ $store.state.instances[$route.params.id].serverinfo.slots + '/' + $store.state.instances[$route.params.id].serverinfo.totalSlots }}
+                                    {{ $store.state.instances[$route.params.id].serverinfo.slots + '/' + $bf3_getActualSlotCount($store.state.instances[$route.params.id]) }}
                                 </div>
                                 <div  class="text-uppercase text-muted small">
                                     Players

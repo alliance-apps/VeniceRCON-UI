@@ -44,8 +44,8 @@
         <CSubheader class="px-3" v-if="this.$route.params.id && $store.state.instances[$route.params.id]">
             <ol class="border-0 mb-0 breadcrumb">
                 <li class="p-1 d-none d-md-block"><img :src="'/maps/146x79/' + $store.state.instances[$route.params.id].serverinfo.map.toLowerCase() + '.jpg'" height="25px"></li>
-                <li class="breadcrumb-item p-1"><b>{{ $bf3_getMapDisplayName($store.state.instances[$route.params.id].serverinfo.map) }}</b></li>
-                <li class="breadcrumb-item p-1">{{ $bf3_getGamemodeDisplayName($store.state.instances[$route.params.id].serverinfo.mode) }}</li>
+                <li class="breadcrumb-item p-1"><b>{{ $bf3_getMapDisplayName($store.state.instances[$route.params.id].serverinfo.map) }}</b> {{ $bf3_getGamemodeDisplayName($store.state.instances[$route.params.id].serverinfo.mode) }}</li>
+                <li class="breadcrumb-item p-1"><b>{{ $store.state.instances[$route.params.id].serverinfo.slots || 0 }}/{{ $bf3_getActualSlotCount($store.state.instances[$route.params.id]) || 0 }}</b></li>
                 <li class="breadcrumb-item p-1 d-none d-md-block" v-if="$store.state.instances[$route.params.id].serverinfo.scores[0]">
                     <CIcon name="cif-us"/>
                     {{ $store.state.instances[$route.params.id].serverinfo.scores[0] }}
@@ -57,7 +57,6 @@
                 <li class="breadcrumb-item p-1 d-none d-md-block"><b>Round</b> {{ $store.state.instances[$route.params.id].serverinfo.roundsPlayed + 1 }}/{{ $store.state.instances[$route.params.id].serverinfo.roundsTotal}}</li>
                 <li class="breadcrumb-item p-1 d-none d-md-block" v-if="$store.state.instances[$route.params.id].maps.length > 0"><b>Next Map</b> {{ $bf3_getMapDisplayName($store.state.instances[$route.params.id].maps[$store.state.instances[$route.params.id].mapInfo.next].map) }} ({{ $bf3_getGamemodeDisplayName($store.state.instances[$route.params.id].maps[$store.state.instances[$route.params.id].mapInfo.next].mode) }})</li>
                 <li class="breadcrumb-item p-1 d-none d-md-block"><b>Uptime</b> {{ getTimeHumanReadable($store.state.instances[$route.params.id].serverinfo.uptime) }}</li>
-
             </ol>
 
 

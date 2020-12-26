@@ -121,3 +121,8 @@ Vue.prototype.$bf3_isMapGmCombinationPossible = (map, gamemode) => {
     if(coopSPMaps[map]) return true
     return mapData[map].supported_gamemodes.includes(gamemode)
 }
+
+Vue.prototype.$bf3_getActualSlotCount = (instance) => {
+    if(instance.version === 'VU') return instance.serverinfo.totalSlots - 24
+    return instance.serverinfo.totalSlots
+}
