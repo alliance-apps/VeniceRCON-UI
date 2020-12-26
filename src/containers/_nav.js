@@ -113,10 +113,6 @@ export default [
         to: '/#id/plugins',
         serverSpecific: true,
         icon: 'cil-input-power',
-        badge: {
-          color: 'primary',
-          text: 'Coming SoonTM'
-        },
         permission: 'PLUGIN#ACCESS'
       },
 
@@ -138,20 +134,20 @@ export default [
         permission: 'INSTANCE#CONSOLE'
       },
 
+      /*
+      {
+        _name: 'CSidebarNavTitle',
+        _children: ['Extras']
+      },
 
-            {
-              _name: 'CSidebarNavTitle',
-              _children: ['Extras']
-            },
-
-            /*{
-              _name: 'CSidebarNavItem',
-              name: 'Download Plugins',
-              href: 'https://veniceunleashed.net',
-              icon: { name: 'cil-cloud-download', class: 'text-white' },
-              _class: 'bg-success text-white',
-              target: '_blank'
-            },*/
+      {
+        _name: 'CSidebarNavItem',
+        name: 'Download Plugins',
+        href: 'https://veniceunleashed.net',
+        icon: { name: 'cil-cloud-download', class: 'text-white' },
+        _class: 'bg-success text-white',
+        target: '_blank'
+      },
 
       {
         _name: 'CSidebarNavItem',
@@ -161,7 +157,7 @@ export default [
         _class: 'bg-danger text-white',
         target: '_blank'
       }
-
+      */
        
     ]
   }
