@@ -12,7 +12,7 @@
                         square
                         size="sm"
                         @click="saveSettings()"
-                        :disabled="!$store.getters.hasPermission('PLUGINREPOSITORY#MODIFY', $route.params.idalt)"
+                        :disabled="!$store.getters.hasPermission('PLUGINREPOSITORY#MODIFY', $route.params.id)"
                 >
                     Save
                 </CButton>
