@@ -74,6 +74,7 @@
                                 square
                                 size="sm"
                                 :items-per-page="25"
+                                v-show="$store.getters.hasPermission('INSTANCE#CREATE', undefined)"
                                 @click="createServerModal = true"
                         >
                             <CIcon name="cil-plus"/> Add server
