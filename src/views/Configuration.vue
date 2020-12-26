@@ -385,6 +385,30 @@
 <script>
     import axios from "axios";
 
+    export const VAR_BF3 = [
+        "serverName", "autoBalance",
+        "friendlyFire", "maxPlayers", "serverDescription",
+        "serverMessage", "killCam", "miniMap",
+        "hud", "3dSpotting", "miniMapSpotting",
+        "nametag", "3pCam", "regenerateHealth",
+        "teamKillCountForKick", "teamKillValueForKick", "teamKillValueIncrease",
+        "teamKillValueDecreasePerSecond", "teamKillKickForBan", "idleTimeout",
+        "idleBanRounds", "roundStartPlayerCount", "roundRestartPlayerCount",
+        "roundLockdownCountdown", "vehicleSpawnAllowed", "vehicleSpawnDelay",
+        "soldierHealth", "playerRespawnTime", "playerManDownTime", "bulletDamage",
+        "gameModeCounter", "onlySquadLeaderSpawn",
+        "premiumStatus", "gunMasterWeaponsPreset"
+    ]
+
+    export const VAR_VU = [
+        "DestructionEnabled", "SuppressionMultiplier",
+        "DesertingAllowed", "VehicleDisablingEnabled",
+        "HighPerformanceReplication", "ServerBanner",
+        "SpectatorCount", "SunFlareEnabled",
+        "ColorCorrectionEnabled", "TimeScale",
+        "SquadSize"
+    ]
+
     export default {
         name: 'Configuration',
         components: {
@@ -455,9 +479,11 @@
                 if(this.vars === null) return ""
                 let toCheck = Object.getOwnPropertyNames(this.vars)
                 let changed = ""
+                changed += "# WATCH OUT: This config does not contain admin.password\r\n"
+                changed += "# If you replace your config with these values, keep the admin.password or RCON will not work anymore.\r\n"
                 for(let i = 0; i < toCheck.length - 1; i++) {
-                    changed += "vars." + toCheck[i] + " \"" + this.vars[toCheck[i]] + "\"\r\n"
-
+                    if(VAR_BF3.includes(toCheck[i])) changed += "vars." + toCheck[i] + " \"" + this.vars[toCheck[i]] + "\"\r\n"
+                    if(VAR_VU.includes(toCheck[i])) changed += "vu." + toCheck[i] + " \"" + this.vars[toCheck[i]] + "\"\r\n"
                 }
                 let dummy = document.createElement("textarea");
                 document.body.appendChild(dummy);
