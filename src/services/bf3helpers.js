@@ -25,7 +25,7 @@ const mapData = {
     "XP4_Quake": {"display_name": "Epicenter", "supported_gamemodes": ["ConquestLarge0", "ConquestSmall0", "RushLarge0", "SquadRush0", "SquadDeathMatch0", "TeamDeathMatch0", "GunMaster0", "Scavenger0"]},
     "XP4_FD": {"display_name": "Markaz Monolith", "supported_gamemodes": ["ConquestLarge0", "ConquestSmall0", "RushLarge0", "SquadRush0", "SquadDeathMatch0", "TeamDeathMatch0", "GunMaster0", "Scavenger0"]},
     "XP4_Parl": {"display_name": "Azadi Palace", "supported_gamemodes": ["ConquestLarge0", "ConquestSmall0", "RushLarge0", "SquadRush0", "SquadDeathMatch0", "TeamDeathMatch0", "GunMaster0", "Scavenger0"]},
-    "XP4_Rubble": {"display_name": "Talah Market", "supported_gamemodes": ["ConquestLarge0", "ConquestSmall0", "RushLarge0", "SquadRush0", "SquadDeathMatch0", "TeamDeathMatch0", "GunMaster0", "Scavenger0"]},
+    "XP4_Rubble": {"display_name": "Talah Market", "supported_gamemodes": ["ConquestAssaultLarge0", "ConquestAssaultSmall0", "RushLarge0", "SquadRush0", "SquadDeathMatch0", "TeamDeathMatch0", "GunMaster0", "Scavenger0"]},
     "XP5_001": {"display_name": "Operation Riverside", "supported_gamemodes": ["ConquestLarge0", "ConquestSmall0", "RushLarge0", "SquadRush0", "SquadDeathMatch0", "TeamDeathMatch0", "CaptureTheFlag0", "AirSuperiority0"]},
     "XP5_002": {"display_name": "Nebandan Flats", "supported_gamemodes": ["ConquestLarge0", "ConquestSmall0", "RushLarge0", "SquadRush0", "SquadDeathMatch0", "TeamDeathMatch0", "CaptureTheFlag0", "AirSuperiority0"]},
     "XP5_003": {"display_name": "Kiasar Railroad", "supported_gamemodes": ["ConquestLarge0", "ConquestSmall0", "RushLarge0", "SquadRush0", "SquadDeathMatch0", "TeamDeathMatch0", "CaptureTheFlag0", "AirSuperiority0"]},
