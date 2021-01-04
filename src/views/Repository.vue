@@ -43,15 +43,17 @@
                     <template #id="{item}">
                         <td>
                             {{ item.id }}
-                            <CBadge color="danger" v-show="!item.enabled">
-                                Not active
-                            </CBadge>
                         </td>
                     </template>
 
                     <template #url="{item}">
                         <td>
-                            {{ item.url }} [<a :href="item.repositoryUrl">{{ item.branch }}</a>]<br>
+                            <div v-if="item.type === 'GITHUB'">
+                                <a :href="'https://github.com/' + item.options.username + '/' + item.options.repository + '/tree/' + item.options.branch" target="_blank">{{ item.options.username }}/{{ item.options.repository }}</a><br>
+                            </div>
+                            <div v-if="item.type === 'DEV'">
+                                DEV
+                            </div>
                             <small v-for="plugin in item.plugins" :key="plugin.uuid">{{ plugin.name }} ({{ plugin.version }}), </small>
                         </td>
                     </template>
@@ -150,7 +152,7 @@
             },
             addRepository() {
                 if(!this.$store.getters.hasPermission('PLUGINREPOSITORY#CREATE', null)) return
-                axios.post('repository', {url: this.repo_url, branch: this.repo_branch})
+                axios.post('repository', {type: 'GITHUB', username: 'alliance-apps', repository: 'VeniceRCON-plugin-repo', 'branch': this.repo_branch})
                     .then(() => {
                         this.$notify({
                             group: 'foo',
