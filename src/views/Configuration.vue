@@ -44,25 +44,25 @@
                     <CCol sm="3">
                         <CInput
                                 label="Server name"
-                                v-model="vars.serverName"
+                                v-model="vars.vars_serverName"
                         />
                     </CCol>
                     <CCol sm="3">
                         <CInput
                                 label="Server description"
-                                v-model="vars.serverDescription"
+                                v-model="vars.vars_serverDescription"
                         />
                     </CCol>
                     <CCol sm="3">
                         <CInput
                                 label="Server message"
-                                v-model="vars.serverMessage"
+                                v-model="vars.vars_serverMessage"
                         />
                     </CCol>
                     <CCol sm="3">
                         <CInput
                                 label="Game password"
-                                v-model="vars.gamePassword"
+                                v-model="vars.vars_gamePassword"
                         />
                     </CCol>
                 </CRow>
@@ -71,7 +71,7 @@
                         <input
                                 type="checkbox"
                                 id="autoBalance"
-                                v-model="vars.autoBalance"
+                                v-model="vars.vars_autoBalance"
                         />&emsp;
                         <label for="autoBalance">Autobalance</label>
                     </CCol>
@@ -79,7 +79,7 @@
                         <input
                                 type="checkbox"
                                 id="friendlyFire"
-                                v-model="vars.friendlyFire"
+                                v-model="vars.vars_friendlyFire"
                         />&emsp;
                         <label for="friendlyFire">Friendly Fire</label>
                     </CCol>
@@ -87,7 +87,7 @@
                         <input
                                 type="checkbox"
                                 id="killCam"
-                                v-model="vars.killCam"
+                                v-model="vars.vars_killCam"
                         />&emsp;
                         <label for="killCam">Kill Cam</label>
                     </CCol>
@@ -95,7 +95,7 @@
                         <input
                                 type="checkbox"
                                 id="miniMap"
-                                v-model="vars.miniMap"
+                                v-model="vars.vars_miniMap"
                         />&emsp;
                         <label for="miniMap">Minimap</label>
                     </CCol>
@@ -103,7 +103,7 @@
                         <input
                                 type="checkbox"
                                 id="hud"
-                                v-model="vars.hud"
+                                v-model="vars.vars_hud"
                         />&emsp;
                         <label for="hud">HUD</label>
                     </CCol>
@@ -111,7 +111,7 @@
                         <input
                                 type="checkbox"
                                 id="3dSpotting"
-                                v-model="vars['3dSpotting']"
+                                v-model="vars['vars_3dSpotting']"
                         />&emsp;
                         <label for="3dSpotting">3D spotting</label>
                     </CCol>
@@ -119,7 +119,7 @@
                         <input
                                 type="checkbox"
                                 id="miniMapSpotting"
-                                v-model="vars.miniMapSpotting"
+                                v-model="vars.vars_miniMapSpotting"
                         />&emsp;
                         <label for="miniMapSpotting">Minimap spotting</label>
                     </CCol>
@@ -127,7 +127,7 @@
                         <input
                                 type="checkbox"
                                 id="nametag"
-                                v-model="vars.nametag"
+                                v-model="vars.vars_nametag"
                         />&emsp;
                         <label for="nametag">Nametag</label>
                     </CCol>
@@ -135,7 +135,7 @@
                         <input
                                 type="checkbox"
                                 id="3pCam"
-                                v-model="vars['3pCam']"
+                                v-model="vars['vars_3pCam']"
                         />&emsp;
                         <label for="3pCam">3rd person cam</label>
                     </CCol>
@@ -143,7 +143,7 @@
                         <input
                                 type="checkbox"
                                 id="regenerateHealth"
-                                v-model="vars.regenerateHealth"
+                                v-model="vars.vars_regenerateHealth"
                         />&emsp;
                         <label for="regenerateHealth">Regenerate health</label>
                     </CCol>
@@ -151,7 +151,7 @@
                         <input
                                 type="checkbox"
                                 id="vehicleSpawnAllowed"
-                                v-model="vars.vehicleSpawnAllowed"
+                                v-model="vars.vars_vehicleSpawnAllowed"
                         />&emsp;
                         <label for="vehicleSpawnAllowed">Vehicle spawn</label>
                     </CCol>
@@ -159,7 +159,7 @@
                         <input
                                 type="checkbox"
                                 id="onlySquadLeaderSpawn"
-                                v-model="vars.onlySquadLeaderSpawn"
+                                v-model="vars.vars_onlySquadLeaderSpawn"
                         />&emsp;
                         <label for="onlySquadLeaderSpawn">Only squad leader spawn</label>
                     </CCol>
@@ -167,8 +167,8 @@
                         <input
                                 type="checkbox"
                                 id="ranked"
-                                :disabled="$store.state.instances[$route.params.id].version == 'VU'"
-                                v-model="vars.ranked"
+                                :disabled="$store.state.instances[$route.params.id].version === 'VU'"
+                                v-model="vars.vars_ranked"
                         />&emsp;
                         <label for="ranked">Ranked</label>
                     </CCol>
@@ -176,56 +176,56 @@
                         <input
                                 type="checkbox"
                                 id="premium"
-                                :disabled="$store.state.instances[$route.params.id].version == 'VU'"
-                                v-model="vars.premiumStatus"
+                                :disabled="$store.state.instances[$route.params.id].version === 'VU'"
+                                v-model="vars.vars_premiumStatus"
                         />&emsp;
                         <label for="premium">Premium</label>
                     </CCol>
-                    <CCol sm="2" v-if="$store.state.instances[$route.params.id].version == 'VU'">
+                    <CCol sm="2" v-show="$store.state.instances[$route.params.id].version === 'VU'">
                         <input
                                 type="checkbox"
                                 id="DestructionEnabled"
-                                v-model="vars.DestructionEnabled"
+                                v-model="vars.vu_DestructionEnabled"
                         />&emsp;
                         <label for="DestructionEnabled">Destruction</label>
                     </CCol>
-                    <CCol sm="2" v-if="$store.state.instances[$route.params.id].version == 'VU'">
+                    <CCol sm="2" v-show="$store.state.instances[$route.params.id].version === 'VU'">
                         <input
                                 type="checkbox"
                                 id="DesertingAllowed"
-                                v-model="vars.DesertingAllowed"
+                                v-model="vars.vu_DesertingAllowed"
                         />&emsp;
                         <label for="DesertingAllowed">Allow deserting</label>
                     </CCol>
-                    <CCol sm="2" v-if="$store.state.instances[$route.params.id].version == 'VU'">
+                    <CCol sm="2" v-show="$store.state.instances[$route.params.id].version === 'VU'">
                         <input
                                 type="checkbox"
                                 id="VehicleDisablingEnabled"
-                                v-model="vars.VehicleDisablingEnabled"
+                                v-model="vars.vu_VehicleDisablingEnabled"
                         />&emsp;
                         <label for="VehicleDisablingEnabled">Vehicle disabling</label>
                     </CCol>
-                    <CCol sm="2" v-if="$store.state.instances[$route.params.id].version == 'VU'">
+                    <CCol sm="2" v-show="$store.state.instances[$route.params.id].version === 'VU'">
                         <input
                                 type="checkbox"
                                 id="HighPerformanceReplication"
-                                v-model="vars.HighPerformanceReplication"
+                                v-model="vars.vu_HighPerformanceReplication"
                         />&emsp;
                         <label for="HighPerformanceReplication">High Perf. Repl.</label>
                     </CCol>
-                    <CCol sm="2" v-if="$store.state.instances[$route.params.id].version == 'VU'">
+                    <CCol sm="2" v-show="$store.state.instances[$route.params.id].version === 'VU'">
                         <input
                                 type="checkbox"
                                 id="SunFlareEnabled"
-                                v-model="vars.SunFlareEnabled"
+                                v-model="vars.vu_SunFlareEnabled"
                         />&emsp;
                         <label for="SunFlareEnabled">Sun Flare</label>
                     </CCol>
-                    <CCol sm="2" v-if="$store.state.instances[$route.params.id].version == 'VU'">
+                    <CCol sm="2" v-show="$store.state.instances[$route.params.id].version === 'VU'">
                         <input
                                 type="checkbox"
                                 id="ColorCorrectionEnabled"
-                                v-model="vars.ColorCorrectionEnabled"
+                                v-model="vars.vu_ColorCorrectionEnabled"
                         />&emsp;
                         <label for="ColorCorrectionEnabled">Color Correction</label>
                     </CCol>
@@ -236,141 +236,141 @@
                     <CCol sm="2">
                         <CInput
                                 label="Slots"
-                                v-model="vars.maxPlayers"
+                                v-model="vars.vars_maxPlayers"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Team kill count for kick"
-                                v-model="vars.teamKillCountForKick"
+                                v-model="vars.vars_teamKillCountForKick"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Team kill value for kick"
-                                v-model="vars.teamKillValueForKick"
+                                v-model="vars.vars_teamKillValueForKick"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Team kill value increase"
-                                v-model="vars.teamKillValueIncrease"
+                                v-model="vars.vars_teamKillValueIncrease"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Team kill value decrease/s"
-                                v-model="vars.teamKillValueDecreasePerSecond"
+                                v-model="vars.vars_teamKillValueDecreasePerSecond"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Team kill kick for ban"
-                                v-model="vars.teamKillKickForBan"
+                                v-model="vars.vars_teamKillKickForBan"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Idle timeout (seconds)"
-                                v-model="vars.idleTimeout"
+                                v-model="vars.vars_idleTimeout"
                         />
                     </CCol>
 
                     <CCol sm="2">
                         <CInput
                                 label="Idle ban rounds"
-                                v-model="vars.idleBanRounds"
+                                v-model="vars.vars_idleBanRounds"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Round start player count"
-                                v-model="vars.roundStartPlayerCount"
+                                v-model="vars.vars_roundStartPlayerCount"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Round restart player count"
-                                v-model="vars.roundRestartPlayerCount"
+                                v-model="vars.vars_roundRestartPlayerCount"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Round lockdown countdown"
-                                v-model="vars.roundLockdownCountdown"
+                                v-model="vars.vars_roundLockdownCountdown"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Vehicle spawn delay (%)"
-                                v-model="vars.vehicleSpawnDelay"
+                                v-model="vars.vars_vehicleSpawnDelay"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Soldier health (%)"
-                                v-model="vars.soldierHealth"
+                                v-model="vars.vars_soldierHealth"
                         />
                     </CCol>
 
                     <CCol sm="2">
                         <CInput
                                 label="Player respawn time (%)"
-                                v-model="vars.playerRespawnTime"
+                                v-model="vars.vars_playerRespawnTime"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Player man down time (%)"
-                                v-model="vars.playerManDownTime"
+                                v-model="vars.vars_playerManDownTime"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Bullet damage (%)"
-                                v-model="vars.bulletDamage"
+                                v-model="vars.vars_bulletDamage"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Tickets (%)"
-                                v-model="vars.gameModeCounter"
+                                v-model="vars.vars_gameModeCounter"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Gunmaster weapons preset"
-                                v-model="vars.gunMasterWeaponsPreset"
+                                v-model="vars.vars_gunMasterWeaponsPreset"
                         />
                     </CCol>
                     <CCol sm="2">
                         <CInput
                                 label="Unlock mode"
-                                v-model="vars.unlockMode"
+                                v-model="vars.vars_unlockMode"
                         />
                     </CCol>
-                    <CCol sm="2" v-if="$store.state.instances[$route.params.id].version == 'VU'">
+                    <CCol sm="2" v-show="$store.state.instances[$route.params.id].version === 'VU'">
                         <CInput
                                 label="Suppression Multiplier (%)"
-                                v-model="vars.SuppressionMultiplier"
+                                v-model="vars.vu_SuppressionMultiplier"
                         />
                     </CCol>
-                    <CCol sm="2" v-if="$store.state.instances[$route.params.id].version == 'VU'">
+                    <CCol sm="2" v-show="$store.state.instances[$route.params.id].version === 'VU'">
                         <CInput
                                 label="Time Scale"
-                                v-model="vars.TimeScale"
+                                v-model="vars.vu_TimeScale"
                         />
                     </CCol>
-                    <CCol sm="2" v-if="$store.state.instances[$route.params.id].version == 'VU'">
+                    <CCol sm="2" v-show="$store.state.instances[$route.params.id].version === 'VU'">
                         <CInput
                                 label="Squad size"
-                                v-model="vars.SquadSize"
+                                v-model="vars.vu_SquadSize"
                         />
                     </CCol>
-                    <CCol sm="4" v-if="$store.state.instances[$route.params.id].version == 'VU'">
+                    <CCol sm="4" v-show="$store.state.instances[$route.params.id].version === 'VU'">
                         <CInput
                                 label="Server banner URL"
-                                v-model="vars.ServerBanner"
+                                v-model="vars.vu_ServerBanner"
                         />
                     </CCol>
                 </CRow>
@@ -378,36 +378,14 @@
             </CCardBody>
         </CCard>
 
+        {{ changedVars() }}
+
 
     </div>
 </template>
 
 <script>
     import axios from "axios";
-
-    export const VAR_BF3 = [
-        "serverName", "autoBalance",
-        "friendlyFire", "maxPlayers", "serverDescription",
-        "serverMessage", "killCam", "miniMap",
-        "hud", "3dSpotting", "miniMapSpotting",
-        "nametag", "3pCam", "regenerateHealth",
-        "teamKillCountForKick", "teamKillValueForKick", "teamKillValueIncrease",
-        "teamKillValueDecreasePerSecond", "teamKillKickForBan", "idleTimeout",
-        "idleBanRounds", "roundStartPlayerCount", "roundRestartPlayerCount",
-        "roundLockdownCountdown", "vehicleSpawnAllowed", "vehicleSpawnDelay",
-        "soldierHealth", "playerRespawnTime", "playerManDownTime", "bulletDamage",
-        "gameModeCounter", "onlySquadLeaderSpawn",
-        "premiumStatus", "gunMasterWeaponsPreset"
-    ]
-
-    export const VAR_VU = [
-        "DestructionEnabled", "SuppressionMultiplier",
-        "DesertingAllowed", "VehicleDisablingEnabled",
-        "HighPerformanceReplication", "ServerBanner",
-        "SpectatorCount", "SunFlareEnabled",
-        "ColorCorrectionEnabled", "TimeScale",
-        "SquadSize"
-    ]
 
     export default {
         name: 'Configuration',
@@ -427,9 +405,9 @@
                 let toCheck = Object.getOwnPropertyNames(this.vars)
                 let changed = []
                 for(let i = 0; i < toCheck.length; i++) {
-                    if(this.vars[toCheck[i]] != this.vars_pre[toCheck[i]]) {
-                        if(toCheck[i] == "0") continue //TODO: Remove this hotfix
-                        if(toCheck[i] == "__ob__") continue //TODO: Remove this hotfix
+                    if(this.vars[toCheck[i]] !== this.vars_pre[toCheck[i]]) {
+                        if(toCheck[i] === "0") continue //TODO: Remove this hotfix
+                        if(toCheck[i] === "__ob__") continue //TODO: Remove this hotfix
                         changed.push(toCheck[i])
                     }
                 }
@@ -439,7 +417,7 @@
                 let changed = this.changedVars()
                 let submit = {}
                 for (let i = 0; i < changed.length; i++) {
-                    submit[changed[i]] = this.vars[changed[i]]
+                    submit[changed[i].replace('_', '.')] = this.vars[changed[i]]
                 }
 
                 axios.patch('instances/' + this.$route.params.id + '/vars', submit)
@@ -482,8 +460,7 @@
                 changed += "# WATCH OUT: This config does not contain admin.password\r\n"
                 changed += "# If you replace your config with these values, keep the admin.password or RCON will not work anymore.\r\n"
                 for(let i = 0; i < toCheck.length - 1; i++) {
-                    if(VAR_BF3.includes(toCheck[i])) changed += "vars." + toCheck[i] + " \"" + this.vars[toCheck[i]] + "\"\r\n"
-                    if(VAR_VU.includes(toCheck[i])) changed += "vu." + toCheck[i] + " \"" + this.vars[toCheck[i]] + "\"\r\n"
+                    changed += toCheck[i].replace('_', '.') + " \"" + this.vars[toCheck[i]] + "\"\r\n"
                 }
                 let dummy = document.createElement("textarea");
                 document.body.appendChild(dummy);
