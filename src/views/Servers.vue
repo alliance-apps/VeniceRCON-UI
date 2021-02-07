@@ -185,15 +185,27 @@
                 else return "danger"
             },
             connect(instance_id) {
-                axios.patch('instances/' + instance_id + '/start', {})
+                axios.patch('instances/' + instance_id + '/stop', {})
                     .then(() => {
-                        this.$notify({
-                            group: 'foo',
-                            type: 'success',
-                            title: 'Connection successful',
-                            duration: 5000,
-                            text: 'You can now interact with this server...'
-                        });
+                        axios.patch('instances/' + instance_id + '/start', {})
+                            .then(() => {
+                                this.$notify({
+                                    group: 'foo',
+                                    type: 'success',
+                                    title: 'Connection successful',
+                                    duration: 5000,
+                                    text: 'You can now interact with this server...'
+                                });
+                            })
+                            .catch((error) => {
+                                this.$notify({
+                                    group: 'foo',
+                                    type: 'error',
+                                    title: 'Connection failed',
+                                    duration: 5000,
+                                    text: 'Unable to connect to this server<br>' + error.response.data.message
+                                });
+                            })
                     })
                     .catch((error) => {
                         this.$notify({
@@ -204,6 +216,7 @@
                             text: 'Unable to connect to this server<br>' + error.response.data.message
                         });
                     })
+                
             },
             addServer() {
                 this.newServer.trying = true
